@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>br.com.fiap.postech</groupId>
-	<artifactId>restaurant-sync-api</artifactId>
+	<artifactId>restaurant-sync</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>restaurant-sync-api</name>
+	<name>restaurant-sync</name>
 	<description>API para gerenciamento de usuários de restaurantes - Tech Challenge FIAP</description>
 	<url/>
 	<licenses>
