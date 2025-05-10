@@ -33,7 +33,7 @@ Antes de rodar o projeto localmente, você precisará de:
 1. Clone o repositório:
 
     ```bash
-    git clone https://github.com/SEU_USUARIO/restaurant-sync-api.git
+    git clone https://github.com/luizffdemoraes/restaurant-sync-api-tech-challenge
     ```
 
 2. Configure o banco de dados no arquivo `application.properties` (se necessário).
@@ -50,11 +50,11 @@ Antes de rodar o projeto localmente, você precisará de:
 
 ## Endpoints
 
-- **POST /users**: Cria um novo usuário.
-- **PUT /users/{id}**: Atualiza as informações de um usuário.
-- **DELETE /users/{id}**: Exclui um usuário.
-- **POST /users/login**: Valida o login de um usuário.
-- **POST /users/change-password**: Troca a senha de um usuário.
+- **POST /v1/users**: Cria um novo usuário.
+- **PUT /v1/users/{id}**: Atualiza as informações de um usuário.
+- **DELETE /v1/users/{id}**: Exclui um usuário.
+- **POST /v1/users/login**: Valida o login de um usuário.
+- **POST /v1/users/change-password**: Troca a senha de um usuário.
 
 ## Testes
 
