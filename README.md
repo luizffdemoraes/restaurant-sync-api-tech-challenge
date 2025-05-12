@@ -1,4 +1,4 @@
-# **restaurant-sync-api** - Tech Challenge FIAP - Fase 1
+# **restaurant-sync** - Tech Challenge FIAP - Fase 1
 
 ## Descrição
 
@@ -18,7 +18,7 @@ O sistema é construído com **Spring Boot**, **Docker**, e **Docker Compose**, 
 
 - **Spring Boot**: Framework principal para desenvolvimento da API.
 - **Docker & Docker Compose**: Utilizados para orquestrar a aplicação e o banco de dados, garantindo portabilidade e escalabilidade.
-- **Banco de dados relacional**: Suporte a **PostgreSQL**, **MySQL** ou **H2**.
+- **Banco de dados relacional**: Suporte a **PostgreSQL** e **H2** para testes.
 - **Postman** (ou ferramenta similar): Para testar os endpoints da API.
 
 ## Requisitos
@@ -55,6 +55,12 @@ Antes de rodar o projeto localmente, você precisará de:
 - **DELETE /v1/users/{id}**: Exclui um usuário.
 - **POST /v1/users/login**: Valida o login de um usuário.
 - **POST /v1/users/change-password**: Troca a senha de um usuário.
+
+## Documentação da API
+
+A documentação completa da API está disponível através do Swagger UI em:
+
+[http://localhost:8080/swagger-ui/index.html](http://localhost:8080/swagger-ui/index.html)
 
 ## Testes
 
