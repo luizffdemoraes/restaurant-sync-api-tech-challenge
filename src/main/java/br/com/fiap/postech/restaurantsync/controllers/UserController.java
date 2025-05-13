@@ -14,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -140,5 +141,12 @@ public class UserController {
     public ResponseEntity<Void> updatePassword(@PathVariable Long id, @RequestBody String newPassword) {
         userService.updatePassword(id, newPassword);
         return ResponseEntity.noContent().build();
+    }
+
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_CLIENT')")
+    @GetMapping(value = "/me")
+    public ResponseEntity<UserResponse> getMe() {
+        UserResponse dto = userService.getMe();
+        return ResponseEntity.ok(dto);
     }
 }

@@ -2,7 +2,9 @@ package br.com.fiap.postech.restaurantsync.services;
 
 import br.com.fiap.postech.restaurantsync.dtos.requests.UserRequest;
 import br.com.fiap.postech.restaurantsync.dtos.responses.UserResponse;
+import br.com.fiap.postech.restaurantsync.entities.Role;
 import br.com.fiap.postech.restaurantsync.entities.User;
+import br.com.fiap.postech.restaurantsync.entities.UserDetailsProjection;
 import br.com.fiap.postech.restaurantsync.repositories.UserRepository;
 import br.com.fiap.postech.restaurantsync.resources.exceptions.BusinessException;
 import jakarta.persistence.EntityNotFoundException;
@@ -10,18 +12,40 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
-public class UserService {
+public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
 
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        List<UserDetailsProjection> result = userRepository.searchUserAndRolesByEmail(username);
+        if (result == null || result.isEmpty()) {
+            throw new UsernameNotFoundException("User not found");
+        }
+        User user = new User();
+        user.setEmail(username);
+        user.setPassword(result.get(0).getPassword());
+        for (UserDetailsProjection projection : result) {
+            user.addRole(new Role(projection.getRoleId(), projection.getAuthority()));
+        }
+        return user;
     }
 
     @Transactional
@@ -40,6 +64,7 @@ public class UserService {
     public UserResponse findUserById(Long id) {
         Optional<User> obj = this.userRepository.findById(id);
         User entity = obj.orElseThrow(() -> new BusinessException("Entity not Found"));
+        validateSelfOrAdmin(obj.get().getId());
         return new UserResponse(entity);
     }
 
@@ -71,5 +96,30 @@ public class UserService {
         User user = userRepository.findById(id).orElseThrow(() -> new BusinessException("Id not found: " + id));
         user.setPassword(newPassword);
         userRepository.save(user);
+    }
+
+    @Transactional(readOnly = true)
+    public UserResponse getMe() {
+        User entity = authenticated();
+        return new UserResponse(entity);
+    }
+
+    protected User authenticated() {
+        try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            Jwt jwtPrincipal = (Jwt) authentication.getPrincipal();
+            String username = jwtPrincipal.getClaim("username");
+            return userRepository.findByEmail(username).get();
+        }
+        catch (Exception e) {
+            throw new UsernameNotFoundException("Invalid user");
+        }
+    }
+
+    public void validateSelfOrAdmin(long userId) {
+        User me = authenticated();
+        if (!me.hasRole("ROLE_ADMIN") && !me.getId().equals(userId)) {
+            throw new BusinessException("Access denied");
+        }
     }
 }
