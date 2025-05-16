@@ -67,10 +67,13 @@ public class AuthorizationServerConfig {
     private Integer jwtDurationSeconds;
 
     private final UserDetailsService userDetailsService;
+    private final PasswordEncoder passwordEncoder;
 
-    public AuthorizationServerConfig(UserDetailsService userDetailsService) {
+    public AuthorizationServerConfig(UserDetailsService userDetailsService, PasswordEncoder passwordEncoder) {
         this.userDetailsService = userDetailsService;
+        this.passwordEncoder = passwordEncoder;
     }
+
 
     @Bean
     @Order(2)
@@ -97,8 +100,7 @@ public class AuthorizationServerConfig {
         // Registra provider para o grant personalizado
         http.authenticationProvider(
                 new CustomPasswordAuthenticationProvider(
-                        authorizationService(), tokenGenerator(), userDetailsService, passwordEncoder()
-                )
+                        authorizationService(), tokenGenerator(), userDetailsService, this.passwordEncoder)
         );
 
         return http.build();
@@ -115,17 +117,12 @@ public class AuthorizationServerConfig {
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
-    @Bean
     public RegisteredClientRepository registeredClientRepository() {
         // @formatter:off
         RegisteredClient registeredClient = RegisteredClient
                 .withId(UUID.randomUUID().toString())
                 .clientId(clientId)
-                .clientSecret(passwordEncoder().encode(clientSecret))
+                .clientSecret(this.passwordEncoder.encode(clientSecret))
                 .scope("read")
                 .scope("write")
                 .authorizationGrantType(new AuthorizationGrantType("password"))
