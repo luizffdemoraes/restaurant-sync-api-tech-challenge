@@ -1,11 +1,24 @@
 package br.com.fiap.postech.restaurantsync.config.doc;
 
 
+import io.swagger.v3.oas.models.Components;
+import io.swagger.v3.oas.models.Operation;
+import io.swagger.v3.oas.models.PathItem;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Contact;
+import io.swagger.v3.oas.models.media.Content;
+import io.swagger.v3.oas.models.media.MediaType;
+import io.swagger.v3.oas.models.media.Schema;
+import io.swagger.v3.oas.models.parameters.RequestBody;
+import io.swagger.v3.oas.models.responses.ApiResponse;
+import io.swagger.v3.oas.models.responses.ApiResponses;
+import io.swagger.v3.oas.models.security.SecurityRequirement;
+import io.swagger.v3.oas.models.security.SecurityScheme;
+import org.springdoc.core.customizers.OpenApiCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
 
 @Configuration
 public class OpenApiConfig {
@@ -21,6 +34,58 @@ public class OpenApiConfig {
                                 .name("Luiz Moraes")
                                 .email("lffm1994@gmail.com")
                                 .url("https://localhost:8080"))
+                )
+                .components(new Components()
+                        .addSecuritySchemes("basicAuth",
+                                new SecurityScheme()
+                                        .type(SecurityScheme.Type.HTTP)
+                                        .scheme("basic")
+                        )
                 );
+    }
+
+    @Bean
+    public OpenApiCustomizer oauth2TokenEndpointCustomiser() {
+        return openApi -> {
+            PathItem tokenPath = new PathItem().post(
+                    new Operation()
+                            .summary("Obter token OAuth2")
+                            .description("""
+                                Endpoint para obter o token de acesso via grant_type=password.
+
+                                **IMPORTANTE:**  
+                                Antes de executar, clique em **Authorize** no Swagger UI e informe seu `client_id` como usuário e `client_secret` como senha.
+
+                                Exemplo de chamada cURL:
+                                curl -X POST 'http://localhost:8080/oauth2/token' \\
+                                  -H 'Authorization: Basic <base64(client_id:client_secret)>' \\
+                                  -H 'Content-Type: application/x-www-form-urlencoded' \\
+                                  --data-urlencode 'username=johndoe@example.com' \\
+                                  --data-urlencode 'password=securepassword' \\
+                                  --data-urlencode 'grant_type=password'
+                                """)
+                            .tags(java.util.List.of("Autenticação"))
+                            .security(java.util.List.of(new SecurityRequirement().addList("basicAuth")))
+                            .requestBody(new RequestBody()
+                                    .required(true)
+                                    .content(new Content().addMediaType(
+                                            "application/x-www-form-urlencoded",
+                                            new MediaType().schema(
+                                                    new Schema<>()
+                                                            .type("object")
+                                                            .addProperties("grant_type", new Schema<>().type("string").example("password"))
+                                                            .addProperties("username", new Schema<>().type("string").example("johndoe@example.com"))
+                                                            .addProperties("password", new Schema<>().type("string").example("securepassword"))
+                                            )
+                                    ))
+                            )
+                            .responses(new ApiResponses()
+                                    .addApiResponse("200", new ApiResponse().description("Token gerado com sucesso"))
+                                    .addApiResponse("400", new ApiResponse().description("Requisição inválida"))
+                                    .addApiResponse("401", new ApiResponse().description("Não autorizado - verifique se clicou em Authorize e preencheu client_id/client_secret"))
+                            )
+            );
+            openApi.path("/oauth2/token", tokenPath);
+        };
     }
 }

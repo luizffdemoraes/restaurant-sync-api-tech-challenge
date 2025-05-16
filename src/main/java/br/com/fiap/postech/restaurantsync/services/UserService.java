@@ -5,6 +5,7 @@ import br.com.fiap.postech.restaurantsync.dtos.responses.UserResponse;
 import br.com.fiap.postech.restaurantsync.entities.Role;
 import br.com.fiap.postech.restaurantsync.entities.User;
 import br.com.fiap.postech.restaurantsync.entities.UserDetailsProjection;
+import br.com.fiap.postech.restaurantsync.repositories.RoleRepository;
 import br.com.fiap.postech.restaurantsync.repositories.UserRepository;
 import br.com.fiap.postech.restaurantsync.resources.exceptions.BusinessException;
 import jakarta.persistence.EntityNotFoundException;
@@ -18,6 +19,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,8 +31,11 @@ public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
 
-    public UserService(UserRepository userRepository) {
+    private final RoleRepository roleRepository;
+
+    public UserService(UserRepository userRepository, RoleRepository roleRepository) {
         this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
     }
 
     @Override
@@ -50,8 +55,14 @@ public class UserService implements UserDetailsService {
 
     @Transactional
     public UserResponse createUser(UserRequest userRequest) {
-        User user = this.userRepository.save(new User(userRequest));
+        User user = new User(userRequest);
+        Role role = getRoleForEmail(userRequest.email());
+
+        user.addRole(role);
+
+        user = this.userRepository.save(user);
         return new UserResponse(user);
+
     }
 
     @Transactional(readOnly = true)
@@ -120,6 +131,16 @@ public class UserService implements UserDetailsService {
         User me = authenticated();
         if (!me.hasRole("ROLE_ADMIN") && !me.getId().equals(userId)) {
             throw new BusinessException("Access denied");
+        }
+    }
+
+    private Role getRoleForEmail(String email) {
+        if (email != null && email.toLowerCase().endsWith("@restaurantsync.com")) {
+            return roleRepository.findByAuthority("ROLE_ADMIN")
+                    .orElseThrow(() -> new BusinessException("Role ADMIN não encontrada."));
+        } else {
+            return roleRepository.findByAuthority("ROLE_CLIENT")
+                    .orElseThrow(() -> new BusinessException("Role CLIENT não encontrada."));
         }
     }
 }
