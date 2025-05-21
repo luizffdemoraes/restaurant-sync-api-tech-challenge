@@ -114,12 +114,6 @@ public class UserService implements UserDetailsService {
         userRepository.save(user);
     }
 
-    @Transactional(readOnly = true)
-    public UserResponse getMe() {
-        User entity = authenticated();
-        return new UserResponse(entity);
-    }
-
     protected User authenticated() {
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

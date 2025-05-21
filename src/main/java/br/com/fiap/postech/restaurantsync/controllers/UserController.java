@@ -142,11 +142,4 @@ public class UserController {
         userService.updatePassword(id, newPassword);
         return ResponseEntity.noContent().build();
     }
-
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_CLIENT')")
-    @GetMapping(value = "/me")
-    public ResponseEntity<UserResponse> getMe() {
-        UserResponse dto = userService.getMe();
-        return ResponseEntity.ok(dto);
-    }
 }
