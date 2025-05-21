@@ -64,11 +64,11 @@ public class CustomPasswordAuthenticationProvider implements AuthenticationProvi
 		try {
 			user = userDetailsService.loadUserByUsername(username);
 		} catch (UsernameNotFoundException e) {
-			throw new OAuth2AuthenticationException("Invalid credentials");
+			throw new OAuth2AuthenticationException("Credenciais inválidas");
 		}
 				
 		if (!passwordEncoder.matches(password, user.getPassword()) || !user.getUsername().equals(username)) {
-			throw new OAuth2AuthenticationException("Invalid credentials");
+			throw new OAuth2AuthenticationException("Credenciais inválidas");
 		}
 		
 		authorizedScopes = user.getAuthorities().stream()
@@ -105,7 +105,7 @@ public class CustomPasswordAuthenticationProvider implements AuthenticationProvi
 		OAuth2Token generatedAccessToken = this.tokenGenerator.generate(tokenContext);
 		if (generatedAccessToken == null) {
 			OAuth2Error error = new OAuth2Error(OAuth2ErrorCodes.SERVER_ERROR,
-					"The token generator failed to generate the access token.", ERROR_URI);
+					"O gerador de token falhou ao gerar o token de acesso.", ERROR_URI);
 			throw new OAuth2AuthenticationException(error);
 		}
 

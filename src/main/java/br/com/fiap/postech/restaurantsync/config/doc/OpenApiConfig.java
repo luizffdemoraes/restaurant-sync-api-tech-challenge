@@ -75,7 +75,7 @@ public class OpenApiConfig {
                                                             .type("object")
                                                             .addProperties("grant_type", new Schema<>().type("string").example("password"))
                                                             .addProperties("username", new Schema<>().type("string").example("johndoe@example.com"))
-                                                            .addProperties("password", new Schema<>().type("string").example("securepassword"))
+                                                            .addProperties("password", new Schema<>().type("string").example("password123"))
                                             )
                                     ))
                             )
