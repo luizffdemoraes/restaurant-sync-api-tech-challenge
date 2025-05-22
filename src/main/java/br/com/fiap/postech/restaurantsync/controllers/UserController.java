@@ -61,6 +61,7 @@ public class UserController {
             @ApiResponse(responseCode = "400",
                     description = "ID inválido")
     })
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<UserResponse> deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
@@ -77,6 +78,7 @@ public class UserController {
             @ApiResponse(responseCode = "400",
                     description = "Parâmetros de paginação inválidos")
     })
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping
     public ResponseEntity<Page<UserResponse>> findAllPagedUsers(
             @RequestParam(value = "page", defaultValue = "0") Integer page,

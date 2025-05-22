@@ -1,6 +1,7 @@
 package br.com.fiap.postech.restaurantsync.resources.exceptions.handler;
 
 
+import br.com.fiap.postech.restaurantsync.resources.exceptions.BusinessException;
 import br.com.fiap.postech.restaurantsync.resources.exceptions.StandardError;
 import br.com.fiap.postech.restaurantsync.resources.exceptions.ValidationError;
 import br.com.fiap.postech.restaurantsync.resources.translator.FieldTranslationService;
@@ -72,6 +73,19 @@ public class GlobalExceptionHandler {
             err.addError(translatedField, f.getDefaultMessage());
         }
 
+        return ResponseEntity.status(status).body(err);
+    }
+
+    @ExceptionHandler(BusinessException.class)
+    public ResponseEntity<StandardError> handleBusinessException(BusinessException ex, HttpServletRequest request) {
+        HttpStatus status = HttpStatus.UNAUTHORIZED;
+        StandardError err = new StandardError(
+                Instant.now(),
+                status.value(),
+                "Acesso não autorizado",
+                ex.getMessage(),
+                request.getRequestURI()
+        );
         return ResponseEntity.status(status).body(err);
     }
 }

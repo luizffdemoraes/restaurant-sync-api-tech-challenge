@@ -67,7 +67,6 @@ public class UserService implements UserDetailsService {
 
         user = this.userRepository.save(user);
         return new UserResponse(user);
-
     }
 
     @Transactional(readOnly = true)
@@ -98,9 +97,10 @@ public class UserService implements UserDetailsService {
     @Transactional
     public UserResponse updateUser(Long id, UserRequest userRequest) {
         try {
-            User entity = this.userRepository.getReferenceById(id);
-            entity = this.userRepository.save(entity);
-            return new UserResponse(entity);
+            User user = this.userRepository.getReferenceById(id);
+            validateSelfOrAdmin(user.getId());
+            user = this.userRepository.save(user);
+            return new UserResponse(user);
 
         } catch (EntityNotFoundException e) {
             throw new BusinessException("Id not found:" + id);
@@ -110,6 +110,7 @@ public class UserService implements UserDetailsService {
     @Transactional
     public void updatePassword(Long id, String newPassword) {
         User user = userRepository.findById(id).orElseThrow(() -> new BusinessException("Id not found: " + id));
+        validateSelfOrAdmin(user.getId());
         user.setPassword(newPassword);
         userRepository.save(user);
     }
