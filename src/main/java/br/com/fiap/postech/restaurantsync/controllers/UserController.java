@@ -1,5 +1,6 @@
 package br.com.fiap.postech.restaurantsync.controllers;
 
+import br.com.fiap.postech.restaurantsync.dtos.requests.PasswordRequest;
 import br.com.fiap.postech.restaurantsync.dtos.requests.UserRequest;
 import br.com.fiap.postech.restaurantsync.dtos.responses.UserResponse;
 import br.com.fiap.postech.restaurantsync.services.UserService;
@@ -140,8 +141,8 @@ public class UserController {
                     description = "Nova senha inválida")
     })
     @PatchMapping(value = "/{id}/senha")
-    public ResponseEntity<Void> updatePassword(@PathVariable Long id, @RequestBody String newPassword) {
-        userService.updatePassword(id, newPassword);
+    public ResponseEntity<Void> updatePassword(@PathVariable Long id, @RequestBody PasswordRequest newPassword) {
+        userService.updatePassword(id, newPassword.password());
         return ResponseEntity.noContent().build();
     }
 }

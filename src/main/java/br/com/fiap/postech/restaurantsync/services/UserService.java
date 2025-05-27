@@ -99,6 +99,7 @@ public class UserService implements UserDetailsService {
         try {
             User user = this.userRepository.getReferenceById(id);
             validateSelfOrAdmin(user.getId());
+            user.setPassword(passwordEncoder.encode(userRequest.password()));
             user = this.userRepository.save(user);
             return new UserResponse(user);
 
@@ -111,7 +112,7 @@ public class UserService implements UserDetailsService {
     public void updatePassword(Long id, String newPassword) {
         User user = userRepository.findById(id).orElseThrow(() -> new BusinessException("Id not found: " + id));
         validateSelfOrAdmin(user.getId());
-        user.setPassword(newPassword);
+        user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
     }
 
