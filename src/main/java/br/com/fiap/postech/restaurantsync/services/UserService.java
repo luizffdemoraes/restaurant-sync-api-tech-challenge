@@ -116,7 +116,7 @@ public class UserService implements UserDetailsService {
         userRepository.save(user);
     }
 
-    protected User authenticated() {
+    private User authenticated() {
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             Jwt jwtPrincipal = (Jwt) authentication.getPrincipal();
@@ -128,7 +128,7 @@ public class UserService implements UserDetailsService {
         }
     }
 
-    public void validateSelfOrAdmin(long userId) {
+    private void validateSelfOrAdmin(long userId) {
         User me = authenticated();
         if (!me.hasRole("ROLE_ADMIN") && !me.getId().equals(userId)) {
             throw new BusinessException("Access denied");
