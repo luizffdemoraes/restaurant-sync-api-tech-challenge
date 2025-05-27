@@ -1,10 +1,14 @@
-# **restaurant-sync** - Tech Challenge FIAP - Fase 1
+#  Tech Challenge 1ª Fase - **restaurant-sync**
 
-## Descrição
+## ÍNDICE
+
+* [Descrição do Projeto](#descricaoDoProjeto)
+
+## Descrição do Projeto
 
 API para gerenciamento de usuários de restaurantes, desenvolvida como parte da **Fase 1** do **Tech Challenge FIAP**. Esta fase foca na implementação das funcionalidades essenciais para o gerenciamento de usuários, permitindo o cadastro, atualização, exclusão e validação de login de dois tipos de usuários: **donos de restaurante** e **clientes**.
 
-O sistema é construído com **Spring Boot**, **Docker**, e **Docker Compose**, sendo integrado a um banco de dados relacional como **PostgreSQL**, **MySQL** ou **H2**.
+O sistema é construído com **Spring Boot**, **Docker**, e **Docker Compose**, sendo integrado a um banco de dados relacional **PostgreSQL** e **H2** para testes.
 
 ## Funcionalidades
 
@@ -41,7 +45,7 @@ Antes de rodar o projeto localmente, você precisará de:
 3. Inicie os containers Docker com o seguinte comando:
 
     ```bash
-    docker-compose up
+    docker compose up
     ```
 
     Isso iniciará a aplicação Spring Boot e o banco de dados.
@@ -50,11 +54,13 @@ Antes de rodar o projeto localmente, você precisará de:
 
 ## Endpoints
 
-- **POST /v1/users**: Cria um novo usuário.
-- **PUT /v1/users/{id}**: Atualiza as informações de um usuário.
-- **DELETE /v1/users/{id}**: Exclui um usuário.
-- **POST /v1/users/login**: Valida o login de um usuário.
-- **POST /v1/users/change-password**: Troca a senha de um usuário.
+- **POST /v1/usuarios**: Cria um novo usuário.
+- **GET /v1/usuarios**: Lista usuários (paginado, apenas para admin).
+- **GET /v1/usuarios/{id}**: Busca usuário por ID.
+- **PUT /v1/usuarios/{id}**: Atualiza as informações de um usuário.
+- **PATCH /v1/usuarios/{id}/senha**: Troca a senha de um usuário.
+- **DELETE /v1/usuarios/{id}**: Exclui um usuário (apenas para admin).
+- **POST /oauth2/token**: Valida o login de um usuário.
 
 ## Documentação da API
 
@@ -73,3 +79,4 @@ Para testar a API, utilize o **Postman** ou ferramenta similar. Inclua os testes
 - **docker-compose.yml**: Arquivo para orquestrar a aplicação e o banco de dados via Docker.
 - **README.md**: Este arquivo.
 
+## Collection POSTMAN
