@@ -80,3 +80,6 @@ Para testar a API, utilize o **Postman** ou ferramenta similar. Inclua os testes
 - **README.md**: Este arquivo.
 
 ## Collection POSTMAN
+
+https://github.com/luizffdemoraes/restaurant-sync-api-tech-challenge/blob/main/collection/Restaurant%20Sync%20-%20FIAP.postman_environment.json
+
