@@ -19,6 +19,9 @@ import org.springdoc.core.customizers.OpenApiCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.HashMap;
+import java.util.Map;
+
 
 @Configuration
 public class OpenApiConfig {
@@ -44,39 +47,44 @@ public class OpenApiConfig {
                 );
     }
 
+    @SuppressWarnings({"rawtypes", "unchecked"})
     @Bean
     public OpenApiCustomizer oauth2TokenEndpointCustomiser() {
         return openApi -> {
+
+            Map<String, Schema<Object>> properties = new HashMap<>();
+            properties.put("grant_type", new Schema<>().type("string").example("password"));
+            properties.put("username", new Schema<>().type("string").example("johndoe@example.com"));
+            properties.put("password", new Schema<>().type("string").example("password123"));
+
+            Schema<Object> requestBodySchema = new Schema<>();
+            requestBodySchema.setType("object");
+            requestBodySchema.setProperties((Map) properties);
+
             PathItem tokenPath = new PathItem().post(
                     new Operation()
                             .summary("Obter token OAuth2")
                             .description("""
-                                Endpoint para obter o token de acesso via grant_type=password.
+                                    Endpoint para obter o token de acesso via grant_type=password.
 
-                                **IMPORTANTE:**  
-                                Antes de executar, clique em **Authorize** no Swagger UI e informe seu `client_id` como usuário e `client_secret` como senha.
+                                    **IMPORTANTE:**  
+                                    Antes de executar, clique em **Authorize** no Swagger UI e informe seu `client_id` como usuário e `client_secret` como senha.
 
-                                Exemplo de chamada cURL:
-                                curl -X POST 'http://localhost:8080/oauth2/token' \\
-                                  -H 'Authorization: Basic <base64(client_id:client_secret)>' \\
-                                  -H 'Content-Type: application/x-www-form-urlencoded' \\
-                                  --data-urlencode 'username=johndoe@example.com' \\
-                                  --data-urlencode 'password=securepassword' \\
-                                  --data-urlencode 'grant_type=password'
-                                """)
+                                    Exemplo de chamada cURL:
+                                    curl -X POST 'http://localhost:8080/oauth2/token' \\
+                                      -H 'Authorization: Basic <base64(client_id:client_secret)>' \\
+                                      -H 'Content-Type: application/x-www-form-urlencoded' \\
+                                      --data-urlencode 'username=johndoe@example.com' \\
+                                      --data-urlencode 'password=securepassword' \\
+                                      --data-urlencode 'grant_type=password'
+                                    """)
                             .tags(java.util.List.of("Autenticação"))
                             .security(java.util.List.of(new SecurityRequirement().addList("basicAuth")))
                             .requestBody(new RequestBody()
                                     .required(true)
                                     .content(new Content().addMediaType(
                                             "application/x-www-form-urlencoded",
-                                            new MediaType().schema(
-                                                    new Schema<>()
-                                                            .type("object")
-                                                            .addProperties("grant_type", new Schema<>().type("string").example("password"))
-                                                            .addProperties("username", new Schema<>().type("string").example("johndoe@example.com"))
-                                                            .addProperties("password", new Schema<>().type("string").example("password123"))
-                                            )
+                                            new MediaType().schema(requestBodySchema)
                                     ))
                             )
                             .responses(new ApiResponses()
@@ -85,6 +93,7 @@ public class OpenApiConfig {
                                     .addApiResponse("401", new ApiResponse().description("Não autorizado - verifique se clicou em Authorize e preencheu client_id/client_secret"))
                             )
             );
+            
             openApi.path("/oauth2/token", tokenPath);
         };
     }
