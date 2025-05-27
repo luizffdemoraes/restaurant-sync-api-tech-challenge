@@ -93,7 +93,7 @@ public class OpenApiConfig {
                                     .addApiResponse("401", new ApiResponse().description("Não autorizado - verifique se clicou em Authorize e preencheu client_id/client_secret"))
                             )
             );
-            
+
             openApi.path("/oauth2/token", tokenPath);
         };
     }
