@@ -3,6 +3,17 @@
 ## ÍNDICE
 
 * [Descrição do Projeto](#descricaoDoProjeto)
+* [Funcionalidades](#funcionalidades)
+* [Estrutura do Usuário](#estruturaDoUsuario)
+* [Qualidade do Código e Boas Práticas](#qualidadeDoCodigo)
+* [Tecnologias Utilizadas](#tecnologiasUtilizadas)
+* [Requisitos](#requisitos)
+* [Como Rodar o Projeto](#comoRodarOProjeto)
+* [Endpoints](#endpoints)
+* [Documentação da API](#documentacaoDaApi)
+* [Testes](#testes)
+* [Estrutura do Projeto](#estruturaDoProjeto)
+* [Collection POSTMAN](#collectionPostman)
 
 ## Descrição do Projeto
 
@@ -12,11 +23,15 @@ O sistema é construído com **Spring Boot**, **Docker**, e **Docker Compose**, 
 
 ## Funcionalidades
 
-- **Cadastro de usuário**: Criação de um novo usuário (dono de restaurante ou cliente).
-- **Alteração de dados**: Atualização das informações do usuário.
-- **Exclusão de usuário**: Remoção de um usuário.
-- **Troca de senha**: Funcionalidade para alteração da senha de um usuário.
-- **Validação de login**: Verificação de credenciais de login para acesso ao sistema.
+A API oferece as seguintes funcionalidades para o gerenciamento de usuários:
+
+* **Cadastro de Usuário**: Permite a criação de novos usuários no sistema, sejam eles donos de restaurante ou clientes.
+* **Busca de Usuário por ID**: Habilita a recuperação de informações detalhadas de um usuário específico utilizando seu identificador.
+* **Listagem de Usuários (Paginada)**: Oferece a capacidade de listar todos os usuários registrados no sistema, com suporte a paginação para otimização de desempenho. Esta funcionalidade é tipicamente restrita a administradores.
+* **Alteração de Dados do Usuário**: Permite a atualização das informações de um usuário existente, como nome, email e endereço.
+* **Troca de Senha**: Funcionalidade específica para a alteração segura da senha de um usuário.
+* **Exclusão de Usuário**: Possibilita a remoção permanente de um usuário do sistema. Esta funcionalidade é geralmente restrita a administradores.
+* **Validação de Login (Autenticação)**: Realiza a verificação das credenciais de login para autenticar o usuário e conceder acesso ao sistema, geralmente retornando um token de autenticação.
 
 ## Tecnologias Utilizadas
 
@@ -24,6 +39,45 @@ O sistema é construído com **Spring Boot**, **Docker**, e **Docker Compose**, 
 - **Docker & Docker Compose**: Utilizados para orquestrar a aplicação e o banco de dados, garantindo portabilidade e escalabilidade.
 - **Banco de dados relacional**: Suporte a **PostgreSQL** e **H2** para testes.
 - **Postman** (ou ferramenta similar): Para testar os endpoints da API.
+
+## Estrutura do Projeto
+
+A aplicação segue uma arquitetura em camadas bem definida, visando modularidade e manutenibilidade. Abaixo, a estrutura de pastas principal:
+
+```
+├── collection                   // Contém as collections do Postman para teste dos endpoints da API 
+├── src
+│   ├── main
+│   │   ├── java
+│   │   │   └── br
+│   │   │       └── com
+│   │   │           └── fiap
+│   │   │               └── postech
+│   │   │                   └── restaurantsync
+│   │   │                       ├── config           // Configurações gerais da aplicação e de segurança (OpenAPI/Swagger, OAuth2)
+│   │   │                       │   ├── doc
+│   │   │                       │   └── security
+│   │   │                       │       └── customgrant
+│   │   │                       ├── controllers      // Camada de Controllers: Responsáveis por expor os endpoints da API REST
+│   │   │                       ├── dtos             // Data Transfer Objects: Classes para transferência de dados entre camadas e para as requisições/respostas da API
+│   │   │                       │   ├── requests
+│   │   │                       │   └── responses
+│   │   │                       ├── entities         // Camada de Entidades: Representam os modelos de dados persistidos no banco
+│   │   │                       ├── repositories     // Camada de Repositórios: Interfaces para acesso e manipulação de dados no banco (Spring Data JPA)
+│   │   │                       ├── resources        // Recursos auxiliares, como classes de exceção, tradutores e validações
+│   │   │                       │   ├── exceptions
+│   │   │                       │   │   └── handler
+│   │   │                       │   ├── translator
+│   │   │                       │   │   └── impl
+│   │   │                       │   └── validations
+│   │   │                       └── services         // Camada de Serviços: Contém a lógica de negócio da aplicação
+│   │   └── resources        // Arquivos de configuração, como application.properties e recursos estáticos 
+│   │       ├── static
+│   │       └── templates
+│   └── test                 // Classes de testes unitários e de integração
+│       └── java
+└── target                   // Diretório gerado pela compilação (classes compiladas, artefatos .jar, etc.)
+```
 
 ## Requisitos
 
@@ -34,21 +88,25 @@ Antes de rodar o projeto localmente, você precisará de:
 
 ## Como Rodar o Projeto
 
-1. Clone o repositório:
-
+1. **Clone o repositório:**
+   ```bash 
+   git clone https://github.com/luizffdemoraes/restaurant-sync-api-tech-challenge```
+   ```
+   
+2. Dado a prévia existencia do jar presente na pasta target não é necessário realizar essa etapa:
     ```bash
-    git clone https://github.com/luizffdemoraes/restaurant-sync-api-tech-challenge
+    ./mvnw clean package -DskipTests
     ```
 
-2. Configure o banco de dados no arquivo `application.properties` (se necessário).
-
-3. Inicie os containers Docker com o seguinte comando:
-
-    ```bash
-    docker compose up
-    ```
-
-    Isso iniciará a aplicação Spring Boot e o banco de dados.
+3.  Realize o build do projeto com o comando:
+   ```bash
+   docker compose build --no-cache
+   ```
+   
+4. Execute o comando abaixo para iniciar os containers:
+   ```bash
+   docker compose up
+   ```
 
 4. A API estará disponível em `http://localhost:8080`.
 
