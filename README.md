@@ -90,7 +90,7 @@ A aplicação segue uma arquitetura em camadas bem definida, visando modularidad
 
 ## Requisitos
 
-Para rodar via Docker, certifique-se de ter:
+Para rodar via Docker, certifique-se de ter instalado e configurado: 
 
 - [Maven instalado](https://maven.apache.org/)
 - [Docker Desktop instalado](https://www.docker.com/)
