@@ -43,6 +43,7 @@ A API oferece as seguintes funcionalidades para o gerenciamento de usuários:
 ![H2 Database](https://img.shields.io/badge/H2_Database-0F4B8D?style=for-the-badge&logo=h2-database&logoColor=white)
 ![Postman](https://img.shields.io/badge/Postman-FF6C37?style=for-the-badge&logo=postman&logoColor=white)
 ![IntelliJ IDEA](https://img.shields.io/badge/IntelliJ%20IDEA-000000?style=for-the-badge&logo=intellij-idea&logoColor=white)
+![DBeaver](https://img.shields.io/badge/DBeaver-37226C?style=for-the-badge&logo=data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjQ0IiBoZWlnaHQ9IjY0NCIgdmlld0JveD0iMCAwIDY0NCA2NDQiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiAgPGNpcmNsZSBjeD0iMzIyIiBjeT0iMzIyIiByPSIzMjIiIGZpbGw9IiMzNzIyNkMiIC8+CiAgPHRleHQgeD0iMzIyIiB5PSIzMzAiIGZvbnQtc2l6ZT0iMjQwIiBmb250LXdlaWdodD0iYm9sZCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0id2hpdGUiPkRCPC90ZXh0Pgo8L3N2Zz4=)
 
 ## Estrutura do Projeto
 
