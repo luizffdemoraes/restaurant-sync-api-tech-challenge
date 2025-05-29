@@ -6,12 +6,14 @@
 * [Funcionalidades](#funcionalidades)
 * [Tecnologias Utilizadas](#tecnologias-utilizadas)
 * [Estrutura do Projeto](#estrutura-do-projeto)
+* [Diagrama das tabelas de banco de dados](#diagrama-das-tabelas-de-banco-de-dados)
 * [Requisitos](#requisitos)
 * [Como Rodar o Projeto](#como-rodar-o-projeto)
 * [Endpoints](#endpoints)
 * [Documentação da API](#documentação-da-api)
 * [Cobertura de código](#cobertura-de-código)
 * [Collection POSTMAN](#collection-postman)
+* [Environment POSTMAN](#environment-postman)
 
 ## Descrição do Projeto
 
