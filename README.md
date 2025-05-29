@@ -93,6 +93,7 @@ A aplicação segue uma arquitetura em camadas bem definida, visando modularidad
 Para rodar via Docker, certifique-se de ter instalado e configurado: 
 
 - [Git](https://git-scm.com/): necessário para clonar o repositório do projeto.
+- [Java 21](https://www.oracle.com/java/technologies/javase/jdk21-archive-downloads.html): necessário para compilar e executar o projeto.
 - [Maven](https://maven.apache.org/): utilizado para compilar o projeto e gerar o arquivo `.jar` que será empacotado e executado no container.
 - [Docker Desktop](https://www.docker.com/): necessário para criar e executar os containers da aplicação e do banco de dados.
 - [Postman](https://www.postman.com/): recomendado para testar os endpoints da API de forma interativa.
@@ -117,7 +118,7 @@ Comentar a linha presente no arquivo `ResourceServerConfig.java`:
 
 ## Como Rodar o Projeto
 
-Antes de iniciar, **certifique-se que todos os requisitos descritos na seção anterior estão atendidos** (Maven e Docker instalados e configurados).
+Antes de iniciar, **certifique-se que todos os requisitos descritos na seção anterior estão atendidos** (Java, Maven e Docker instalados e configurados).
 
 1. **Clone o repositório:**
    ```bash 
