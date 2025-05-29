@@ -92,8 +92,10 @@ A aplicação segue uma arquitetura em camadas bem definida, visando modularidad
 
 Para rodar via Docker, certifique-se de ter instalado e configurado: 
 
+- [Git](https://git-scm.com/): necessário para clonar o repositório do projeto.
 - [Maven](https://maven.apache.org/): utilizado para compilar o projeto e gerar o arquivo `.jar` que será empacotado e executado no container.
 - [Docker Desktop](https://www.docker.com/): necessário para criar e executar os containers da aplicação e do banco de dados.
+- [Postman](https://www.postman.com/): recomendado para testar os endpoints da API de forma interativa.
 
 Para executar o projeto manualmente na sua máquina (sem Docker), você precisará de:
 
