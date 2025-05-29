@@ -92,7 +92,8 @@ A aplicação segue uma arquitetura em camadas bem definida, visando modularidad
 
 Para rodar via Docker, certifique-se de ter:
 
-- Docker Desktop instalado
+- [Docker Desktop instalado](https://www.docker.com/)
+- [Maven instalado](https://maven.apache.org/)
 
 Para executar o projeto manualmente na sua máquina (sem Docker), você precisará de:
 
