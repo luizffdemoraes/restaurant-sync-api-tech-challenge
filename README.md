@@ -92,8 +92,8 @@ A aplicação segue uma arquitetura em camadas bem definida, visando modularidad
 
 Para rodar via Docker, certifique-se de ter instalado e configurado: 
 
-- [Maven instalado](https://maven.apache.org/)
-- [Docker Desktop instalado](https://www.docker.com/)
+- [Maven](https://maven.apache.org/): utilizado para compilar o projeto e gerar o arquivo `.jar` que será empacotado e executado no container.
+- [Docker Desktop](https://www.docker.com/): necessário para criar e executar os containers da aplicação e do banco de dados.
 
 Para executar o projeto manualmente na sua máquina (sem Docker), você precisará de:
 
@@ -114,6 +114,8 @@ Comentar a linha presente no arquivo `ResourceServerConfig.java`:
 ```
 
 ## Como Rodar o Projeto
+
+Antes de iniciar, **certifique-se que todos os requisitos descritos na seção anterior estão atendidos** (Maven e Docker instalados e configurados).
 
 1. **Clone o repositório:**
    ```bash 
