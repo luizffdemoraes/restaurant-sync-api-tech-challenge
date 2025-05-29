@@ -116,7 +116,7 @@ Comentar a linha presente no arquivo `ResourceServerConfig.java`:
 
 1. **Clone o repositório:**
    ```bash 
-   git clone https://github.com/luizffdemoraes/restaurant-sync-api-tech-challenge```
+   git clone https://github.com/luizffdemoraes/restaurant-sync-api-tech-challenge
    ```
    
 2. Caso o arquivo .jar já exista na pasta target, esta etapa pode ser ignorada:
