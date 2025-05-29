@@ -34,15 +34,13 @@ A API oferece as seguintes funcionalidades para o gerenciamento de usuários:
 ## Tecnologias Utilizadas
 
 ![Java 21](https://img.shields.io/badge/Java-21-ED8B00?style=for-the-badge&logo=java&logoColor=white)
+![Maven](https://img.shields.io/badge/Maven-C71A36?style=for-the-badge&logo=apachemaven&logoColor=white)
 ![Spring Boot](https://img.shields.io/badge/Spring_Boot-6DB33F?style=for-the-badge&logo=spring-boot&logoColor=white)
 ![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
-![Docker Compose](https://img.shields.io/badge/Docker_Compose-2496ED?style=for-the-badge&logo=docker&logoColor=white)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)
 ![H2 Database](https://img.shields.io/badge/H2_Database-0F4B8D?style=for-the-badge&logo=h2-database&logoColor=white)
 ![Postman](https://img.shields.io/badge/Postman-FF6C37?style=for-the-badge&logo=postman&logoColor=white)
 ![IntelliJ IDEA](https://img.shields.io/badge/IntelliJ%20IDEA-000000?style=for-the-badge&logo=intellij-idea&logoColor=white)
-
-
 
 ## Estrutura do Projeto
 
@@ -147,5 +145,8 @@ A documentação completa da API está disponível através do Swagger UI em:
 
 ## Collection POSTMAN
 
-https://github.com/luizffdemoraes/restaurant-sync-api-tech-challenge/blob/main/collection/Restaurant%20Sync%20-%20FIAP.postman_environment.json
+https://github.com/luizffdemoraes/restaurant-sync-api-tech-challenge/blob/main/collection/restaurant-sync-fiap.postman_collection.json
 
+## Environment POSTMAN
+
+https://github.com/luizffdemoraes/restaurant-sync-api-tech-challenge/blob/main/collection/restaurant-sync-fiap.postman_environment.json
