@@ -34,10 +34,16 @@ A API oferece as seguintes funcionalidades para o gerenciamento de usuários:
 
 ## Tecnologias Utilizadas
 
-- **Spring Boot**: Framework principal para desenvolvimento da API.
-- **Docker & Docker Compose**: Utilizados para orquestrar a aplicação e o banco de dados, garantindo portabilidade e escalabilidade.
-- **Banco de dados relacional**: Suporte a **PostgreSQL** e **H2** para testes.
-- **Postman** (ou ferramenta similar): Para testar os endpoints da API.
+![Java 21](https://img.shields.io/badge/Java-21-ED8B00?style=for-the-badge&logo=java&logoColor=white)
+![Spring Boot](https://img.shields.io/badge/Spring_Boot-6DB33F?style=for-the-badge&logo=spring-boot&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
+![Docker Compose](https://img.shields.io/badge/Docker_Compose-2496ED?style=for-the-badge&logo=docker&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)
+![H2 Database](https://img.shields.io/badge/H2_Database-0F4B8D?style=for-the-badge&logo=h2-database&logoColor=white)
+![Postman](https://img.shields.io/badge/Postman-FF6C37?style=for-the-badge&logo=postman&logoColor=white)
+![IntelliJ IDEA](https://img.shields.io/badge/IntelliJ%20IDEA-000000?style=for-the-badge&logo=intellij-idea&logoColor=white)
+
+
 
 ## Estrutura do Projeto
 
@@ -80,10 +86,21 @@ A aplicação segue uma arquitetura em camadas bem definida, visando modularidad
 
 ## Requisitos
 
-Antes de rodar o projeto localmente, você precisará de:
+Para rodar via Docker, certifique-se de ter:
 
-- **Java 21** ou superior.
-- **Docker** e **Docker Compose** instalados.
+- Docker Desktop instalado
+
+Para executar o projeto manualmente na sua máquina (sem Docker), você precisará de:
+
+- Java 21 ou superior instalado.
+- Maven instalado para compilar e construir o projeto.
+- Alterar o arquivo `application.properties` para o H2. 
+
+Utilizar a configuração presente no arquivo no seguinte caminho:
+
+```properties
+src\test\resources\application-test.properties
+```
 
 ## Como Rodar o Projeto
 
