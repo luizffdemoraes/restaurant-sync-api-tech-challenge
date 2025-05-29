@@ -2,17 +2,16 @@
 
 ## ÍNDICE
 
-* [Descrição do Projeto](#descricaoDoProjeto)
+* [Descrição do Projeto](#descrição-do-projeto)
 * [Funcionalidades](#funcionalidades)
-* [Estrutura do Projeto](#estruturaDoProjeto)
-* [Tecnologias Utilizadas](#tecnologiasUtilizadas)
+* [Tecnologias Utilizadas](#tecnologias-utilizadas)
+* [Estrutura do Projeto](#estrutura-do-projeto)
 * [Requisitos](#requisitos)
-* [Como Rodar o Projeto](#comoRodarOProjeto)
+* [Como Rodar o Projeto](#como-rodar-o-projeto)
 * [Endpoints](#endpoints)
-* [Documentação da API](#documentacaoDaApi)
-* [Testes](#testes)
-* [Qualidade do Código e Boas Práticas](#qualidadeDoCodigo)
-* [Collection POSTMAN](#collectionPostman)
+* [Documentação da API](#documentação-da-api)
+* [Cobertura de código](#cobertura-de-código)
+* [Collection POSTMAN](#collection-postman)
 
 ## Descrição do Projeto
 
@@ -47,7 +46,7 @@ A API oferece as seguintes funcionalidades para o gerenciamento de usuários:
 
 ## Estrutura do Projeto
 
-A aplicação segue uma arquitetura em camadas bem definida, visando modularidade e manutenibilidade. Abaixo, a estrutura de pastas principal:
+A aplicação segue uma arquitetura em camadas bem definida, visando modularidade e manutenibilidade. Abaixo está a estrutura principal de pastas:
 
 ```
 ├── collection                   // Contém as collections do Postman para teste dos endpoints da API 
@@ -94,9 +93,9 @@ Para executar o projeto manualmente na sua máquina (sem Docker), você precisar
 
 - Java 21 ou superior instalado.
 - Maven instalado para compilar e construir o projeto.
-- Alterar o arquivo `application.properties` para o H2. 
+- Altere o arquivo `application.properties` para utilizar o banco H2.
 
-Utilizar a configuração presente no arquivo no seguinte caminho:
+Utilize a configuração presente no seguinte arquivo:
 
 ```properties
 src\test\resources\application-test.properties
@@ -109,7 +108,7 @@ src\test\resources\application-test.properties
    git clone https://github.com/luizffdemoraes/restaurant-sync-api-tech-challenge```
    ```
    
-2. Dado a prévia existencia do jar presente na pasta target não é necessário realizar essa etapa:
+2. Caso o arquivo .jar já exista na pasta target, esta etapa pode ser ignorada:
     ```bash
     ./mvnw clean package -DskipTests
     ```
@@ -128,13 +127,13 @@ src\test\resources\application-test.properties
 
 ## Endpoints
 
-- **POST /v1/usuarios**: Cria um novo usuário.
-- **GET /v1/usuarios**: Lista usuários (paginado, apenas para admin).
-- **GET /v1/usuarios/{id}**: Busca usuário por ID.
-- **PUT /v1/usuarios/{id}**: Atualiza as informações de um usuário.
-- **PATCH /v1/usuarios/{id}/senha**: Troca a senha de um usuário.
-- **DELETE /v1/usuarios/{id}**: Exclui um usuário (apenas para admin).
-- **POST /oauth2/token**: Valida o login de um usuário.
+- **POST   `/v1/usuarios`**: Cria um novo usuário.
+- **GET    `/v1/usuarios`**: Lista usuários (paginado, apenas para admin).
+- **GET    `/v1/usuarios/{id}`**: Busca usuário por ID.
+- **PUT    `/v1/usuarios/{id}`**: Atualiza as informações de um usuário.
+- **PATCH  `/v1/usuarios/{id}/senha`**: Troca a senha de um usuário.
+- **DELETE `/v1/usuarios/{id}`**: Exclui um usuário (apenas para admin).
+- **POST   `/oauth2/token`**: Valida o login de um usuário.
 
 ## Documentação da API
 
