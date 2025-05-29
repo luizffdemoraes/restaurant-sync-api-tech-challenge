@@ -4,15 +4,14 @@
 
 * [Descrição do Projeto](#descricaoDoProjeto)
 * [Funcionalidades](#funcionalidades)
-* [Estrutura do Usuário](#estruturaDoUsuario)
-* [Qualidade do Código e Boas Práticas](#qualidadeDoCodigo)
+* [Estrutura do Projeto](#estruturaDoProjeto)
 * [Tecnologias Utilizadas](#tecnologiasUtilizadas)
 * [Requisitos](#requisitos)
 * [Como Rodar o Projeto](#comoRodarOProjeto)
 * [Endpoints](#endpoints)
 * [Documentação da API](#documentacaoDaApi)
 * [Testes](#testes)
-* [Estrutura do Projeto](#estruturaDoProjeto)
+* [Qualidade do Código e Boas Práticas](#qualidadeDoCodigo)
 * [Collection POSTMAN](#collectionPostman)
 
 ## Descrição do Projeto
@@ -126,16 +125,9 @@ A documentação completa da API está disponível através do Swagger UI em:
 
 [http://localhost:8080/swagger-ui/index.html](http://localhost:8080/swagger-ui/index.html)
 
-## Testes
+## Cobertura de código
 
-Para testar a API, utilize o **Postman** ou ferramenta similar. Inclua os testes dos endpoints no formato de **collections** para facilitar o processo de verificação.
-
-## Estrutura do Projeto
-
-- **src/main/java**: Código-fonte da aplicação.
-- **src/main/resources**: Arquivos de configuração e templates.
-- **docker-compose.yml**: Arquivo para orquestrar a aplicação e o banco de dados via Docker.
-- **README.md**: Este arquivo.
+![restaurant-sync-coverage](https://github.com/luizffdemoraes/restaurant-sync-api-tech-challenge/blob/main/images/restaurant-sysc-coverage.png)
 
 ## Collection POSTMAN
 
