@@ -81,6 +81,10 @@ A aplicação segue uma arquitetura em camadas bem definida, visando modularidad
 └── target                   // Diretório gerado pela compilação (classes compiladas, artefatos .jar, etc.)
 ```
 
+## Diagrama das tabelas de banco de dados
+
+![Diagrama de banco de dados](https://github.com/luizffdemoraes/restaurant-sync-api-tech-challenge/blob/main/images/diagrama-db.png)
+
 ## Requisitos
 
 Para rodar via Docker, certifique-se de ter:
@@ -97,6 +101,12 @@ Utilize a configuração presente no seguinte arquivo:
 
 ```properties
 src\test\resources\application-test.properties
+```
+
+Comentar a linha presente no arquivo `ResourceServerConfig.java`:
+
+```properties
+  @Profile("test")
 ```
 
 ## Como Rodar o Projeto

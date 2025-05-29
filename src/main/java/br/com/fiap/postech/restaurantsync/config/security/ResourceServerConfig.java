@@ -30,7 +30,7 @@ public class ResourceServerConfig {
 
     @Bean
     @Order(1)
-    @Profile("test")
+    @Profile("test") // Comentar a linha para desabilitar o perfil de teste para h2 console
     public SecurityFilterChain h2SecurityFilterChain(HttpSecurity http) throws Exception {
 
         http.securityMatcher(PathRequest.toH2Console()).csrf(AbstractHttpConfigurer::disable)
