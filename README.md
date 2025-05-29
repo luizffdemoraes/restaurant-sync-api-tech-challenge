@@ -124,7 +124,7 @@ Comentar a linha presente no arquivo `ResourceServerConfig.java`:
     ./mvnw clean package -DskipTests
     ```
 
-3.  Realize o build do projeto com o comando:
+3. Realize o build do projeto com o comando:
    ```bash
    docker compose build --no-cache
    ```
@@ -134,7 +134,7 @@ Comentar a linha presente no arquivo `ResourceServerConfig.java`:
    docker compose up
    ```
 
-4. A API estará disponível em `http://localhost:8080`.
+5. A API estará disponível em `http://localhost:8080`.
 
 ## Endpoints
 
