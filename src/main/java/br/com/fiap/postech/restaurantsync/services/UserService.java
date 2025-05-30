@@ -116,7 +116,7 @@ public class UserService implements UserDetailsService {
         userRepository.save(user);
     }
 
-    User authenticated() {
+    public User authenticated() {
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             Jwt jwtPrincipal = (Jwt) authentication.getPrincipal();
@@ -128,14 +128,14 @@ public class UserService implements UserDetailsService {
         }
     }
 
-    void validateSelfOrAdmin(Integer userId) {
+    public void validateSelfOrAdmin(Integer userId) {
         User me = authenticated();
         if (!me.hasRole("ROLE_ADMIN") && !me.getId().equals(userId)) {
             throw new BusinessException("Access denied");
         }
     }
 
-    private Role getRoleForEmail(String email) {
+    public Role getRoleForEmail(String email) {
         if (email != null && email.toLowerCase().endsWith("@restaurantsync.com")) {
             return roleRepository.findByAuthority("ROLE_ADMIN")
                     .orElseThrow(() -> new BusinessException("Role ADMIN não encontrada."));

@@ -68,10 +68,6 @@ public class TestDataFactory {
         );
     }
 
-    public static PasswordRequest createPasswordRequest() {
-        return new PasswordRequest("novaSenha123");
-    }
-
     public static User createUser() {
         User user = new User(
                 "Test User",
@@ -86,13 +82,6 @@ public class TestDataFactory {
         Role role = createRoleClient();
         user.addRole(role);
 
-        return user;
-    }
-
-    public static User createAdminUser() {
-        User user = createUser();
-        user.setEmail("admin@restaurantsync.com");
-        user.addRole(new Role(2, "ROLE_ADMIN"));
         return user;
     }
 
