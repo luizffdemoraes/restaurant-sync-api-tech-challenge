@@ -76,7 +76,7 @@ public class UserControllerTest {
     @Test
     @WithMockUser(roles = "ADMIN")
     void testDeleteUserSuccess() throws Exception {
-        Long userId = 1L;
+        Integer userId = 1;
         doNothing().when(userService).deleteUser(userId);
 
         mockMvc.perform(delete("/v1/usuarios/{id}", userId))
@@ -105,7 +105,7 @@ public class UserControllerTest {
     @Test
     @WithMockUser(roles = "ADMIN")
     void testFindUserByIdSuccess() throws Exception {
-        Long userId = 1L;
+        Integer userId = 1;
         UserResponse userResponse = TestDataFactory.createUserResponse();
 
         when(userService.findUserById(userId)).thenReturn(userResponse);
@@ -119,7 +119,7 @@ public class UserControllerTest {
 
     @Test
     void testUpdateUserSuccess() throws Exception {
-        Long userId = 1L;
+        Integer userId = 1;
         UserRequest userRequest = TestDataFactory.createUserRequest();
         UserResponse userResponse = TestDataFactory.createUserResponse();
 
@@ -136,7 +136,7 @@ public class UserControllerTest {
 
     @Test
     void testUpdatePasswordSuccess() throws Exception {
-        Long userId = 1L;
+        Integer userId = 1;
         PasswordRequest passwordRequest = new PasswordRequest("novaSenha123");
 
         doNothing().when(userService).updatePassword(userId, passwordRequest.password());

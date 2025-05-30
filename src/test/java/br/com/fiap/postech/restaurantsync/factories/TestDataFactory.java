@@ -14,8 +14,6 @@ import br.com.fiap.postech.restaurantsync.services.UserService;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 
 public class TestDataFactory {
 
@@ -41,7 +39,7 @@ public class TestDataFactory {
 
     public static UserResponse createUserResponse() {
         return new UserResponse(
-                1L,
+                1,
                 "John Doe",
                 "johndoe@example.com",
                 "johndoe",
@@ -82,7 +80,7 @@ public class TestDataFactory {
                 "testPassword",
                 createAddress()
         );
-        user.setId(1L);
+        user.setId(1);
         user.setLastUpdateDate(new Date());
 
         Role role = createRoleClient();
@@ -94,12 +92,12 @@ public class TestDataFactory {
     public static User createAdminUser() {
         User user = createUser();
         user.setEmail("admin@restaurantsync.com");
-        user.addRole(new Role(2L, "ROLE_ADMIN"));
+        user.addRole(new Role(2, "ROLE_ADMIN"));
         return user;
     }
 
     public static Role createRoleClient() {
-        return new Role(1L, "ROLE_CLIENT");
+        return new Role(1, "ROLE_CLIENT");
     }
 
     public static UserDetailsProjection createUserDetailsProjection() {
@@ -115,8 +113,8 @@ public class TestDataFactory {
             }
 
             @Override
-            public Long getRoleId() {
-                return 1L;
+            public Integer getRoleId() {
+                return 1;
             }
 
             @Override

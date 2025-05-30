@@ -76,7 +76,7 @@ public class UserService implements UserDetailsService {
     }
 
     @Transactional(readOnly = true)
-    public UserResponse findUserById(Long id) {
+    public UserResponse findUserById(Integer id) {
         Optional<User> obj = this.userRepository.findById(id);
         User entity = obj.orElseThrow(() -> new BusinessException("Entity not Found"));
         validateSelfOrAdmin(obj.get().getId());
@@ -84,7 +84,7 @@ public class UserService implements UserDetailsService {
     }
 
     @Transactional
-    public void deleteUser(Long id) {
+    public void deleteUser(Integer id) {
         try {
             this.userRepository.deleteById(id);
         } catch (EmptyResultDataAccessException e) {
@@ -95,7 +95,7 @@ public class UserService implements UserDetailsService {
     }
 
     @Transactional
-    public UserResponse updateUser(Long id, UserRequest userRequest) {
+    public UserResponse updateUser(Integer id, UserRequest userRequest) {
         try {
             User user = this.userRepository.getReferenceById(id);
             validateSelfOrAdmin(user.getId());
@@ -109,7 +109,7 @@ public class UserService implements UserDetailsService {
     }
 
     @Transactional
-    public void updatePassword(Long id, String newPassword) {
+    public void updatePassword(Integer id, String newPassword) {
         User user = userRepository.findById(id).orElseThrow(() -> new BusinessException("Id not found: " + id));
         validateSelfOrAdmin(user.getId());
         user.setPassword(passwordEncoder.encode(newPassword));
@@ -128,7 +128,7 @@ public class UserService implements UserDetailsService {
         }
     }
 
-    void validateSelfOrAdmin(long userId) {
+    void validateSelfOrAdmin(Integer userId) {
         User me = authenticated();
         if (!me.hasRole("ROLE_ADMIN") && !me.getId().equals(userId)) {
             throw new BusinessException("Access denied");

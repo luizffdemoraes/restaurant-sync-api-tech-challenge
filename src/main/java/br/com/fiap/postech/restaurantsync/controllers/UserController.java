@@ -64,7 +64,7 @@ public class UserController {
     })
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<UserResponse> deleteUser(@PathVariable Long id) {
+    public ResponseEntity<UserResponse> deleteUser(@PathVariable Integer id) {
         userService.deleteUser(id);
         return ResponseEntity.noContent().build();
     }
@@ -105,7 +105,7 @@ public class UserController {
                     description = "Usuário não encontrado")
     })
     @GetMapping(value = "/{id}")
-    public ResponseEntity<UserResponse> findUserById(@PathVariable Long id) {
+    public ResponseEntity<UserResponse> findUserById(@PathVariable Integer id) {
         UserResponse response = userService.findUserById(id);
         return ResponseEntity.ok().body(response);
     }
@@ -125,7 +125,7 @@ public class UserController {
                     description = "Erro de validação dos campos")
     })
     @PutMapping(value = "/{id}")
-    public ResponseEntity<UserResponse> updateUser(@PathVariable Long id, @RequestBody UserRequest request) {
+    public ResponseEntity<UserResponse> updateUser(@PathVariable Integer id, @RequestBody UserRequest request) {
         UserResponse response = userService.updateUser(id, request);
         return ResponseEntity.ok().body(response);
     }
@@ -141,7 +141,7 @@ public class UserController {
                     description = "Nova senha inválida")
     })
     @PatchMapping(value = "/{id}/senha")
-    public ResponseEntity<Void> updatePassword(@PathVariable Long id, @RequestBody PasswordRequest newPassword) {
+    public ResponseEntity<Void> updatePassword(@PathVariable Integer id, @RequestBody PasswordRequest newPassword) {
         userService.updatePassword(id, newPassword.password());
         return ResponseEntity.noContent().build();
     }

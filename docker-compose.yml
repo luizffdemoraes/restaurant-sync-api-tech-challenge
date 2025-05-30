@@ -9,7 +9,8 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/restaurant_sync
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=postgres
-      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=validate
+
     depends_on:
       postgres:
         condition: service_healthy
@@ -17,7 +18,7 @@ services:
       - restaurant-network
 
   postgres:
-    image: postgres:17
+    image: postgres:16
     ports:
       - "5432:5432"
     environment:

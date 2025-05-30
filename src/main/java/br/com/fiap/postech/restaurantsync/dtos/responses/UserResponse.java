@@ -9,7 +9,7 @@ import java.util.Date;
 @Schema(description = "Dados do response para usuário")
 public record UserResponse(
         @Schema(description = "ID do usuário", example = "1")
-        Long id,
+        Integer id,
         @JsonProperty("nome")
         @Schema(description = "Nome do usuário", example = "John Doe")
         String name,

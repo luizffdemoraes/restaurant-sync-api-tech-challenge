@@ -3,6 +3,6 @@ package br.com.fiap.postech.restaurantsync.entities;
 public interface UserDetailsProjection {
     String getUsername();
     String getPassword();
-    Long getRoleId();
+    Integer getRoleId();
     String getAuthority();
 }

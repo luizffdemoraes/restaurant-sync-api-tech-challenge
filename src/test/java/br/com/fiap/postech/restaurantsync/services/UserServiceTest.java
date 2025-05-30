@@ -47,6 +47,8 @@ class UserServiceTest {
     @Mock
     private PasswordEncoder passwordEncoder;
 
+    private static final Integer USER_ID = 1;
+
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
@@ -67,10 +69,10 @@ class UserServiceTest {
     void createUserShouldReturnUserResponseWhenSuccess() {
         UserRequest userRequest = TestDataFactory.createUserRequest();
 
-        Role role = new Role(2L, "ROLE_CLIENT");
+        Role role = new Role(2, "ROLE_CLIENT");
 
         User savedUser = new User(userRequest);
-        savedUser.setId(10L);
+        savedUser.setId(10);
 
         when(roleRepository.findByAuthority("ROLE_CLIENT")).thenReturn(Optional.of(role));
         when(passwordEncoder.encode(anyString())).thenReturn("encodedPassword");
@@ -86,31 +88,31 @@ class UserServiceTest {
     @Test
     void findUserByIdShouldReturnUserResponseWhenUserExists() {
         User user = TestDataFactory.createUser();
-        user.setId(1L);
+        user.setId(USER_ID);
 
-        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+        when(userRepository.findById(USER_ID)).thenReturn(Optional.of(user));
         when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(user));
 
-        UserResponse response = userService.findUserById(1L);
+        UserResponse response = userService.findUserById(USER_ID);
 
         assertNotNull(response);
         assertEquals(user.getId(), response.id());
-        verify(userRepository).findById(1L);
+        verify(userRepository).findById(USER_ID);
     }
 
     @Test
     void updateUserShouldReturnUserResponseWhenSuccess() {
         User user = TestDataFactory.createUser();
-        user.setId(1L);
+        user.setId(USER_ID);
 
         UserRequest userRequest = TestDataFactory.createUserRequest();
 
-        when(userRepository.getReferenceById(1L)).thenReturn(user);
+        when(userRepository.getReferenceById(USER_ID)).thenReturn(user);
         when(passwordEncoder.encode(anyString())).thenReturn("encodedPassword");
         when(userRepository.save(any(User.class))).thenReturn(user);
         when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(user));
 
-        UserResponse response = userService.updateUser(1L, userRequest);
+        UserResponse response = userService.updateUser(USER_ID, userRequest);
 
         assertNotNull(response);
         assertEquals(user.getId(), response.id());
@@ -119,9 +121,9 @@ class UserServiceTest {
 
     @Test
     void deleteUserShouldCallRepositoryDeleteById() {
-        userService.deleteUser(1L);
+        userService.deleteUser(USER_ID);
 
-        verify(userRepository).deleteById(1L);
+        verify(userRepository).deleteById(USER_ID);
     }
 
     @Test
@@ -139,7 +141,7 @@ class UserServiceTest {
     void findAllPagedUsersShouldReturnPageOfUserResponse() {
         PageRequest pageRequest = PageRequest.of(0, 10);
         User user = TestDataFactory.createUser();
-        user.setId(1L);
+        user.setId(USER_ID);
 
         Page<User> userPage = new org.springframework.data.domain.PageImpl<>(List.of(user));
 
@@ -154,14 +156,14 @@ class UserServiceTest {
     @Test
     void updatePasswordShouldUpdatePasswordWhenUserExists() {
         User user = TestDataFactory.createUser();
-        user.setId(1L);
+        user.setId(USER_ID);
 
-        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+        when(userRepository.findById(USER_ID)).thenReturn(Optional.of(user));
         when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(user));
         when(passwordEncoder.encode(anyString())).thenReturn("newEncodedPassword");
         when(userRepository.save(any(User.class))).thenReturn(user);
 
-        assertDoesNotThrow(() -> userService.updatePassword(1L, "newPassword"));
+        assertDoesNotThrow(() -> userService.updatePassword(USER_ID, "newPassword"));
 
         verify(userRepository).save(user);
         assertEquals("newEncodedPassword", user.getPassword());
@@ -169,7 +171,7 @@ class UserServiceTest {
 
     @Test
     void getRoleForEmailShouldReturnAdminRoleForAdminEmail() {
-        Role adminRole = new Role(1L, "ROLE_ADMIN");
+        Role adminRole = new Role(USER_ID, "ROLE_ADMIN");
         when(roleRepository.findByAuthority("ROLE_ADMIN")).thenReturn(Optional.of(adminRole));
 
         Role result = TestDataFactory.invokeGetRoleForEmail(userService, "admin@restaurantsync.com");
@@ -192,31 +194,29 @@ class UserServiceTest {
 
     @Test
     void findUserByIdShouldThrowBusinessExceptionWhenUserNotFound() {
-        when(userRepository.findById(1L)).thenReturn(Optional.empty());
+        when(userRepository.findById(USER_ID)).thenReturn(Optional.empty());
 
-        BusinessException ex = assertThrows(BusinessException.class, () -> userService.findUserById(1L));
+        BusinessException ex = assertThrows(BusinessException.class, () -> userService.findUserById(1));
 
         assertEquals("Entity not Found", ex.getMessage());
     }
 
     @Test
     void deleteUserShouldThrowExceptionWhenUserNotFound() {
-        Long userId = 1L;
-
-        doThrow(new EmptyResultDataAccessException(1)).when(userRepository).deleteById(userId);
+        doThrow(new EmptyResultDataAccessException(USER_ID)).when(userRepository).deleteById(USER_ID);
 
         BusinessException ex = assertThrows(BusinessException.class, () -> {
-            userService.deleteUser(userId);
+            userService.deleteUser(USER_ID);
         });
 
         assertEquals("Id not found.", ex.getMessage());
 
-        verify(userRepository).deleteById(userId);
+        verify(userRepository).deleteById(USER_ID);
     }
 
     @Test
     void updatePasswordShouldThrowExceptionWhenUserNotFound() {
-        Long userId = 1L;
+        Integer userId = 1;
 
         when(userRepository.findById(userId)).thenReturn(Optional.empty());
 
@@ -230,10 +230,10 @@ class UserServiceTest {
     @Test
     void updatePasswordShouldThrowExceptionWhenAccessDenied() {
         User user = TestDataFactory.createUser();
-        user.setId(1L);
+        user.setId(USER_ID);
 
         User anotherUser = new User();
-        anotherUser.setId(2L);
+        anotherUser.setId(2);
 
         when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
 
@@ -272,14 +272,14 @@ class UserServiceTest {
     @Test
     void validateSelfOrAdminShouldThrowExceptionWhenNotAdminAndNotSelf() throws Exception {
         User me = new User();
-        me.setId(2L);
-        me.addRole(new Role(1L, "ROLE_CLIENT"));
+        me.setId(2);
+        me.addRole(new Role(USER_ID, "ROLE_CLIENT"));
 
         UserService spyService = Mockito.spy(userService);
         doReturn(me).when(spyService).authenticated();
 
         BusinessException ex = assertThrows(BusinessException.class, () -> {
-            spyService.validateSelfOrAdmin(1L);
+            spyService.validateSelfOrAdmin(USER_ID);
         });
 
         assertEquals("Access denied", ex.getMessage());
@@ -288,25 +288,25 @@ class UserServiceTest {
     @Test
     void validateSelfOrAdminShouldNotThrowWhenAdmin() throws Exception {
         User me = new User();
-        me.setId(2L);
-        me.addRole(new Role(1L, "ROLE_ADMIN"));
+        me.setId(2);
+        me.addRole(new Role(USER_ID, "ROLE_ADMIN"));
 
         UserService spyService = Mockito.spy(userService);
         doReturn(me).when(spyService).authenticated();
 
-        assertDoesNotThrow(() -> spyService.validateSelfOrAdmin(1L));
+        assertDoesNotThrow(() -> spyService.validateSelfOrAdmin(USER_ID));
     }
 
     @Test
     void validateSelfOrAdminShouldThrowWhenUserIsNotAdminAndNotSelf() throws Exception {
         User me = new User();
-        me.setId(2L);
-        me.addRole(new Role(1L, "ROLE_CLIENT"));
+        me.setId(2);
+        me.addRole(new Role(USER_ID, "ROLE_CLIENT"));
         UserService spyService = Mockito.spy(userService);
         doReturn(me).when(spyService).authenticated();
 
         BusinessException ex = assertThrows(BusinessException.class, () -> {
-            spyService.validateSelfOrAdmin(1L);
+            spyService.validateSelfOrAdmin(USER_ID);
         });
 
         assertEquals("Access denied", ex.getMessage());
@@ -315,56 +315,53 @@ class UserServiceTest {
     @Test
     void validateSelfOrAdminShouldPassForAdminUser() throws Exception {
         User me = new User();
-        me.setId(2L);
-        me.addRole(new Role(1L, "ROLE_ADMIN"));
+        me.setId(2);
+        me.addRole(new Role(USER_ID, "ROLE_ADMIN"));
 
         UserService spyService = Mockito.spy(userService);
         doReturn(me).when(spyService).authenticated();
 
-        assertDoesNotThrow(() -> spyService.validateSelfOrAdmin(1L));
+        assertDoesNotThrow(() -> spyService.validateSelfOrAdmin(USER_ID));
     }
 
     @Test
     void validateSelfOrAdminShouldNotThrowWhenSelf() throws Exception {
         User me = new User();
-        me.setId(1L);
-        me.addRole(new Role(2L, "ROLE_CLIENT"));
+        me.setId(USER_ID);
+        me.addRole(new Role(2, "ROLE_CLIENT"));
 
         UserService spyService = Mockito.spy(userService);
         doReturn(me).when(spyService).authenticated();
 
-        assertDoesNotThrow(() -> spyService.validateSelfOrAdmin(1L));
+        assertDoesNotThrow(() -> spyService.validateSelfOrAdmin(USER_ID));
     }
 
     @Test
     void deleteUserShouldThrowExceptionWhenDataIntegrityViolation() {
-        Long userId = 1L;
-
-        doThrow(new DataIntegrityViolationException("")).when(userRepository).deleteById(userId);
+        doThrow(new DataIntegrityViolationException("")).when(userRepository).deleteById(USER_ID);
 
         BusinessException ex = assertThrows(BusinessException.class, () -> {
-            userService.deleteUser(userId);
+            userService.deleteUser(USER_ID);
         });
 
         assertEquals("Integrity violaton.", ex.getMessage());
 
-        verify(userRepository).deleteById(userId);
+        verify(userRepository).deleteById(USER_ID);
     }
 
     @Test
-    void updateUserShouldThrowExceptionWhenEntityNotFound() {
-        Long userId = 1L;
+    void updateUserShouldThrowExceptionWhenEntityNotFound() {;
         UserRequest userRequest = TestDataFactory.createUserRequest();
 
-        when(userRepository.getReferenceById(userId)).thenThrow(EntityNotFoundException.class);
+        when(userRepository.getReferenceById(USER_ID)).thenThrow(EntityNotFoundException.class);
 
         BusinessException ex = assertThrows(BusinessException.class, () -> {
-            userService.updateUser(userId, userRequest);
+            userService.updateUser(USER_ID, userRequest);
         });
 
-        assertEquals("Id not found:" + userId, ex.getMessage());
+        assertEquals("Id not found:" + USER_ID, ex.getMessage());
 
-        verify(userRepository).getReferenceById(userId);
+        verify(userRepository).getReferenceById(USER_ID);
     }
 
     @Test
