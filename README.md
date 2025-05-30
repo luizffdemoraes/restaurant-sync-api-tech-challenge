@@ -152,6 +152,13 @@ Antes de iniciar, **certifique-se que todos os requisitos descritos na seção a
 - **DELETE `/v1/usuarios/{id}`**: Exclui um usuário (apenas para admin).
 - **POST   `/oauth2/token`**: Valida o login de um usuário.
 
+> ⚠️ **Importante:**  
+> Antes de utilizar a API para as demais funcionalidades, o usuário **precisa estar cadastrado** (`POST /v1/usuarios`) e **autenticado** (`POST /oauth2/token`) para obter o **token de acesso**.  
+> Esse token deve ser incluído no cabeçalho `Authorization` das requisições aos endpoints protegidos:  
+> `Authorization: Bearer <token>`
+>
+> Além disso, **algumas operações são restritas a administradores**, como listar ou excluir usuários.
+
 ## Documentação da API
 
 A documentação completa da API está disponível através do Swagger UI em:
