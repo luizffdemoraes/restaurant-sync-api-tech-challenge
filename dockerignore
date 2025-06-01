@@ -1,0 +1,8 @@
+# Ignorar arquivos e pastas desnecessárias para o build da imagem
+target/
+.git/
+.gitignore
+Dockerfile*
+docker-compose*
+README.md
+*.log

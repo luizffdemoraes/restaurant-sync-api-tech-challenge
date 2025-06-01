@@ -87,7 +87,7 @@ A aplicação segue uma arquitetura em camadas bem definida, visando modularidad
 
 ## Diagrama das tabelas de banco de dados
 
-![Diagrama de banco de dados](https://github.com/luizffdemoraes/restaurant-sync-api-tech-challenge/blob/main/images/diagrama-db.png)
+![Diagrama de banco de dados](images/diagrama-db.png)
 
 ## Requisitos
 
@@ -125,23 +125,18 @@ Antes de iniciar, **certifique-se que todos os requisitos descritos na seção a
    ```bash 
    git clone https://github.com/luizffdemoraes/restaurant-sync-api-tech-challenge
    ```
-   
-2. Caso o arquivo .jar já exista na pasta target, esta etapa pode ser ignorada:
-    ```bash
-    ./mvnw clean package -DskipTests
-    ```
 
-3. Realize o build do projeto com o comando:
+2. **Realize o build do projeto:**
    ```bash
    docker compose build --no-cache
    ```
    
-4. Execute o comando abaixo para iniciar os containers:
+3. **Inicie os containers:**
    ```bash
    docker compose up
    ```
 
-5. A API estará disponível em `http://localhost:8080`.
+4.  A API estará disponível em `http://localhost:8080`.
 
 ## Endpoints
 
@@ -168,7 +163,7 @@ A documentação completa da API está disponível através do Swagger UI em:
 
 ## Cobertura de código
 
-![restaurant-sync-coverage](https://github.com/luizffdemoraes/restaurant-sync-api-tech-challenge/blob/main/images/restaurant-sysc-coverage.png)
+![restaurant-sync-coverage](images/restaurant-sysc-coverage.png)
 
 ## Collection POSTMAN
 
