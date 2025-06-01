@@ -161,6 +161,14 @@ A documentação completa da API está disponível através do Swagger UI em:
 
 [http://localhost:8080/swagger-ui/index.html](http://localhost:8080/swagger-ui/index.html)
 
+> ⚠️ **Importante:**
+> Para acessar a documentação interativa da API via Swagger UI e testar os endpoints, você precisará das seguintes credenciais de acesso:
+>
+> **Username:** myclientid<br>
+> **Password:** myclientsecret
+>
+> ![swagger](images/swagger.png)
+
 ## Cobertura de código
 
 ![restaurant-sync-coverage](images/restaurant-sysc-coverage.png)
