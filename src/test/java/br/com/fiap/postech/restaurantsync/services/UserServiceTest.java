@@ -107,7 +107,7 @@ class UserServiceTest {
 
         UserRequest userRequest = TestDataFactory.createUserRequest();
 
-        when(userRepository.getReferenceById(USER_ID)).thenReturn(user);
+        when(userRepository.findById(USER_ID)).thenReturn(Optional.of(user));
         when(passwordEncoder.encode(anyString())).thenReturn("encodedPassword");
         when(userRepository.save(any(User.class))).thenReturn(user);
         when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(user));
@@ -121,6 +121,14 @@ class UserServiceTest {
 
     @Test
     void deleteUserShouldCallRepositoryDeleteById() {
+        User user = TestDataFactory.createUser();
+        user.setId(USER_ID);
+        user.addRole(new Role(1, "ROLE_ADMIN"));
+
+        when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(user));
+        when(userRepository.findById(USER_ID)).thenReturn(Optional.of(user));
+        doNothing().when(userRepository).deleteById(anyInt());
+
         userService.deleteUser(USER_ID);
 
         verify(userRepository).deleteById(USER_ID);
@@ -142,6 +150,9 @@ class UserServiceTest {
         PageRequest pageRequest = PageRequest.of(0, 10);
         User user = TestDataFactory.createUser();
         user.setId(USER_ID);
+        user.addRole(new Role(1, "ROLE_ADMIN"));
+
+        when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(user));
 
         Page<User> userPage = new org.springframework.data.domain.PageImpl<>(List.of(user));
 
@@ -198,20 +209,22 @@ class UserServiceTest {
 
         BusinessException ex = assertThrows(BusinessException.class, () -> userService.findUserById(1));
 
-        assertEquals("Entity not Found", ex.getMessage());
+        assertEquals("Id não encontrado: 1", ex.getMessage());
     }
 
     @Test
     void deleteUserShouldThrowExceptionWhenUserNotFound() {
-        doThrow(new EmptyResultDataAccessException(USER_ID)).when(userRepository).deleteById(USER_ID);
+        User admin = TestDataFactory.createUser();
+        admin.setId(100);
+        admin.addRole(new Role(1, "ROLE_ADMIN"));
+        when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(admin));
+        when(userRepository.findById(USER_ID)).thenReturn(Optional.empty());
 
         BusinessException ex = assertThrows(BusinessException.class, () -> {
             userService.deleteUser(USER_ID);
         });
 
-        assertEquals("Id not found.", ex.getMessage());
-
-        verify(userRepository).deleteById(USER_ID);
+        assertEquals("Id não encontrado: 1", ex.getMessage());
     }
 
     @Test
@@ -224,7 +237,7 @@ class UserServiceTest {
             userService.updatePassword(userId, "newPassword");
         });
 
-        assertEquals("Id not found: " + userId, ex.getMessage());
+        assertEquals("Id não encontrado: " + userId, ex.getMessage());
     }
 
     @Test
@@ -338,6 +351,12 @@ class UserServiceTest {
 
     @Test
     void deleteUserShouldThrowExceptionWhenDataIntegrityViolation() {
+        User admin = TestDataFactory.createUser();
+        admin.setId(100);
+        admin.addRole(new Role(1, "ROLE_ADMIN"));
+        when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(admin));
+
+        when(userRepository.findById(USER_ID)).thenReturn(Optional.of(admin));
         doThrow(new DataIntegrityViolationException("")).when(userRepository).deleteById(USER_ID);
 
         BusinessException ex = assertThrows(BusinessException.class, () -> {
@@ -345,23 +364,21 @@ class UserServiceTest {
         });
 
         assertEquals("Integrity violaton.", ex.getMessage());
-
         verify(userRepository).deleteById(USER_ID);
     }
 
     @Test
-    void updateUserShouldThrowExceptionWhenEntityNotFound() {;
+    void updateUserShouldThrowExceptionWhenEntityNotFound() {
         UserRequest userRequest = TestDataFactory.createUserRequest();
 
-        when(userRepository.getReferenceById(USER_ID)).thenThrow(EntityNotFoundException.class);
+        when(userRepository.findById(USER_ID)).thenReturn(Optional.empty());
 
         BusinessException ex = assertThrows(BusinessException.class, () -> {
             userService.updateUser(USER_ID, userRequest);
         });
 
-        assertEquals("Id not found:" + USER_ID, ex.getMessage());
-
-        verify(userRepository).getReferenceById(USER_ID);
+        assertEquals("Id não encontrado: " + USER_ID, ex.getMessage());
+        verify(userRepository).findById(USER_ID);
     }
 
     @Test

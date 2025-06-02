@@ -78,11 +78,15 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(BusinessException.class)
     public ResponseEntity<StandardError> handleBusinessException(BusinessException ex, HttpServletRequest request) {
-        HttpStatus status = HttpStatus.UNAUTHORIZED;
+        String msg = ex.getMessage().toLowerCase();
+        HttpStatus status = (msg.contains("not found") || msg.contains("não encontrado"))
+                ? HttpStatus.NOT_FOUND
+                : HttpStatus.UNAUTHORIZED;
+
         StandardError err = new StandardError(
                 Instant.now(),
                 status.value(),
-                "Acesso não autorizado",
+                status == HttpStatus.NOT_FOUND ? "Recurso não encontrado" : "Acesso não autorizado",
                 ex.getMessage(),
                 request.getRequestURI()
         );

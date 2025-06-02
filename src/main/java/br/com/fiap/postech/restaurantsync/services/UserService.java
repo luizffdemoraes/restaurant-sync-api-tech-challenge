@@ -8,9 +8,7 @@ import br.com.fiap.postech.restaurantsync.entities.UserDetailsProjection;
 import br.com.fiap.postech.restaurantsync.repositories.RoleRepository;
 import br.com.fiap.postech.restaurantsync.repositories.UserRepository;
 import br.com.fiap.postech.restaurantsync.resources.exceptions.BusinessException;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.Authentication;
@@ -24,7 +22,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -42,9 +39,66 @@ public class UserService implements UserDetailsService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    @Transactional
+    public UserResponse createUser(UserRequest userRequest) {
+        User user = new User(userRequest);
+        Role role = getRoleForEmail(userRequest.email());
+        user.setPassword(passwordEncoder.encode(userRequest.password()));
+        user.addRole(role);
+        user = this.userRepository.save(user);
+        return new UserResponse(user);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<UserResponse> findAllPagedUsers(PageRequest pageRequest) {
+        validateAdmin();
+        Page<User> list = this.userRepository.findAll(pageRequest);
+        return list.map(UserResponse::new);
+    }
+
+    @Transactional(readOnly = true)
+    public UserResponse findUserById(Integer id) {
+        User user = findUserOrThrow(id);
+        validateSelfOrAdmin(user.getId());
+        return new UserResponse(user);
+    }
+
+    @Transactional
+    public void deleteUser(Integer id) {
+        validateAdmin();
+        findUserOrThrow(id);
+        try {
+            this.userRepository.deleteById(id);
+        } catch (DataIntegrityViolationException e) {
+            throw new BusinessException("Integrity violaton.");
+        }
+    }
+
+    @Transactional
+    public UserResponse updateUser(Integer id, UserRequest userRequest) {
+        User user = findUserOrThrow(id);
+        validateSelfOrAdmin(user.getId());
+        user.setPassword(passwordEncoder.encode(userRequest.password()));
+        user = this.userRepository.save(user);
+        return new UserResponse(user);
+    }
+
+    @Transactional
+    public void updatePassword(Integer id, String newPassword) {
+        User user = findUserOrThrow(id);
+        validateSelfOrAdmin(user.getId());
+        user.setPassword(passwordEncoder.encode(newPassword));
+        this.userRepository.save(user);
+    }
+
+    private User findUserOrThrow(Integer id) {
+        return this.userRepository.findById(id)
+                .orElseThrow(() -> new BusinessException("Id não encontrado: " + id));
+    }
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        List<UserDetailsProjection> result = userRepository.searchUserAndRolesByEmail(username);
+        List<UserDetailsProjection> result = this.userRepository.searchUserAndRolesByEmail(username);
         if (result == null || result.isEmpty()) {
             throw new UsernameNotFoundException("User not found");
         }
@@ -57,74 +111,21 @@ public class UserService implements UserDetailsService {
         return user;
     }
 
-    @Transactional
-    public UserResponse createUser(UserRequest userRequest) {
-        User user = new User(userRequest);
-        Role role = getRoleForEmail(userRequest.email());
-        user.setPassword(passwordEncoder.encode(userRequest.password()));
-
-        user.addRole(role);
-
-        user = this.userRepository.save(user);
-        return new UserResponse(user);
-    }
-
-    @Transactional(readOnly = true)
-    public Page<UserResponse> findAllPagedUsers(PageRequest pageRequest) {
-        Page<User> list = this.userRepository.findAll(pageRequest);
-        return list.map(UserResponse::new);
-    }
-
-    @Transactional(readOnly = true)
-    public UserResponse findUserById(Integer id) {
-        Optional<User> obj = this.userRepository.findById(id);
-        User entity = obj.orElseThrow(() -> new BusinessException("Entity not Found"));
-        validateSelfOrAdmin(obj.get().getId());
-        return new UserResponse(entity);
-    }
-
-    @Transactional
-    public void deleteUser(Integer id) {
-        try {
-            this.userRepository.deleteById(id);
-        } catch (EmptyResultDataAccessException e) {
-            throw new BusinessException("Id not found.");
-        } catch (DataIntegrityViolationException e) {
-            throw new BusinessException("Integrity violaton.");
-        }
-    }
-
-    @Transactional
-    public UserResponse updateUser(Integer id, UserRequest userRequest) {
-        try {
-            User user = this.userRepository.getReferenceById(id);
-            validateSelfOrAdmin(user.getId());
-            user.setPassword(passwordEncoder.encode(userRequest.password()));
-            user = this.userRepository.save(user);
-            return new UserResponse(user);
-
-        } catch (EntityNotFoundException e) {
-            throw new BusinessException("Id not found:" + id);
-        }
-    }
-
-    @Transactional
-    public void updatePassword(Integer id, String newPassword) {
-        User user = userRepository.findById(id).orElseThrow(() -> new BusinessException("Id not found: " + id));
-        validateSelfOrAdmin(user.getId());
-        user.setPassword(passwordEncoder.encode(newPassword));
-        userRepository.save(user);
-    }
-
     public User authenticated() {
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             Jwt jwtPrincipal = (Jwt) authentication.getPrincipal();
             String username = jwtPrincipal.getClaim("username");
-            return userRepository.findByEmail(username).get();
-        }
-        catch (Exception e) {
+            return this.userRepository.findByEmail(username).get();
+        } catch (Exception e) {
             throw new UsernameNotFoundException("Invalid user");
+        }
+    }
+
+    public void validateAdmin() {
+        User me = authenticated();
+        if (!me.hasRole("ROLE_ADMIN")) {
+            throw new BusinessException("Access denied");
         }
     }
 
