@@ -51,7 +51,7 @@ A API oferece as seguintes funcionalidades para o gerenciamento de usuários:
 A aplicação segue uma arquitetura em camadas bem definida, visando modularidade e manutenibilidade. Abaixo está a estrutura principal de pastas:
 
 ```
-├── collection                   // Contém as collections do Postman para teste dos endpoints da API 
+├── collection                   // Collections do Postman para teste dos endpoints da API
 ├── src
 │   ├── main
 │   │   ├── java
@@ -60,29 +60,43 @@ A aplicação segue uma arquitetura em camadas bem definida, visando modularidad
 │   │   │           └── fiap
 │   │   │               └── postech
 │   │   │                   └── restaurantsync
-│   │   │                       ├── config           // Configurações gerais da aplicação e de segurança (OpenAPI/Swagger, OAuth2)
+│   │   │                       ├── config           // Configurações gerais e de segurança
 │   │   │                       │   ├── doc
 │   │   │                       │   └── security
 │   │   │                       │       └── customgrant
-│   │   │                       ├── controllers      // Camada de Controllers: Responsáveis por expor os endpoints da API REST
-│   │   │                       ├── dtos             // Data Transfer Objects: Classes para transferência de dados entre camadas e para as requisições/respostas da API
+│   │   │                       ├── controllers      // Controllers REST
+│   │   │                       ├── dtos             // DTOs de requisição e resposta
 │   │   │                       │   ├── requests
 │   │   │                       │   └── responses
-│   │   │                       ├── entities         // Camada de Entidades: Representam os modelos de dados persistidos no banco
-│   │   │                       ├── repositories     // Camada de Repositórios: Interfaces para acesso e manipulação de dados no banco (Spring Data JPA)
-│   │   │                       ├── resources        // Recursos auxiliares, como classes de exceção, tradutores e validações
+│   │   │                       ├── entities         // Entidades JPA
+│   │   │                       ├── repositories     // Repositórios Spring Data JPA
+│   │   │                       ├── resources        // Exceções, tradutores, validações
 │   │   │                       │   ├── exceptions
 │   │   │                       │   │   └── handler
 │   │   │                       │   ├── translator
 │   │   │                       │   │   └── impl
 │   │   │                       │   └── validations
-│   │   │                       └── services         // Camada de Serviços: Contém a lógica de negócio da aplicação
-│   │   └── resources        // Arquivos de configuração, como application.properties e recursos estáticos 
+│   │   │                       └── services         // Serviços (lógica de negócio)
+│   │   └── resources            // Arquivos de configuração application.properties, db/migration, static, templates etc.
+│   │       ├── db
+│   │       │   └── migration
 │   │       ├── static
 │   │       └── templates
-│   └── test                 // Classes de testes unitários e de integração
-│       └── java
-└── target                   // Diretório gerado pela compilação (classes compiladas, artefatos .jar, etc.)
+│   └── test
+│       ├── java
+│       │   └── br
+│       │       └── com
+│       │           └── fiap
+│       │               └── postech
+│       │                   └── restaurantsync
+│       │                       ├── controllers
+│       │                       ├── factories
+│       │                       ├── resources
+│       │                       │   └── exceptions
+│       │                       │       └── handler
+│       │                       └── services
+│       └── resources            // Configurações e recursos para testes
+└── target                       // Artefatos gerados pelo build (classes, jar, relatórios, etc.)
 ```
 
 ## Diagrama das tabelas de banco de dados
@@ -170,6 +184,38 @@ A documentação completa da API está disponível através do Swagger UI em:
 > ![swagger](images/swagger.png)
 
 ## Cobertura de código
+
+A cobertura de código do projeto é gerada utilizando o JaCoCo (Java Code Coverage). O processo é automatizado através do Maven.
+
+Gerando a cobertura de código
+Execute os seguintes comandos no terminal, a partir da raiz do projeto:
+
+Executar os testes e coletar os dados de cobertura:
+
+```bash
+mvn clean test
+```
+
+- Este comando executa todos os testes automatizados do projeto.
+- Durante a execução, o JaCoCo coleta os dados necessários para análise de cobertura.
+
+Gerar os relatórios de cobertura:
+
+```bash
+mvn jacoco:report
+```
+
+- Este comando processa os dados coletados e gera os relatórios nos formatos HTML/XML/CSV.
+
+### Acessando o relatório
+O relatório gerado pode ser visualizado abrindo o arquivo:
+
+```
+target/site/jacoco/index.html
+```
+
+
+### Exemplo da cobertura gerada:
 
 ![restaurant-sync-coverage](images/restaurant-sysc-coverage.png)
 
