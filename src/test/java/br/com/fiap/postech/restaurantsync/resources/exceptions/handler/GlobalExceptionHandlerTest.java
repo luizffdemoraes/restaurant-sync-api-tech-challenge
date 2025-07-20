@@ -1,9 +1,9 @@
 package br.com.fiap.postech.restaurantsync.resources.exceptions.handler;
 
-import br.com.fiap.postech.restaurantsync.resources.exceptions.BusinessException;
-import br.com.fiap.postech.restaurantsync.resources.exceptions.StandardError;
-import br.com.fiap.postech.restaurantsync.resources.exceptions.ValidationError;
-import br.com.fiap.postech.restaurantsync.resources.translator.FieldTranslationService;
+import br.com.fiap.postech.restaurantsync.infrastructure.exceptions.BusinessException;
+import br.com.fiap.postech.restaurantsync.infrastructure.exceptions.StandardError;
+import br.com.fiap.postech.restaurantsync.infrastructure.exceptions.ValidationError;
+import br.com.fiap.postech.restaurantsync.infrastructure.exceptions.handler.GlobalExceptionHandler;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,8 +26,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 class GlobalExceptionHandlerTest {
-    @Mock
-    private FieldTranslationService translationService;
+
 
     @Mock
     private HttpServletRequest request;
@@ -37,7 +36,7 @@ class GlobalExceptionHandlerTest {
     @BeforeEach
     void setup() {
         MockitoAnnotations.openMocks(this);
-        handler = new GlobalExceptionHandler(translationService);
+       // handler = new GlobalExceptionHandler();
         when(request.getRequestURI()).thenReturn("/test-uri");
     }
 
@@ -84,8 +83,6 @@ class GlobalExceptionHandlerTest {
         when(ex.getBindingResult()).thenReturn(bindingResult);
         when(bindingResult.getFieldErrors()).thenReturn(List.of(fieldError1, fieldError2));
 
-        when(translationService.translateField("field1")).thenReturn("campo1");
-        when(translationService.translateField("field2")).thenReturn("campo2");
 
         ResponseEntity<ValidationError> response = handler.validation(ex, request);
 

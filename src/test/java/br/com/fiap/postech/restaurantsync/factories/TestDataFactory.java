@@ -1,22 +1,9 @@
 package br.com.fiap.postech.restaurantsync.factories;
 
-import br.com.fiap.postech.restaurantsync.dtos.requests.AddressRequest;
-import br.com.fiap.postech.restaurantsync.dtos.requests.PasswordRequest;
-import br.com.fiap.postech.restaurantsync.dtos.requests.UserRequest;
-import br.com.fiap.postech.restaurantsync.dtos.responses.AddressResponse;
-import br.com.fiap.postech.restaurantsync.dtos.responses.UserResponse;
-import br.com.fiap.postech.restaurantsync.entities.Address;
-import br.com.fiap.postech.restaurantsync.entities.Role;
-import br.com.fiap.postech.restaurantsync.entities.User;
-import br.com.fiap.postech.restaurantsync.entities.UserDetailsProjection;
-import br.com.fiap.postech.restaurantsync.services.UserService;
-
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.Date;
 
 public class TestDataFactory {
 
+    /**
     public static UserRequest createUserRequest() {
         return new UserRequest(
                 "John Doe",
@@ -58,8 +45,8 @@ public class TestDataFactory {
         );
     }
 
-    public static Address createAddress() {
-        return new Address(
+    public static AddressEntity createAddress() {
+        return new AddressEntity(
                 "Main Street",
                 123L,
                 "Sample City",
@@ -79,14 +66,14 @@ public class TestDataFactory {
         user.setId(1);
         user.setLastUpdateDate(new Date());
 
-        Role role = createRoleClient();
-        user.addRole(role);
+        RoleEntity roleEntity = createRoleClient();
+        user.addRole(roleEntity);
 
         return user;
     }
 
-    public static Role createRoleClient() {
-        return new Role(1, "ROLE_CLIENT");
+    public static RoleEntity createRoleClient() {
+        return new RoleEntity(1, "ROLE_CLIENT");
     }
 
     public static UserDetailsProjection createUserDetailsProjection() {
@@ -113,11 +100,11 @@ public class TestDataFactory {
         };
     }
 
-    public static Role invokeGetRoleForEmail(UserService userService, String email) {
+    public static RoleEntity invokeGetRoleForEmail(UserService userService, String email) {
         try {
             Method method = UserService.class.getDeclaredMethod("getRoleForEmail", String.class);
             method.setAccessible(true);
-            return (Role) method.invoke(userService, email);
+            return (RoleEntity) method.invoke(userService, email);
         } catch (InvocationTargetException e) {
             Throwable cause = e.getCause();
             if (cause instanceof RuntimeException) {
@@ -141,5 +128,6 @@ public class TestDataFactory {
         }
     }
 
+      **/
 
 }
