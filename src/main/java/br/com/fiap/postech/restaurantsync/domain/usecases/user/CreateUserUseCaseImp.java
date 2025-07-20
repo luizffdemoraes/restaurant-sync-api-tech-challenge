@@ -25,7 +25,7 @@ public class CreateUserUseCaseImp implements CreateUserUseCase {
     }
 
     public UserResponse execute(UserRequest userRequest) {
-        if (userGateway.existsByEmail(userRequest.email())) {
+        if (userGateway.existsUserByEmail(userRequest.email())) {
             throw new BusinessException("Email already registered");
         }
 
@@ -34,7 +34,7 @@ public class CreateUserUseCaseImp implements CreateUserUseCase {
         user.setPassword(passwordEncoder.encode(userRequest.password()));
         user.addRole(role);
 
-        User savedUser = userGateway.save(user);
+        User savedUser = userGateway.saveUser(user);
         return new UserResponse(savedUser);
     }
 
