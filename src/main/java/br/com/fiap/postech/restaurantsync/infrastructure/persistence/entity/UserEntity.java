@@ -35,14 +35,14 @@ public class UserEntity implements UserDetails {
     @Embedded
     private AddressEntity addressEntity;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_role",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<RoleEntity> roleEntities = new HashSet<>();
 
+
     public UserEntity() {
-        // Construtor padrão necessário para o JPA
     }
 
     public UserEntity(String name, String email, String login, String password, AddressEntity addressEntity) {
@@ -54,9 +54,7 @@ public class UserEntity implements UserDetails {
         this.addressEntity = addressEntity;
     }
 
-    // dentro de UserEntity
-
-    public static UserEntity fromDomain(br.com.fiap.postech.restaurantsync.domain.entities.User user) {
+    public static UserEntity fromDomain(User user) {
         if (user == null) {
             return null;
         }

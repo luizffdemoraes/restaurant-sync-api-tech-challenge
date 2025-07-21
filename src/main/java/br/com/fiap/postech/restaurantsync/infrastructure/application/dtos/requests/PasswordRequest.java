@@ -1,13 +1,9 @@
 package br.com.fiap.postech.restaurantsync.infrastructure.application.dtos.requests;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 
 public record PasswordRequest(
-    @NotBlank(message = "Campo obrigatório")
-    @JsonProperty("senha")
-    @Schema(description = "Senha do usuário", example = "password123")
+    @NotBlank(message = "Password is required")
     String password
 ){
     public PasswordRequest(String password) {

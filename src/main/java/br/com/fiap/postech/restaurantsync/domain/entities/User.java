@@ -1,13 +1,13 @@
 package br.com.fiap.postech.restaurantsync.domain.entities;
 
 
-
 import br.com.fiap.postech.restaurantsync.infrastructure.application.dtos.requests.UserRequest;
 
-import java.util.*;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 public class User {
-
     private Integer id;
     private String name;
     private String email;

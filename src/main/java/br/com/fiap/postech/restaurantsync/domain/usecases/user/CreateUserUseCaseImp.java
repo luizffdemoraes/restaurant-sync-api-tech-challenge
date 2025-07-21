@@ -1,27 +1,23 @@
 package br.com.fiap.postech.restaurantsync.domain.usecases.user;
 
 
-import br.com.fiap.postech.restaurantsync.infrastructure.application.dtos.requests.UserRequest;
-import br.com.fiap.postech.restaurantsync.infrastructure.application.dtos.responses.UserResponse;
 import br.com.fiap.postech.restaurantsync.domain.entities.Role;
 import br.com.fiap.postech.restaurantsync.domain.entities.User;
 import br.com.fiap.postech.restaurantsync.domain.gateways.RoleGateway;
 import br.com.fiap.postech.restaurantsync.domain.gateways.UserGateway;
+import br.com.fiap.postech.restaurantsync.infrastructure.application.dtos.requests.UserRequest;
+import br.com.fiap.postech.restaurantsync.infrastructure.application.dtos.responses.UserResponse;
 import br.com.fiap.postech.restaurantsync.infrastructure.exceptions.BusinessException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 public class CreateUserUseCaseImp implements CreateUserUseCase {
 
     private final UserGateway userGateway;
     private final RoleGateway roleGateway;
-    private final PasswordEncoder passwordEncoder;
 
     public CreateUserUseCaseImp(UserGateway userGateway,
-                                RoleGateway roleGateway,
-                                PasswordEncoder passwordEncoder) {
+                                RoleGateway roleGateway) {
         this.userGateway = userGateway;
         this.roleGateway = roleGateway;
-        this.passwordEncoder = passwordEncoder;
     }
 
     public UserResponse execute(UserRequest userRequest) {
@@ -31,7 +27,6 @@ public class CreateUserUseCaseImp implements CreateUserUseCase {
 
         User user = new User(userRequest);
         Role role = getRoleForEmail(userRequest.email());
-        user.setPassword(passwordEncoder.encode(userRequest.password()));
         user.addRole(role);
 
         User savedUser = userGateway.saveUser(user);

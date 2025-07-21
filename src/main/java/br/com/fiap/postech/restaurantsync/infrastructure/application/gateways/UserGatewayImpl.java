@@ -17,7 +17,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.Jwt;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class UserGatewayImpl implements UserGateway {
 
@@ -32,6 +34,7 @@ public class UserGatewayImpl implements UserGateway {
     @Override
     public User saveUser(User user) {
         UserEntity userEntity = UserEntity.fromDomain(user);
+        userEntity.setPassword(passwordEncoder.encode(user.getPassword()));
         UserEntity saved = this.userRepository.save(userEntity);
         return saved.toDomain();
     }
@@ -43,8 +46,8 @@ public class UserGatewayImpl implements UserGateway {
 
     public Page<User> findAllPagedUsers(PageRequest pageRequest) {
         validateAdmin();
-        Page<UserEntity> list = this.userRepository.findAll(pageRequest);
-        return list.map(UserEntity::toDomain);
+        Page<UserEntity> pagedUsers = this.userRepository.findAll(pageRequest);
+        return pagedUsers.map(UserEntity::toDomain);
     }
 
     public User findUserById(Integer id) {
@@ -53,7 +56,7 @@ public class UserGatewayImpl implements UserGateway {
         return user;
     }
 
-    public void deleteUser(Integer id) {
+    public void deleteUserById(Integer id) {
         validateAdmin();
         findUserOrThrow(id);
         try {
@@ -88,9 +91,15 @@ public class UserGatewayImpl implements UserGateway {
         userEntity.setEmail(username);
         userEntity.setPassword(result.get(0).getPassword());
 
+        // Cria uma cópia dos roles para evitar lazy loading
+        Set<RoleEntity> roles = new HashSet<>();
         for (UserDetailsProjection projection : result) {
-            userEntity.addRole(new RoleEntity(projection.getRoleId(), projection.getAuthority()));
+            roles.add(new RoleEntity(projection.getRoleId(), projection.getAuthority()));
         }
+
+        // Atribui a coleção completa de uma vez
+        userEntity.getRoleEntities().addAll(roles);
+
         return userEntity;
     }
 
@@ -119,7 +128,7 @@ public class UserGatewayImpl implements UserGateway {
         }
     }
 
-    private User findUserOrThrow(Integer id) {
+    public User findUserOrThrow(Integer id) {
         return this.userRepository.findById(id)
                 .orElseThrow(() -> new BusinessException("Id not found: " + id)).toDomain();
     }

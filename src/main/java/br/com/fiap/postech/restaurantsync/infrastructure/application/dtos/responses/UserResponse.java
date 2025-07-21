@@ -2,6 +2,7 @@ package br.com.fiap.postech.restaurantsync.infrastructure.application.dtos.respo
 
 
 import br.com.fiap.postech.restaurantsync.domain.entities.User;
+import br.com.fiap.postech.restaurantsync.infrastructure.persistence.entity.UserEntity;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 

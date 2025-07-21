@@ -11,11 +11,12 @@ public interface UserGateway {
     boolean existsUserByEmail(String email);
     Page<User> findAllPagedUsers(PageRequest pageRequest);
     User findUserById(Integer id);
-    void deleteUser(Integer id);
-    User updateUser(Integer id, User userRequest);
+    void deleteUserById(Integer id);
+    User updateUser(Integer id, User user);
     void updateUserPassword(Integer id, String newPassword);
     UserDetails loadUserByUsername(String username) throws UsernameNotFoundException;
     User authenticated();
     void validateAdmin();
     void validateSelfOrAdmin(Integer userId);
+    User findUserOrThrow(Integer id);
 }

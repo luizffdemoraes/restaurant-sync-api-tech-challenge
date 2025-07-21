@@ -2,8 +2,7 @@ package br.com.fiap.postech.restaurantsync.infrastructure.config.dependency;
 
 import br.com.fiap.postech.restaurantsync.domain.gateways.RoleGateway;
 import br.com.fiap.postech.restaurantsync.domain.gateways.UserGateway;
-import br.com.fiap.postech.restaurantsync.domain.usecases.user.CreateUserUseCase;
-import br.com.fiap.postech.restaurantsync.domain.usecases.user.CreateUserUseCaseImp;
+import br.com.fiap.postech.restaurantsync.domain.usecases.user.*;
 import br.com.fiap.postech.restaurantsync.infrastructure.application.gateways.RoleGatewayImpl;
 import br.com.fiap.postech.restaurantsync.infrastructure.application.gateways.UserGatewayImpl;
 import br.com.fiap.postech.restaurantsync.infrastructure.persistence.repository.RoleRepository;
@@ -20,13 +19,38 @@ public class DependencyInjectionConfig {
 
     @Bean
     public CreateUserUseCase createUserUseCase(UserGateway userGateway,
-                                               RoleGateway roleGateway,
-                                               PasswordEncoder passwordEncoder) {
-        return new CreateUserUseCaseImp(userGateway, roleGateway, passwordEncoder);
+                                               RoleGateway roleGateway) {
+        return new CreateUserUseCaseImp(userGateway, roleGateway);
     }
 
     @Bean
-    public UserGateway userGateway(UserRepository repository, PasswordEncoder passwordEncoder) {
+    public DeleteUserUseCase deleteUserUseCase(UserGateway userGateway) {
+        return new DeleteUserUseCaseImp(userGateway);
+    }
+
+    @Bean
+    public FindUserByIdUseCase findUserByIdUseCase(UserGateway userGateway) {
+        return new FindUserByIdUseCaseImp(userGateway);
+    }
+
+    @Bean
+    public FindAllPagedUsersUseCase findAllPagedUsersUseCase(UserGateway userGateway) {
+        return new FindAllPagedUsersUseCaseImp(userGateway);
+    }
+
+    @Bean
+    public UpdateUserUseCase updateUserUseCase(UserGateway userGateway) {
+        return new UpdateUserUseCaseImp(userGateway);
+    }
+
+    @Bean
+    public UpdatePasswordUseCase updatePasswordUseCase(UserGateway userGateway) {
+        return new UpdatePasswordUseCaseImp(userGateway);
+    }
+
+    @Bean
+    public UserGateway userGateway(UserRepository repository,
+                                   PasswordEncoder passwordEncoder) {
         return new UserGatewayImpl(repository, passwordEncoder);
     }
 
@@ -42,4 +66,3 @@ public class DependencyInjectionConfig {
                 .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
     }
 }
-

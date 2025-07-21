@@ -5,9 +5,6 @@ public class Role {
     private Integer id;
     private String authority;
 
-    public Role() {
-    }
-
     public Role(Integer id, String authority) {
         this.id = id;
         this.authority = authority;
