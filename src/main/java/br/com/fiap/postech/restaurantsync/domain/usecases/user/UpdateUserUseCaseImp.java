@@ -4,7 +4,6 @@ import br.com.fiap.postech.restaurantsync.domain.entities.User;
 import br.com.fiap.postech.restaurantsync.domain.gateways.UserGateway;
 import br.com.fiap.postech.restaurantsync.infrastructure.application.dtos.requests.UserRequest;
 import br.com.fiap.postech.restaurantsync.infrastructure.application.dtos.responses.UserResponse;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 public class UpdateUserUseCaseImp implements UpdateUserUseCase{
 
