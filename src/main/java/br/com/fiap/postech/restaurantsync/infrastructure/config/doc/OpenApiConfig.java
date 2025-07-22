@@ -32,7 +32,7 @@ public class OpenApiConfig {
                 .info(new Info()
                         .title("Restaurant Sync API")
                         .version("1.0.0")
-                        .description("API para gerenciamento de usuários de restaurantes")
+                        .description("API for restaurant user management")
                         .contact(new Contact()
                                 .name("Luiz Moraes")
                                 .email("lffm1994@gmail.com")
@@ -63,14 +63,14 @@ public class OpenApiConfig {
 
             PathItem tokenPath = new PathItem().post(
                     new Operation()
-                            .summary("Obter token OAuth2")
+                            .summary("Get OAuth2 Token")
                             .description("""
-                                    Endpoint para obter o token de acesso via grant_type=password.
+                                    Endpoint to obtain the access token via grant_type=password.
 
-                                    **IMPORTANTE:**  
-                                    Antes de executar, clique em **Authorize** no Swagger UI e informe seu `client_id` como usuário e `client_secret` como senha.
+                                    **IMPORTANT:**  
+                                    Before executing, click Authorize in the Swagger UI and enter your client_id as the username and client_secret as the password.
 
-                                    Exemplo de chamada cURL:
+                                    Example curl call:
                                     curl -X POST 'http://localhost:8080/oauth2/token' \\
                                       -H 'Authorization: Basic <base64(client_id:client_secret)>' \\
                                       -H 'Content-Type: application/x-www-form-urlencoded' \\
@@ -78,7 +78,7 @@ public class OpenApiConfig {
                                       --data-urlencode 'password=securepassword' \\
                                       --data-urlencode 'grant_type=password'
                                     """)
-                            .tags(java.util.List.of("Autenticação"))
+                            .tags(java.util.List.of("Authentication"))
                             .security(java.util.List.of(new SecurityRequirement().addList("basicAuth")))
                             .requestBody(new RequestBody()
                                     .required(true)
@@ -88,9 +88,9 @@ public class OpenApiConfig {
                                     ))
                             )
                             .responses(new ApiResponses()
-                                    .addApiResponse("200", new ApiResponse().description("Token gerado com sucesso"))
-                                    .addApiResponse("400", new ApiResponse().description("Requisição inválida"))
-                                    .addApiResponse("401", new ApiResponse().description("Não autorizado - verifique se clicou em Authorize e preencheu client_id/client_secret"))
+                                    .addApiResponse("200", new ApiResponse().description("Token generated successfully"))
+                                    .addApiResponse("400", new ApiResponse().description("Invalid request"))
+                                    .addApiResponse("401", new ApiResponse().description("Unauthorized - make sure you clicked Authorize and filled in client_id/client_secret"))
                             )
             );
 
