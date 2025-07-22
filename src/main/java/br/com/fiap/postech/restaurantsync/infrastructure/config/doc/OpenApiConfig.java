@@ -47,6 +47,53 @@ public class OpenApiConfig {
                 );
     }
 
+    @Bean
+    public OpenApiCustomizer customizeApiResponses() {
+        return openApi -> {
+            openApi.getPaths().forEach((path, pathItem) -> {
+                // Ajusta o POST /v1/users
+                if (path.equals("/v1/users")) {
+                    pathItem.readOperations().forEach(operation -> {
+                        if ("createUser".equals(operation.getOperationId())) {
+                            operation.getResponses().remove("200");
+                            if (!operation.getResponses().containsKey("201")) {
+                                operation.getResponses().addApiResponse("201", new ApiResponse()
+                                        .description("Usuário criado com sucesso")
+                                        .content(new Content()
+                                                .addMediaType("application/json",
+                                                        new MediaType().schema(new Schema<>().$ref("#/components/schemas/UserResponse"))
+                                                )
+                                        ));
+                            }
+                        }
+                    });
+                }
+
+                // Ajusta o DELETE /v1/users/{id}
+                if (path.equals("/v1/users/{id}")) {
+                    pathItem.readOperations().forEach(operation -> {
+                        if ("deleteUser".equals(operation.getOperationId())) {
+                            operation.getResponses().clear();
+                            operation.getResponses().addApiResponse("204", new ApiResponse()
+                                    .description("Usuário removido com sucesso"));
+                        }
+                    });
+                }
+
+                // Ajusta o PATCH /v1/users/{id}/password
+                if (path.equals("/v1/users/{id}/password")) {
+                    pathItem.readOperations().forEach(operation -> {
+                        if ("updatePassword".equals(operation.getOperationId())) {
+                            operation.getResponses().clear();
+                            operation.getResponses().addApiResponse("204", new ApiResponse()
+                                    .description("Senha atualizada com sucesso"));
+                        }
+                    });
+                }
+            });
+        };
+    }
+
     @SuppressWarnings({"rawtypes", "unchecked"})
     @Bean
     public OpenApiCustomizer oauth2TokenEndpointCustomiser() {
@@ -66,10 +113,10 @@ public class OpenApiConfig {
                             .summary("Get OAuth2 Token")
                             .description("""
                                     Endpoint to obtain the access token via grant_type=password.
-
+                                    
                                     **IMPORTANT:**  
                                     Before executing, click Authorize in the Swagger UI and enter your client_id as the username and client_secret as the password.
-
+                                    
                                     Example curl call:
                                     curl -X POST 'http://localhost:8080/oauth2/token' \\
                                       -H 'Authorization: Basic <base64(client_id:client_secret)>' \\
