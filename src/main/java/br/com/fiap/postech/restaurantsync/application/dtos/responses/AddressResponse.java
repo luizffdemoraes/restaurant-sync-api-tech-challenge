@@ -1,4 +1,4 @@
-package br.com.fiap.postech.restaurantsync.infrastructure.application.dtos.responses;
+package br.com.fiap.postech.restaurantsync.application.dtos.responses;
 
 import br.com.fiap.postech.restaurantsync.domain.entities.Address;
 

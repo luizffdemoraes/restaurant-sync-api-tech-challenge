@@ -4,10 +4,10 @@ import br.com.fiap.postech.restaurantsync.domain.entities.Address;
 import br.com.fiap.postech.restaurantsync.domain.entities.Role;
 import br.com.fiap.postech.restaurantsync.domain.entities.User;
 import br.com.fiap.postech.restaurantsync.domain.usecases.user.CreateUserUseCase;
-import br.com.fiap.postech.restaurantsync.infrastructure.application.dtos.requests.AddressRequest;
-import br.com.fiap.postech.restaurantsync.infrastructure.application.dtos.requests.UserRequest;
-import br.com.fiap.postech.restaurantsync.infrastructure.application.dtos.responses.AddressResponse;
-import br.com.fiap.postech.restaurantsync.infrastructure.application.dtos.responses.UserResponse;
+import br.com.fiap.postech.restaurantsync.application.dtos.requests.AddressRequest;
+import br.com.fiap.postech.restaurantsync.application.dtos.requests.UserRequest;
+import br.com.fiap.postech.restaurantsync.application.dtos.responses.AddressResponse;
+import br.com.fiap.postech.restaurantsync.application.dtos.responses.UserResponse;
 import br.com.fiap.postech.restaurantsync.infrastructure.persistence.entity.UserDetailsProjection;
 
 import java.lang.reflect.InvocationTargetException;

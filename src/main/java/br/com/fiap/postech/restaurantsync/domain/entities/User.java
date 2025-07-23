@@ -1,7 +1,7 @@
 package br.com.fiap.postech.restaurantsync.domain.entities;
 
 
-import br.com.fiap.postech.restaurantsync.infrastructure.application.dtos.requests.UserRequest;
+import br.com.fiap.postech.restaurantsync.application.dtos.requests.UserRequest;
 
 import java.util.Date;
 import java.util.HashSet;

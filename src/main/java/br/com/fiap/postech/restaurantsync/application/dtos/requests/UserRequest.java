@@ -1,4 +1,4 @@
-package br.com.fiap.postech.restaurantsync.infrastructure.application.dtos.requests;
+package br.com.fiap.postech.restaurantsync.application.dtos.requests;
 
 import br.com.fiap.postech.restaurantsync.infrastructure.persistence.entity.UserEntity;
 import br.com.fiap.postech.restaurantsync.infrastructure.validations.UniqueValue;

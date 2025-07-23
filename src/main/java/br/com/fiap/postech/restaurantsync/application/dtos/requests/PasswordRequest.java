@@ -1,4 +1,4 @@
-package br.com.fiap.postech.restaurantsync.infrastructure.application.dtos.requests;
+package br.com.fiap.postech.restaurantsync.application.dtos.requests;
 
 import jakarta.validation.constraints.NotBlank;
 

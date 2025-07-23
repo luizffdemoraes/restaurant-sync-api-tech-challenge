@@ -2,8 +2,8 @@ package br.com.fiap.postech.restaurantsync.domain.usecases.user;
 
 import br.com.fiap.postech.restaurantsync.domain.entities.User;
 import br.com.fiap.postech.restaurantsync.domain.gateways.UserGateway;
-import br.com.fiap.postech.restaurantsync.infrastructure.application.dtos.requests.UserRequest;
-import br.com.fiap.postech.restaurantsync.infrastructure.application.dtos.responses.UserResponse;
+import br.com.fiap.postech.restaurantsync.application.dtos.requests.UserRequest;
+import br.com.fiap.postech.restaurantsync.application.dtos.responses.UserResponse;
 
 public class UpdateUserUseCaseImp implements UpdateUserUseCase{
 

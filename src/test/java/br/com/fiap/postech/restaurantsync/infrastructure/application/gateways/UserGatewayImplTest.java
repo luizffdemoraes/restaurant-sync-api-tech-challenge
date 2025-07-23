@@ -1,6 +1,7 @@
 package br.com.fiap.postech.restaurantsync.infrastructure.application.gateways;
 
 
+import br.com.fiap.postech.restaurantsync.application.gateways.UserGatewayImpl;
 import br.com.fiap.postech.restaurantsync.domain.entities.User;
 import br.com.fiap.postech.restaurantsync.factories.TestDataFactory;
 import br.com.fiap.postech.restaurantsync.infrastructure.exceptions.BusinessException;

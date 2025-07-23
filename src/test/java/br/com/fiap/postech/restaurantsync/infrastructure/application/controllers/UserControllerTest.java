@@ -2,9 +2,9 @@ package br.com.fiap.postech.restaurantsync.infrastructure.application.controller
 
 import br.com.fiap.postech.restaurantsync.domain.usecases.user.*;
 import br.com.fiap.postech.restaurantsync.factories.TestDataFactory;
-import br.com.fiap.postech.restaurantsync.infrastructure.application.dtos.requests.PasswordRequest;
-import br.com.fiap.postech.restaurantsync.infrastructure.application.dtos.requests.UserRequest;
-import br.com.fiap.postech.restaurantsync.infrastructure.application.dtos.responses.UserResponse;
+import br.com.fiap.postech.restaurantsync.application.dtos.requests.PasswordRequest;
+import br.com.fiap.postech.restaurantsync.application.dtos.requests.UserRequest;
+import br.com.fiap.postech.restaurantsync.application.dtos.responses.UserResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
