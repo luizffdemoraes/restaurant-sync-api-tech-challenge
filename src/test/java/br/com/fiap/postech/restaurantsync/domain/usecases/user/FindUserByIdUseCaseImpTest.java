@@ -1,5 +1,6 @@
 package br.com.fiap.postech.restaurantsync.domain.usecases.user;
 
+import br.com.fiap.postech.restaurantsync.domain.entities.Address;
 import br.com.fiap.postech.restaurantsync.domain.entities.User;
 import br.com.fiap.postech.restaurantsync.domain.gateways.UserGateway;
 import br.com.fiap.postech.restaurantsync.infrastructure.application.dtos.responses.UserResponse;
@@ -31,6 +32,9 @@ class FindUserByIdUseCaseImpTest {
 
     @Test
     void execute_shouldReturnUserResponse_whenUserFoundAndAuthorized() {
+        Address address = new Address("Test Street", 123L, "Test State", "Test Zipcode", "08663-000");
+        user.setAddress(address);
+
         when(userGateway.findUserById(1)).thenReturn(user);
         doNothing().when(userGateway).validateSelfOrAdmin(user.getId());
 
@@ -38,6 +42,7 @@ class FindUserByIdUseCaseImpTest {
 
         assertNotNull(response);
         assertEquals(1, response.id());
+        assertEquals("Test Street", response.address().street());
         verify(userGateway).findUserById(1);
         verify(userGateway).validateSelfOrAdmin(user.getId());
     }

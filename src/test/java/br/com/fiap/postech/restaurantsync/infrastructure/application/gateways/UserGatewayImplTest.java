@@ -120,10 +120,13 @@ class UserGatewayImplTest {
 
     @Test
     void findAllPagedUsers_shouldThrowExceptionWhenNotAdmin() {
-        // Setup non-admin user
         Set<RoleEntity> userRoles = new HashSet<>();
         userRoles.add(new RoleEntity(2, "ROLE_CLIENT"));
-        mockUserEntity.addRole((RoleEntity) userRoles);
+
+        mockUserEntity.getRoleEntities().clear();
+        for (RoleEntity role : userRoles) {
+            mockUserEntity.addRole(role);
+        }
 
         assertThrows(BusinessException.class, () -> {
             userGateway.findAllPagedUsers(PageRequest.of(0, 10));

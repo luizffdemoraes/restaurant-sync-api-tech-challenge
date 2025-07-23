@@ -1,5 +1,6 @@
 package br.com.fiap.postech.restaurantsync.domain.usecases.user;
 
+import br.com.fiap.postech.restaurantsync.domain.entities.Address;
 import br.com.fiap.postech.restaurantsync.domain.entities.User;
 import br.com.fiap.postech.restaurantsync.domain.gateways.UserGateway;
 import br.com.fiap.postech.restaurantsync.infrastructure.application.dtos.responses.UserResponse;
@@ -20,6 +21,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class FindAllPagedUsersUseCaseImpTest {
+
     @InjectMocks
     private FindAllPagedUsersUseCaseImp findAllPagedUsersUseCaseImp;
 
@@ -34,10 +36,14 @@ class FindAllPagedUsersUseCaseImpTest {
     @Test
     void execute_shouldReturnPagedUserResponses_whenAdminValidated() {
         PageRequest pageRequest = PageRequest.of(0, 10);
-        User user1 = new User("User 1", "user1@test.com", "user1", "pass1", null);
+        // Adiciona o parâmetro de cidade para atender ao construtor
+        Address address = new Address("Test Street", 123L, "Test City", "Test State", "Test Zipcode");
+
+        User user1 = new User("User 1", "user1@test.com", "user1", "pass1", address);
         user1.setId(1);
-        User user2 = new User("User 2", "user2@test.com", "user2", "pass2", null);
+        User user2 = new User("User 2", "user2@test.com", "user2", "pass2", address);
         user2.setId(2);
+
         List<User> users = Arrays.asList(user1, user2);
         Page<User> userPage = new PageImpl<>(users, pageRequest, users.size());
 

@@ -35,9 +35,10 @@ class UpdateUserUseCaseImpTest {
     @Test
     void execute_shouldUpdateUser_whenAuthorized() {
         Integer userId = 1;
+        User user = new User(userRequest);
 
         doNothing().when(userGateway).validateSelfOrAdmin(userId);
-        doNothing().when(userGateway).updateUser(eq(userId), any(User.class));
+        when(userGateway.updateUser(eq(userId), any(User.class))).thenReturn(user);
 
         UserResponse response = updateUserUseCaseImp.execute(userId, userRequest);
 
