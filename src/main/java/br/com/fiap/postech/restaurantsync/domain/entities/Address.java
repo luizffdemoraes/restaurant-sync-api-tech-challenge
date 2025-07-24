@@ -1,7 +1,6 @@
 package br.com.fiap.postech.restaurantsync.domain.entities;
 
 public class Address {
-
     private String street;
     private Long number;
     private String city;

@@ -96,8 +96,6 @@ public class UserEntity implements UserDetails {
         return domain;
     }
 
-
-    // Getters e Setters
     public Integer  getId() {
         return id;
     }

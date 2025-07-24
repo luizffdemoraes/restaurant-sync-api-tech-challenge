@@ -24,7 +24,6 @@ public class AddressEntity {
     private String zipCode;
 
     public AddressEntity() {
-        // Construtor padrão necessário para o JPA
     }
 
     public AddressEntity(String street, Long number, String city, String state, String zipCode) {

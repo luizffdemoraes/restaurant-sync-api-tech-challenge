@@ -1,10 +1,15 @@
 package br.com.fiap.postech.restaurantsync.infrastructure.config.dependency;
 
+import br.com.fiap.postech.restaurantsync.application.gateways.RestaurantGatewayImpl;
+import br.com.fiap.postech.restaurantsync.domain.gateways.RestaurantGateway;
 import br.com.fiap.postech.restaurantsync.domain.gateways.RoleGateway;
 import br.com.fiap.postech.restaurantsync.domain.gateways.UserGateway;
+import br.com.fiap.postech.restaurantsync.domain.usecases.restaurant.CreateRestaurantUseCase;
+import br.com.fiap.postech.restaurantsync.domain.usecases.restaurant.CreateRestaurantUseCaseImp;
 import br.com.fiap.postech.restaurantsync.domain.usecases.user.*;
 import br.com.fiap.postech.restaurantsync.application.gateways.RoleGatewayImpl;
 import br.com.fiap.postech.restaurantsync.application.gateways.UserGatewayImpl;
+import br.com.fiap.postech.restaurantsync.infrastructure.persistence.repository.RestaurantRepository;
 import br.com.fiap.postech.restaurantsync.infrastructure.persistence.repository.RoleRepository;
 import br.com.fiap.postech.restaurantsync.infrastructure.persistence.repository.UserRepository;
 import org.springframework.context.annotation.Bean;
@@ -21,6 +26,11 @@ public class DependencyInjectionConfig {
     public CreateUserUseCase createUserUseCase(UserGateway userGateway,
                                                RoleGateway roleGateway) {
         return new CreateUserUseCaseImp(userGateway, roleGateway);
+    }
+
+    @Bean
+    public CreateRestaurantUseCase createRestaurantUseCase(RestaurantGateway restaurantGateway) {
+        return new CreateRestaurantUseCaseImp(restaurantGateway);
     }
 
     @Bean
@@ -52,6 +62,11 @@ public class DependencyInjectionConfig {
     public UserGateway userGateway(UserRepository repository,
                                    PasswordEncoder passwordEncoder) {
         return new UserGatewayImpl(repository, passwordEncoder);
+    }
+
+    @Bean
+    public RestaurantGateway restaurantGateway(RestaurantRepository repository) {
+        return new RestaurantGatewayImpl(repository);
     }
 
     @Bean
