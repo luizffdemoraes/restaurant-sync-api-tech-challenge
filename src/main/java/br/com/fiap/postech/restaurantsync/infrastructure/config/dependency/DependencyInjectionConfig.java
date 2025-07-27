@@ -29,8 +29,9 @@ public class DependencyInjectionConfig {
     }
 
     @Bean
-    public CreateRestaurantUseCase createRestaurantUseCase(RestaurantGateway restaurantGateway) {
-        return new CreateRestaurantUseCaseImp(restaurantGateway);
+    public CreateRestaurantUseCase createRestaurantUseCase(RestaurantGateway restaurantGateway,
+                                                           UserGateway userGateway) {
+        return new CreateRestaurantUseCaseImp(restaurantGateway, userGateway);
     }
 
     @Bean

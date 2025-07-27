@@ -24,3 +24,18 @@ CREATE TABLE user_role (
     FOREIGN KEY (user_id) REFERENCES users(id),
     FOREIGN KEY (role_id) REFERENCES roles(id)
 );
+
+CREATE TABLE restaurants (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    street VARCHAR(255) NOT NULL,
+    number BIGINT NOT NULL,
+    city VARCHAR(255) NOT NULL,
+    state VARCHAR(255) NOT NULL,
+    zip_code VARCHAR(255) NOT NULL,
+    cuisine_type VARCHAR(255) NOT NULL,
+    opening_hours VARCHAR(255) NOT NULL,
+    owner_id BIGINT NOT NULL,
+    FOREIGN KEY (owner_id) REFERENCES users(id)
+);
+

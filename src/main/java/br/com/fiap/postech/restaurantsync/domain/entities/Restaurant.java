@@ -10,7 +10,8 @@ public class Restaurant {
     private String openingHours;
     private Integer ownerId;
 
-    public Restaurant(String name, Address address, String cuisineType, String openingHours, Integer ownerId) {
+    public Restaurant(Integer id, String name, Address address, String cuisineType, String openingHours, Integer ownerId) {
+        this.id = id;
         this.name = name;
         this.address = address;
         this.cuisineType = cuisineType;

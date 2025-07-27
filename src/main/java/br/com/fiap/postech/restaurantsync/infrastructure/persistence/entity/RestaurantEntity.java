@@ -1,13 +1,28 @@
 package br.com.fiap.postech.restaurantsync.infrastructure.persistence.entity;
 
 import br.com.fiap.postech.restaurantsync.domain.entities.Restaurant;
+import jakarta.persistence.*;
 
+@Entity
+@Table(name = "restaurants")
 public class RestaurantEntity {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
+    @Column(unique = true, nullable = false)
     private String name;
+
+    @Embedded
     private AddressEntity addressEntity;
+
+    @Column(name = "cuisine_type", nullable = false)
     private String cuisineType;
+
+    @Column(name = "opening_hours", nullable = false)
     private String openingHours;
+
+    @Column(name = "owner_id", nullable = false)
     private Integer ownerId;
 
     public RestaurantEntity() {
@@ -35,6 +50,7 @@ public class RestaurantEntity {
 
     public Restaurant toDomain() {
         return new Restaurant(
+                this.id,
                 this.name,
                 this.addressEntity.toDomain(),
                 this.cuisineType,

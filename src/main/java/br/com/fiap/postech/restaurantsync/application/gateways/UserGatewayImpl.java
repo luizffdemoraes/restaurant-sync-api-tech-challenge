@@ -132,4 +132,14 @@ public class UserGatewayImpl implements UserGateway {
         return this.userRepository.findById(id)
                 .orElseThrow(() -> new BusinessException("Id not found: " + id)).toDomain();
     }
+
+    public void validateUserByOwnerId(Integer ownerId) {
+        validateAdmin();
+        User owner = findUserOrThrow(ownerId);
+        if (!owner.hasRole("ROLE_ADMIN")) {
+            throw new BusinessException(
+                    "Restaurant owner must be an ADMIN user"
+            );
+        }
+    }
 }

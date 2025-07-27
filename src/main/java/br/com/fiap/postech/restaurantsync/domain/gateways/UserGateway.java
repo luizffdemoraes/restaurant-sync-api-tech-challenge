@@ -19,4 +19,5 @@ public interface UserGateway {
     void validateAdmin();
     void validateSelfOrAdmin(Integer userId);
     User findUserOrThrow(Integer id);
+    void validateUserByOwnerId(Integer ownerId);
 }
