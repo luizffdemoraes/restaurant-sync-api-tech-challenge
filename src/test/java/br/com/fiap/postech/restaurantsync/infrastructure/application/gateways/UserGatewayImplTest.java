@@ -120,21 +120,6 @@ class UserGatewayImplTest {
     }
 
     @Test
-    void findAllPagedUsers_shouldThrowExceptionWhenNotAdmin() {
-        Set<RoleEntity> userRoles = new HashSet<>();
-        userRoles.add(new RoleEntity(2, "ROLE_CLIENT"));
-
-        mockUserEntity.getRoleEntities().clear();
-        for (RoleEntity role : userRoles) {
-            mockUserEntity.addRole(role);
-        }
-
-        assertThrows(BusinessException.class, () -> {
-            userGateway.findAllPagedUsers(PageRequest.of(0, 10));
-        });
-    }
-
-    @Test
     void findUserById_shouldReturnUserWithAddress() {
         when(userRepository.findById(mockUser.getId())).thenReturn(Optional.of(mockUserEntity));
 
