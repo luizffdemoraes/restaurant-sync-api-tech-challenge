@@ -1,6 +1,9 @@
 package br.com.fiap.postech.restaurantsync.factories;
 
+import br.com.fiap.postech.restaurantsync.application.dtos.requests.RestaurantRequest;
+import br.com.fiap.postech.restaurantsync.application.dtos.responses.RestaurantResponse;
 import br.com.fiap.postech.restaurantsync.domain.entities.Address;
+import br.com.fiap.postech.restaurantsync.domain.entities.Restaurant;
 import br.com.fiap.postech.restaurantsync.domain.entities.Role;
 import br.com.fiap.postech.restaurantsync.domain.entities.User;
 import br.com.fiap.postech.restaurantsync.domain.usecases.user.CreateUserUseCase;
@@ -83,6 +86,17 @@ public class TestDataFactory {
         return user;
     }
 
+    public static Restaurant createRestaurant(String name, Integer id) {
+        return new Restaurant(
+                id,
+                name,
+                createAddress(),
+                "Italian",
+                "12:00-23:00",
+                1
+        );
+    }
+
     public static Role createRoleClient() {
         return new Role(1, "ROLE_CLIENT");
     }
@@ -109,6 +123,34 @@ public class TestDataFactory {
                 return "ROLE_CLIENT";
             }
         };
+    }
+
+    public static RestaurantRequest createRestaurantRequest() {
+        return new RestaurantRequest(
+                "Gourmet Bistro",
+                new AddressRequest(
+                        "Avenida Paulista",
+                        1000L,
+                        "São Paulo",
+                        "SP",
+                        "01310-100"
+                ),
+                "French",
+                "10:00-22:00",
+                1
+        );
+    }
+
+    public static RestaurantResponse createRestaurantResponse() {
+        Restaurant restaurant = new Restaurant(
+                1,
+                "Gourmet Bistro",
+                new Address("Avenida Paulista", 1000L, "São Paulo", "SP", "01310-100"),
+                "French",
+                "10:00-22:00",
+                1
+        );
+        return new RestaurantResponse(restaurant);
     }
 
     public static Role invokeGetRoleForEmail(CreateUserUseCase createUserUseCase, String email) {

@@ -1,4 +1,4 @@
-package br.com.fiap.postech.restaurantsync.infrastructure.application.controllers;
+package br.com.fiap.postech.restaurantsync.application.controllers;
 
 import br.com.fiap.postech.restaurantsync.domain.usecases.user.*;
 import br.com.fiap.postech.restaurantsync.factories.TestDataFactory;
@@ -56,7 +56,6 @@ public class UserControllerTest {
     private UpdatePasswordUseCase updatePasswordUseCase;
 
     @Autowired
-
     private ObjectMapper objectMapper;
 
     @Test

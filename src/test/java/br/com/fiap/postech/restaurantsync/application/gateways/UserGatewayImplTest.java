@@ -1,7 +1,7 @@
-package br.com.fiap.postech.restaurantsync.infrastructure.application.gateways;
+package br.com.fiap.postech.restaurantsync.application.gateways;
 
 
-import br.com.fiap.postech.restaurantsync.application.gateways.UserGatewayImpl;
+import br.com.fiap.postech.restaurantsync.domain.entities.Role;
 import br.com.fiap.postech.restaurantsync.domain.entities.User;
 import br.com.fiap.postech.restaurantsync.factories.TestDataFactory;
 import br.com.fiap.postech.restaurantsync.infrastructure.exceptions.BusinessException;
@@ -225,4 +225,164 @@ class UserGatewayImplTest {
             userGateway.authenticated();
         });
     }
+
+    // Testa updateUserPassword: senha é atualizada e salva
+    @Test
+    void updateUserPassword_shouldUpdatePassword() {
+        String novaSenha = "novaSenha";
+        when(userRepository.findById(mockUser.getId()))
+                .thenReturn(Optional.of(mockUserEntity));
+        when(userRepository.save(any(UserEntity.class))).thenReturn(mockUserEntity);
+        when(passwordEncoder.encode(novaSenha)).thenReturn("encodedNovaSenha");
+
+        userGateway.updateUserPassword(mockUser.getId(), novaSenha);
+
+        verify(userRepository).save(argThat(entity ->
+                "encodedNovaSenha".equals(entity.getPassword())
+        ));
+        verify(passwordEncoder).encode(novaSenha);
+    }
+
+    // Testa updateUserPassword: lança exceção se usuário não encontrado
+    @Test
+    void updateUserPassword_shouldThrowExceptionWhenUserNotFound() {
+        when(userRepository.findById(123)).thenReturn(Optional.empty());
+        assertThrows(BusinessException.class, () ->
+                userGateway.updateUserPassword(123, "qualquer")
+        );
+    }
+
+    // Testa validateAdmin: sem ROLE_ADMIN -> exceção
+    @Test
+    void validateAdmin_shouldThrowExceptionWhenUserIsNotAdmin() {
+        // Simula usuário sem ROLE_ADMIN
+        when(userRepository.findByEmail(mockUser.getEmail()))
+                .thenReturn(Optional.of(mockUserEntity));
+
+        // Remove todas roles
+        mockUserEntity.getRoleEntities().clear();
+        // Adiciona só CLIENT
+        mockUserEntity.addRole(new RoleEntity(2, "ROLE_CLIENT"));
+
+        assertThrows(BusinessException.class, () -> {
+            userGateway.validateAdmin();
+        });
+    }
+
+    // Testa validateAdmin: com admin - não lança exceção
+    @Test
+    void validateAdmin_shouldPassWhenUserIsAdmin() {
+        // Simula ROLE_ADMIN
+        mockUserEntity.getRoleEntities().clear();
+        mockUserEntity.addRole(new RoleEntity(1, "ROLE_ADMIN"));
+        when(userRepository.findByEmail(mockUser.getEmail()))
+                .thenReturn(Optional.of(mockUserEntity));
+
+        assertDoesNotThrow(() -> userGateway.validateAdmin());
+    }
+
+    // Testa validateSelfOrAdmin: usuário normal tentando acessar outro id
+    @Test
+    void validateSelfOrAdmin_shouldThrowExceptionWhenUserIsNotSelfOrAdmin() {
+        mockUserEntity.getRoleEntities().clear(); // Não é admin
+        mockUserEntity.addRole(new RoleEntity(2, "ROLE_CLIENT"));
+        when(userRepository.findByEmail(mockUser.getEmail()))
+                .thenReturn(Optional.of(mockUserEntity));
+
+        // Tenta validar acesso com outro ID (não é self)
+        assertThrows(BusinessException.class, () ->
+                userGateway.validateSelfOrAdmin(999)
+        );
+    }
+
+    // Testa validateSelfOrAdmin: usuário é ele mesmo
+    @Test
+    void validateSelfOrAdmin_shouldPassWhenUserIsSelf() {
+        mockUserEntity.getRoleEntities().clear(); // Não é admin
+        mockUserEntity.addRole(new RoleEntity(2, "ROLE_CLIENT"));
+        when(userRepository.findByEmail(mockUser.getEmail()))
+                .thenReturn(Optional.of(mockUserEntity));
+
+        assertDoesNotThrow(() -> userGateway.validateSelfOrAdmin(mockUser.getId()));
+    }
+
+    @Test
+    void validateSelfOrAdmin_shouldPassWhenUserIsAdmin() {
+        mockUserEntity.getRoleEntities().clear();
+        mockUserEntity.addRole(new RoleEntity(1, "ROLE_ADMIN"));
+        when(userRepository.findByEmail(mockUser.getEmail()))
+                .thenReturn(Optional.of(mockUserEntity));
+
+        assertDoesNotThrow(() -> userGateway.validateSelfOrAdmin(999));
+    }
+
+    @Test
+    void validateUserByOwnerId_shouldThrowExceptionIfUserNotFound() {
+        when(userRepository.findById(999)).thenReturn(Optional.empty());
+
+        assertThrows(BusinessException.class, () ->
+                userGateway.validateUserByOwnerId(999)
+        );
+    }
+
+
+    @Test
+    void validateUserByOwnerId_shouldPass_whenOwnerIsAdmin() {
+        // Arrange
+        Integer ownerId = 10;
+        User adminUser = TestDataFactory.createUser();
+        adminUser.addRole(new Role(1, "ROLE_ADMIN"));
+
+        // Mock the internal validateAdmin() call to do nothing
+        UserGatewayImpl spyGateway = spy(userGateway);
+        doNothing().when(spyGateway).validateAdmin();
+
+        when(userRepository.findById(ownerId)).thenReturn(Optional.of(UserEntity.fromDomain(adminUser)));
+
+        // Act & Assert
+        assertDoesNotThrow(() -> spyGateway.validateUserByOwnerId(ownerId));
+        verify(spyGateway).validateAdmin();
+        verify(userRepository).findById(ownerId);
+    }
+
+    @Test
+    void validateUserByOwnerId_shouldThrowBusinessException_whenOwnerIsNotAdmin() {
+        // Arrange
+        Integer ownerId = 20;
+        User commonUser = TestDataFactory.createUser(); // Has only ROLE_CLIENT by default
+
+        // Mock the internal validateAdmin() call to do nothing
+        UserGatewayImpl spyGateway = spy(userGateway);
+        doNothing().when(spyGateway).validateAdmin();
+        when(userRepository.findById(ownerId)).thenReturn(Optional.of(UserEntity.fromDomain(commonUser)));
+
+        // Act & Assert
+        BusinessException ex = assertThrows(
+                BusinessException.class,
+                () -> spyGateway.validateUserByOwnerId(ownerId)
+        );
+        assertEquals("Restaurant owner must be an ADMIN user", ex.getMessage());
+        verify(spyGateway).validateAdmin();
+        verify(userRepository).findById(ownerId);
+    }
+
+    @Test
+    void validateUserByOwnerId_shouldThrow_whenOwnerNotFound() {
+        // Arrange
+        Integer ownerId = 999;
+
+        // Mock the internal validateAdmin() call to do nothing
+        UserGatewayImpl spyGateway = spy(userGateway);
+        doNothing().when(spyGateway).validateAdmin();
+
+        when(userRepository.findById(ownerId)).thenReturn(Optional.empty());
+
+        // Act & Assert
+        assertThrows(BusinessException.class,
+                () -> spyGateway.validateUserByOwnerId(ownerId));
+        verify(spyGateway).validateAdmin();
+        verify(userRepository).findById(ownerId);
+    }
 }
+
+
