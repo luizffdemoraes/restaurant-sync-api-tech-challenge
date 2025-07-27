@@ -4,8 +4,7 @@ import br.com.fiap.postech.restaurantsync.application.gateways.RestaurantGateway
 import br.com.fiap.postech.restaurantsync.domain.gateways.RestaurantGateway;
 import br.com.fiap.postech.restaurantsync.domain.gateways.RoleGateway;
 import br.com.fiap.postech.restaurantsync.domain.gateways.UserGateway;
-import br.com.fiap.postech.restaurantsync.domain.usecases.restaurant.CreateRestaurantUseCase;
-import br.com.fiap.postech.restaurantsync.domain.usecases.restaurant.CreateRestaurantUseCaseImp;
+import br.com.fiap.postech.restaurantsync.domain.usecases.restaurant.*;
 import br.com.fiap.postech.restaurantsync.domain.usecases.user.*;
 import br.com.fiap.postech.restaurantsync.application.gateways.RoleGatewayImpl;
 import br.com.fiap.postech.restaurantsync.application.gateways.UserGatewayImpl;
@@ -22,16 +21,44 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Configuration
 public class DependencyInjectionConfig {
 
-    @Bean
-    public CreateUserUseCase createUserUseCase(UserGateway userGateway,
-                                               RoleGateway roleGateway) {
-        return new CreateUserUseCaseImp(userGateway, roleGateway);
-    }
+    // Restaurant Use Cases
 
     @Bean
     public CreateRestaurantUseCase createRestaurantUseCase(RestaurantGateway restaurantGateway,
                                                            UserGateway userGateway) {
         return new CreateRestaurantUseCaseImp(restaurantGateway, userGateway);
+    }
+
+    @Bean
+    public DeleteRestaurantUseCase deleteRestaurantUseCase(RestaurantGateway restaurantGateway,
+                                                           UserGateway userGateway) {
+        return new DeleteRestaurantUseCaseImp(restaurantGateway, userGateway);
+    }
+
+    @Bean
+    public FindAllPagedRestaurantUseCase findAllPagedRestaurantUseCase(RestaurantGateway restaurantGateway,
+                                                           UserGateway userGateway) {
+        return new FindAllPagedRestaurantUseCaseImp(restaurantGateway, userGateway);
+    }
+
+    @Bean
+    public FindRestaurantByIdUseCase findRestaurantByIdUseCase(RestaurantGateway restaurantGateway,
+                                                                       UserGateway userGateway) {
+        return new FindRestaurantByIdUseCaseImp(restaurantGateway, userGateway);
+    }
+
+    @Bean
+    public UpdateRestaurantUseCase UpdateRestaurantUseCase(RestaurantGateway restaurantGateway,
+                                                               UserGateway userGateway) {
+        return new UpdateRestaurantUseCaseImp(restaurantGateway, userGateway);
+    }
+
+    // User Use Cases
+
+    @Bean
+    public CreateUserUseCase createUserUseCase(UserGateway userGateway,
+                                               RoleGateway roleGateway) {
+        return new CreateUserUseCaseImp(userGateway, roleGateway);
     }
 
     @Bean

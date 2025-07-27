@@ -45,7 +45,8 @@ public class UserEntity implements UserDetails {
     public UserEntity() {
     }
 
-    public UserEntity(String name, String email, String login, String password, AddressEntity addressEntity) {
+    public UserEntity(Integer id, String name, String email, String login, String password, AddressEntity addressEntity) {
+        this.id = id;
         this.name = name;
         this.email = email;
         this.login = login;
@@ -60,6 +61,7 @@ public class UserEntity implements UserDetails {
         }
         var address = AddressEntity.fromDomain(user.getAddress());
         var entity = new UserEntity(
+                user.getId(),
                 user.getName(),
                 user.getEmail(),
                 user.getLogin(),

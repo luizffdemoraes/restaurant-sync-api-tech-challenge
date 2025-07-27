@@ -17,6 +17,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.Jwt;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -61,10 +62,22 @@ public class UserGatewayImpl implements UserGateway {
         }
     }
 
+    @Override
     public User updateUser(Integer id, User userRequest) {
         User user = findUserOrThrow(id);
         validateSelfOrAdmin(user.getId());
-        user.setPassword(passwordEncoder.encode(userRequest.getPassword()));
+
+        user.setPassword(
+                (userRequest.getPassword() != null && !userRequest.getPassword().isEmpty())
+                        ? passwordEncoder.encode(userRequest.getPassword())
+                        : user.getPassword()
+        );
+        user.setName(userRequest.getName() != null ? userRequest.getName() : user.getName());
+        user.setEmail(userRequest.getEmail() != null ? userRequest.getEmail() : user.getEmail());
+        user.setLogin(userRequest.getLogin() != null ? userRequest.getLogin() : user.getLogin());
+        user.setAddress(userRequest.getAddress() != null ? userRequest.getAddress() : user.getAddress());
+        user.setLastUpdateDate(new Date());
+
         UserEntity saved = this.userRepository.save(UserEntity.fromDomain(user));
         return saved.toDomain();
     }

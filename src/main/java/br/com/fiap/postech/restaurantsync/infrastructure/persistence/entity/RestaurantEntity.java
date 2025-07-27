@@ -28,7 +28,8 @@ public class RestaurantEntity {
     public RestaurantEntity() {
     }
 
-    public RestaurantEntity(String name, AddressEntity address, String cuisineType, String openingHours, Integer ownerId) {
+    public RestaurantEntity(Integer id, String name, AddressEntity address, String cuisineType, String openingHours, Integer ownerId) {
+        this.id = id;
         this.name = name;
         this.addressEntity = address;
         this.cuisineType = cuisineType;
@@ -40,6 +41,7 @@ public class RestaurantEntity {
         if (restaurant == null) return null;
         var address = AddressEntity.fromDomain(restaurant.getAddress());
         return new RestaurantEntity(
+                restaurant.getId(),
                 restaurant.getName(),
                 address,
                 restaurant.getCuisineType(),

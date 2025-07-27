@@ -1,5 +1,7 @@
 package br.com.fiap.postech.restaurantsync.application.dtos.requests;
 
+import br.com.fiap.postech.restaurantsync.infrastructure.persistence.entity.RestaurantEntity;
+import br.com.fiap.postech.restaurantsync.infrastructure.validations.UniqueValue;
 import br.com.fiap.postech.restaurantsync.infrastructure.validations.ValidTimeInterval;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -7,6 +9,7 @@ import jakarta.validation.constraints.Pattern;
 
 public record RestaurantRequest(
         @NotBlank(message = "Name is required")
+        @UniqueValue(domainClass = RestaurantEntity.class, fieldName = "name", message = "Name already registered.")
         String name,
 
         @NotNull(message = "Address is required")

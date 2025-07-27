@@ -17,7 +17,7 @@ public class UpdateUserUseCaseImp implements UpdateUserUseCase{
     public UserResponse execute(Integer id, UserRequest request) {
         User user = new User(request);
         this.userGateway.validateSelfOrAdmin(id);
-        this.userGateway.updateUser(id, user);
-        return new UserResponse(user);
+        User updateUser = this.userGateway.updateUser(id, user);
+        return new UserResponse(updateUser);
     }
 }

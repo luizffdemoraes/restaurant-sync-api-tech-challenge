@@ -54,7 +54,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserResponse> findUserById(@PathVariable Integer id) {
+    public ResponseEntity<Object> findUserById(@PathVariable Integer id) {
         UserResponse response = this.findUserByIdUseCase.execute(id);
         return ResponseEntity.ok(response);
     }
@@ -72,7 +72,7 @@ public class UserController {
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<UserResponse> updateUser(@PathVariable Integer id, @Valid @RequestBody UserRequest request) {
+    public ResponseEntity<Object> updateUser(@PathVariable Integer id, @Valid @RequestBody UserRequest request) {
         UserResponse response = updateUserUseCase.execute(id, request);
         return ResponseEntity.ok().body(response);
     }
