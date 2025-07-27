@@ -45,20 +45,15 @@ public class UserGatewayImpl implements UserGateway {
     }
 
     public Page<User> findAllPagedUsers(PageRequest pageRequest) {
-        validateAdmin();
         Page<UserEntity> pagedUsers = this.userRepository.findAll(pageRequest);
         return pagedUsers.map(UserEntity::toDomain);
     }
 
     public User findUserById(Integer id) {
-        User user = findUserOrThrow(id);
-        validateSelfOrAdmin(user.getId());
-        return user;
+        return findUserOrThrow(id);
     }
 
     public void deleteUserById(Integer id) {
-        validateAdmin();
-        findUserOrThrow(id);
         try {
             this.userRepository.deleteById(id);
         } catch (DataIntegrityViolationException e) {
@@ -76,7 +71,6 @@ public class UserGatewayImpl implements UserGateway {
 
     public void updateUserPassword(Integer id, String newPassword) {
         User user = findUserOrThrow(id);
-        validateSelfOrAdmin(user.getId());
         user.setPassword(passwordEncoder.encode(newPassword));
         this.userRepository.save(UserEntity.fromDomain(user));
     }

@@ -5,13 +5,11 @@ import br.com.fiap.postech.restaurantsync.application.dtos.requests.UserRequest;
 import br.com.fiap.postech.restaurantsync.application.dtos.responses.RestaurantResponse;
 import br.com.fiap.postech.restaurantsync.application.dtos.responses.UserResponse;
 import br.com.fiap.postech.restaurantsync.domain.usecases.restaurant.CreateRestaurantUseCase;
-import br.com.fiap.postech.restaurantsync.domain.usecases.user.CreateUserUseCase;
+import br.com.fiap.postech.restaurantsync.domain.usecases.restaurant.DeleteRestaurantUseCase;
+import br.com.fiap.postech.restaurantsync.domain.usecases.user.*;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
@@ -21,9 +19,15 @@ import java.net.URI;
 public class RestaurantController {
 
     private final CreateRestaurantUseCase createRestaurantUseCase;
+    private final DeleteRestaurantUseCase deleteRestaurantUseCase;
+   // private final FindRestaurantByIdUseCase findRestaurantByIdUseCase;
+   // private final FindAllPagedRestaurantUseCase findAllPagedRestaurantUseCase;
+   // private final UpdateRestaurantUseCase updateRestaurantUseCase;
 
-    public RestaurantController(CreateRestaurantUseCase createRestaurantUseCase) {
-        this.createRestaurantUseCase = createRestaurantUseCase;
+    public RestaurantController(CreateRestaurantUseCase createRestaurantUseCase,
+                                DeleteRestaurantUseCase deleteRestaurantUseCase) {
+        this.createRestaurantUseCase = createRestaurantUseCase,
+        this.deleteRestaurantUseCase = deleteRestaurantUseCase;
     }
 
     @PostMapping
@@ -32,5 +36,11 @@ public class RestaurantController {
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
                 .buildAndExpand(response.id()).toUri();
         return ResponseEntity.created(uri).body(response);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteUser(@PathVariable Integer id) {
+        this.deleteRestaurantUseCase.execute(id);
+        return ResponseEntity.noContent().build();
     }
 }
