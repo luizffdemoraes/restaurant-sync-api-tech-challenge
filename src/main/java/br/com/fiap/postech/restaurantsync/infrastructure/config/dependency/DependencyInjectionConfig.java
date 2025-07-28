@@ -1,13 +1,18 @@
 package br.com.fiap.postech.restaurantsync.infrastructure.config.dependency;
 
+import br.com.fiap.postech.restaurantsync.application.gateways.MenuGatewayImp;
 import br.com.fiap.postech.restaurantsync.application.gateways.RestaurantGatewayImpl;
+import br.com.fiap.postech.restaurantsync.domain.gateways.MenuGateway;
 import br.com.fiap.postech.restaurantsync.domain.gateways.RestaurantGateway;
 import br.com.fiap.postech.restaurantsync.domain.gateways.RoleGateway;
 import br.com.fiap.postech.restaurantsync.domain.gateways.UserGateway;
+import br.com.fiap.postech.restaurantsync.domain.usecases.menu.CreateMenuUseCase;
+import br.com.fiap.postech.restaurantsync.domain.usecases.menu.CreateMenuUseCaseImp;
 import br.com.fiap.postech.restaurantsync.domain.usecases.restaurant.*;
 import br.com.fiap.postech.restaurantsync.domain.usecases.user.*;
 import br.com.fiap.postech.restaurantsync.application.gateways.RoleGatewayImpl;
 import br.com.fiap.postech.restaurantsync.application.gateways.UserGatewayImpl;
+import br.com.fiap.postech.restaurantsync.infrastructure.persistence.repository.MenuRepository;
 import br.com.fiap.postech.restaurantsync.infrastructure.persistence.repository.RestaurantRepository;
 import br.com.fiap.postech.restaurantsync.infrastructure.persistence.repository.RoleRepository;
 import br.com.fiap.postech.restaurantsync.infrastructure.persistence.repository.UserRepository;
@@ -20,6 +25,15 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 public class DependencyInjectionConfig {
+
+    // Menu Use Cases
+
+    @Bean
+    public CreateMenuUseCase createMenuUseCase(MenuGateway menuGateway,
+                                               RestaurantGateway restaurantGateway,
+                                               UserGateway userGateway) {
+        return new CreateMenuUseCaseImp(menuGateway, restaurantGateway, userGateway);
+    }
 
     // Restaurant Use Cases
 
@@ -90,6 +104,11 @@ public class DependencyInjectionConfig {
     public UserGateway userGateway(UserRepository repository,
                                    PasswordEncoder passwordEncoder) {
         return new UserGatewayImpl(repository, passwordEncoder);
+    }
+
+    @Bean
+    public MenuGateway menuGateway(MenuRepository repository) {
+        return new MenuGatewayImp(repository);
     }
 
     @Bean

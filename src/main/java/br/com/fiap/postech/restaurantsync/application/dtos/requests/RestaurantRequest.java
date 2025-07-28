@@ -6,6 +6,7 @@ import br.com.fiap.postech.restaurantsync.infrastructure.validations.ValidTimeIn
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Positive;
 
 public record RestaurantRequest(
         @NotBlank(message = "Name is required")
@@ -25,6 +26,7 @@ public record RestaurantRequest(
         String openingHours,
 
         @NotNull(message = "Owner ID is required")
+        @Positive(message = "Owner ID must be positive")
         Integer ownerId) {
 
     public RestaurantRequest(String name, AddressRequest address, String cuisineType, String openingHours, Integer ownerId) {
