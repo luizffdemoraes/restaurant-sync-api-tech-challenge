@@ -2,8 +2,7 @@ spring:
   application:
     name: restaurant-sync
 
-  datasource:
-    url: jdbc:postgresql://localhost:5432/restaurant_sync
+    url: jdbc:postgresql://postgres:5432/restaurant_sync
     username: postgres
     password: postgres
     driver-class-name: org.postgresql.Driver
