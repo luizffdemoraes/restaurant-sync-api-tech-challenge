@@ -131,6 +131,7 @@
                         <exclude>**/config/**</exclude>
                         <exclude>**/dtos/**</exclude>
                         <exclude>**/entities/**</exclude>
+                        <exclude>**/entity/**</exclude>
                     </excludes>
                 </configuration>
                 <executions>
