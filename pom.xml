@@ -129,8 +129,9 @@
                 <configuration>
                     <excludes>
                         <exclude>**/config/**</exclude>
+                        <exclude>**/dtos/**</exclude>
                         <exclude>**/entities/**</exclude>
-                        <exclude>**/translator/**</exclude>
+                        <exclude>**/entity/**</exclude>
                     </excludes>
                 </configuration>
                 <executions>

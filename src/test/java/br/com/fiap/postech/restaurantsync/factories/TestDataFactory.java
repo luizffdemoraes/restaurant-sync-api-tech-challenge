@@ -1,22 +1,24 @@
 package br.com.fiap.postech.restaurantsync.factories;
 
-import br.com.fiap.postech.restaurantsync.dtos.requests.AddressRequest;
-import br.com.fiap.postech.restaurantsync.dtos.requests.PasswordRequest;
-import br.com.fiap.postech.restaurantsync.dtos.requests.UserRequest;
-import br.com.fiap.postech.restaurantsync.dtos.responses.AddressResponse;
-import br.com.fiap.postech.restaurantsync.dtos.responses.UserResponse;
-import br.com.fiap.postech.restaurantsync.entities.Address;
-import br.com.fiap.postech.restaurantsync.entities.Role;
-import br.com.fiap.postech.restaurantsync.entities.User;
-import br.com.fiap.postech.restaurantsync.entities.UserDetailsProjection;
-import br.com.fiap.postech.restaurantsync.services.UserService;
+import br.com.fiap.postech.restaurantsync.application.dtos.requests.MenuRequest;
+import br.com.fiap.postech.restaurantsync.application.dtos.requests.RestaurantRequest;
+import br.com.fiap.postech.restaurantsync.application.dtos.responses.RestaurantResponse;
+import br.com.fiap.postech.restaurantsync.domain.entities.Address;
+import br.com.fiap.postech.restaurantsync.domain.entities.Restaurant;
+import br.com.fiap.postech.restaurantsync.domain.entities.Role;
+import br.com.fiap.postech.restaurantsync.domain.entities.User;
+import br.com.fiap.postech.restaurantsync.domain.usecases.user.CreateUserUseCase;
+import br.com.fiap.postech.restaurantsync.application.dtos.requests.AddressRequest;
+import br.com.fiap.postech.restaurantsync.application.dtos.requests.UserRequest;
+import br.com.fiap.postech.restaurantsync.application.dtos.responses.AddressResponse;
+import br.com.fiap.postech.restaurantsync.application.dtos.responses.UserResponse;
+import br.com.fiap.postech.restaurantsync.infrastructure.persistence.entity.UserDetailsProjection;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Date;
 
 public class TestDataFactory {
-
     public static UserRequest createUserRequest() {
         return new UserRequest(
                 "John Doe",
@@ -85,6 +87,17 @@ public class TestDataFactory {
         return user;
     }
 
+    public static Restaurant createRestaurant(String name, Integer id) {
+        return new Restaurant(
+                id,
+                name,
+                createAddress(),
+                "Italian",
+                "12:00-23:00",
+                1
+        );
+    }
+
     public static Role createRoleClient() {
         return new Role(1, "ROLE_CLIENT");
     }
@@ -113,11 +126,39 @@ public class TestDataFactory {
         };
     }
 
-    public static Role invokeGetRoleForEmail(UserService userService, String email) {
+    public static RestaurantRequest createRestaurantRequest() {
+        return new RestaurantRequest(
+                "Gourmet Bistro",
+                new AddressRequest(
+                        "Avenida Paulista",
+                        1000L,
+                        "São Paulo",
+                        "SP",
+                        "01310-100"
+                ),
+                "French",
+                "10:00-22:00",
+                1
+        );
+    }
+
+    public static RestaurantResponse createRestaurantResponse() {
+        Restaurant restaurant = new Restaurant(
+                1,
+                "Gourmet Bistro",
+                new Address("Avenida Paulista", 1000L, "São Paulo", "SP", "01310-100"),
+                "French",
+                "10:00-22:00",
+                1
+        );
+        return new RestaurantResponse(restaurant);
+    }
+
+    public static Role invokeGetRoleForEmail(CreateUserUseCase createUserUseCase, String email) {
         try {
-            Method method = UserService.class.getDeclaredMethod("getRoleForEmail", String.class);
+            Method method = CreateUserUseCase.class.getDeclaredMethod("getRoleForEmail", String.class);
             method.setAccessible(true);
-            return (Role) method.invoke(userService, email);
+            return (Role) method.invoke(createUserUseCase, email);
         } catch (InvocationTargetException e) {
             Throwable cause = e.getCause();
             if (cause instanceof RuntimeException) {
@@ -131,15 +172,25 @@ public class TestDataFactory {
     }
 
 
-    public static Object invokeAuthenticated(UserService userService) throws Throwable {
+    public static Object invokeAuthenticated(CreateUserUseCase createUserUseCase) throws Throwable {
         try {
-            Method method = UserService.class.getDeclaredMethod("authenticated");
+            Method method = CreateUserUseCase.class.getDeclaredMethod("authenticated");
             method.setAccessible(true);
-            return method.invoke(userService);
+            return method.invoke(createUserUseCase);
         } catch (InvocationTargetException e) {
             throw e.getCause();
         }
     }
 
+    public static MenuRequest createMenuRequest() {
+        return new MenuRequest(
+                "Menu Test",
+                "Delicious menu for testing",
+                10.00,
+                true,
+                "/images/feijoada.jpg",
+                1
+        );
 
+    }
 }
