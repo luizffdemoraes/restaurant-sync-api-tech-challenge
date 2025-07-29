@@ -6,8 +6,7 @@ import br.com.fiap.postech.restaurantsync.domain.gateways.MenuGateway;
 import br.com.fiap.postech.restaurantsync.domain.gateways.RestaurantGateway;
 import br.com.fiap.postech.restaurantsync.domain.gateways.RoleGateway;
 import br.com.fiap.postech.restaurantsync.domain.gateways.UserGateway;
-import br.com.fiap.postech.restaurantsync.domain.usecases.menu.CreateMenuUseCase;
-import br.com.fiap.postech.restaurantsync.domain.usecases.menu.CreateMenuUseCaseImp;
+import br.com.fiap.postech.restaurantsync.domain.usecases.menu.*;
 import br.com.fiap.postech.restaurantsync.domain.usecases.restaurant.*;
 import br.com.fiap.postech.restaurantsync.domain.usecases.user.*;
 import br.com.fiap.postech.restaurantsync.application.gateways.RoleGatewayImpl;
@@ -35,6 +34,37 @@ public class DependencyInjectionConfig {
         return new CreateMenuUseCaseImp(menuGateway, restaurantGateway, userGateway);
     }
 
+    @Bean
+    public DeleteMenuUseCase deleteMenu(MenuGateway menuGateway,
+                                        UserGateway userGateway) {
+        return new DeleteMenuUseCaseImp(menuGateway, userGateway);
+    }
+
+    @Bean
+    public FindMenuByIdUseCase findMenuById(MenuGateway menuGateway,
+                                            UserGateway userGateway) {
+        return new FindMenuByIdUseCaseImp(menuGateway, userGateway);
+    }
+
+    @Bean
+    public FindAllPagedMenuUseCase findAllPagedMenu(MenuGateway menuGateway,
+                                                    UserGateway userGateway) {
+        return new FindAllPagedMenuUseCaseImp(menuGateway, userGateway);
+    }
+
+    @Bean
+    public UpdateMenuUseCase updateRestaurant(MenuGateway menuGateway,
+                                              RestaurantGateway restaurantGateway,
+                                              UserGateway userGateway) {
+        return new UpdateMenuUseCaseImp(menuGateway, restaurantGateway, userGateway);
+    }
+
+    @Bean
+    public UpdateAvailableRestaurantOnlyUseCase updateAvailableRestaurantOnlyUseCase(MenuGateway menuGateway,
+                                                                                     UserGateway userGateway) {
+        return new UpdateAvailableRestaurantOnlyUseCaseImp(menuGateway, userGateway);
+    }
+
     // Restaurant Use Cases
 
     @Bean
@@ -51,19 +81,19 @@ public class DependencyInjectionConfig {
 
     @Bean
     public FindAllPagedRestaurantUseCase findAllPagedRestaurantUseCase(RestaurantGateway restaurantGateway,
-                                                           UserGateway userGateway) {
+                                                                       UserGateway userGateway) {
         return new FindAllPagedRestaurantUseCaseImp(restaurantGateway, userGateway);
     }
 
     @Bean
     public FindRestaurantByIdUseCase findRestaurantByIdUseCase(RestaurantGateway restaurantGateway,
-                                                                       UserGateway userGateway) {
+                                                               UserGateway userGateway) {
         return new FindRestaurantByIdUseCaseImp(restaurantGateway, userGateway);
     }
 
     @Bean
     public UpdateRestaurantUseCase UpdateRestaurantUseCase(RestaurantGateway restaurantGateway,
-                                                               UserGateway userGateway) {
+                                                           UserGateway userGateway) {
         return new UpdateRestaurantUseCaseImp(restaurantGateway, userGateway);
     }
 

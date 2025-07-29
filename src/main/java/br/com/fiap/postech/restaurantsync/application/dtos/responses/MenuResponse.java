@@ -8,7 +8,7 @@ public record MenuResponse(
         String name,
         String description,
         Double price,
-        Boolean availableOnlyAtRestaurant,
+        Boolean availableOnlyRestaurant,
         String photoPath,
         Integer restaurantId
 ) {
@@ -18,7 +18,7 @@ public record MenuResponse(
                 menuItem.getName(),
                 menuItem.getDescription(),
                 menuItem.getPrice(),
-                menuItem.isAvailableOnlyAtRestaurant(),
+                menuItem.isAvailableOnlyRestaurant(),
                 menuItem.getPhotoPath(),
                 menuItem.getRestaurantId()
         );

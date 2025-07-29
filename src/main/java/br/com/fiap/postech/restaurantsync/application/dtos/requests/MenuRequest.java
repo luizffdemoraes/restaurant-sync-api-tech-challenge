@@ -17,7 +17,7 @@ public record MenuRequest(
         Double price,
 
         @NotNull(message = "Availability is required")
-        Boolean availableOnlyAtRestaurant,
+        Boolean availableOnlyRestaurant,
 
         String photoPath,
 
@@ -25,11 +25,11 @@ public record MenuRequest(
         @Positive(message = "Restaurant ID must be positive")
         Integer restaurantId
 ) {
-    public MenuRequest(String name, String description, Double price, Boolean availableOnlyAtRestaurant, String photoPath, Integer restaurantId) {
+    public MenuRequest(String name, String description, Double price, Boolean availableOnlyRestaurant, String photoPath, Integer restaurantId) {
         this.name = name;
         this.description = description;
         this.price = price;
-        this.availableOnlyAtRestaurant = availableOnlyAtRestaurant;
+        this.availableOnlyRestaurant = availableOnlyRestaurant;
         this.photoPath = photoPath;
         this.restaurantId = restaurantId;
     }

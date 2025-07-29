@@ -2,8 +2,11 @@ package br.com.fiap.postech.restaurantsync.application.gateways;
 
 import br.com.fiap.postech.restaurantsync.domain.entities.Menu;
 import br.com.fiap.postech.restaurantsync.domain.gateways.MenuGateway;
+import br.com.fiap.postech.restaurantsync.infrastructure.exceptions.BusinessException;
 import br.com.fiap.postech.restaurantsync.infrastructure.persistence.entity.MenuEntity;
 import br.com.fiap.postech.restaurantsync.infrastructure.persistence.repository.MenuRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 
 public class MenuGatewayImp implements MenuGateway {
 
@@ -18,5 +21,51 @@ public class MenuGatewayImp implements MenuGateway {
         MenuEntity responseEntity = MenuEntity.fromDomain(menuItem);
         MenuEntity saved = this.menuItemRepository.save(responseEntity);
         return saved.toDomain();
+    }
+
+    @Override
+    public void deleteMenuById(Integer id) {
+        try {
+            this.menuItemRepository.deleteById(id);
+        } catch (Exception e) {
+            throw new BusinessException("Integrity violaton.");
+        }
+    }
+
+    @Override
+    public Page<Menu> findAllPagedMenus(PageRequest pageRequest) {
+        Page<MenuEntity> pagedMenus = this.menuItemRepository.findAll(pageRequest);
+        return pagedMenus.map(MenuEntity::toDomain);
+    }
+
+    @Override
+    public Menu findMenuById(Integer id) {
+        return findMenuOrThrow(id);
+    }
+
+    @Override
+    public Menu updateMenu(Integer id, Menu menuRequest) {
+        Menu menu = findMenuOrThrow(id);
+        menu.setName(menuRequest.getName() != null ? menuRequest.getName() : menu.getName());
+        menu.setDescription(menuRequest.getDescription() != null ? menuRequest.getDescription() : menu.getDescription());
+        menu.setPrice(menuRequest.getPrice() != null ? menuRequest.getPrice() : menu.getPrice());
+        menu.setAvailableOnlyRestaurant(menuRequest.isAvailableOnlyRestaurant());
+        menu.setPhotoPath(menuRequest.getPhotoPath() != null ? menuRequest.getPhotoPath() : menu.getPhotoPath());
+        menu.setRestaurantId(menuRequest.getRestaurantId() != null ? menuRequest.getRestaurantId() : menu.getRestaurantId());
+        MenuEntity saved = this.menuItemRepository.save(MenuEntity.fromDomain(menu));
+        return saved.toDomain();
+    }
+
+    @Override
+    public Menu updateAvailableOnlyRestaurant(Integer id, Boolean availableOnlyRestaurant) {
+        Menu menu = findMenuOrThrow(id);
+        menu.setAvailableOnlyRestaurant(availableOnlyRestaurant);
+        MenuEntity saved = this.menuItemRepository.save(MenuEntity.fromDomain(menu));
+        return saved.toDomain();
+    }
+
+    private Menu findMenuOrThrow(Integer id) {
+        return this.menuItemRepository.findById(id)
+                .orElseThrow(() -> new BusinessException("Id not found: " + id)).toDomain();
     }
 }

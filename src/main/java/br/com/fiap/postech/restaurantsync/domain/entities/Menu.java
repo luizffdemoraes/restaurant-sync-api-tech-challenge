@@ -8,19 +8,19 @@ public class Menu {
     private String name;
     private String description;
     private Double price;
-    private boolean availableOnlyAtRestaurant;
+    private boolean availableOnlyRestaurant;
     private String photoPath;
     private Integer restaurantId;
 
 
     public Menu(Integer id, String name, String description, Double price,
-                boolean availableOnlyAtRestaurant, String photoPath,
+                boolean availableOnlyRestaurant, String photoPath,
                 Integer restaurantIds) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.price = price;
-        this.availableOnlyAtRestaurant = availableOnlyAtRestaurant;
+        this.availableOnlyRestaurant = availableOnlyRestaurant;
         this.photoPath = photoPath;
         this.restaurantId = restaurantIds;
     }
@@ -29,7 +29,7 @@ public class Menu {
         this.name = request.name();
         this.description = request.description();
         this.price = request.price();
-        this.availableOnlyAtRestaurant = request.availableOnlyAtRestaurant();
+        this.availableOnlyRestaurant = request.availableOnlyRestaurant();
         this.photoPath = request.photoPath();
         this.restaurantId = request.restaurantId();
     }
@@ -66,12 +66,12 @@ public class Menu {
         this.price = price;
     }
 
-    public boolean isAvailableOnlyAtRestaurant() {
-        return availableOnlyAtRestaurant;
+    public boolean isAvailableOnlyRestaurant() {
+        return availableOnlyRestaurant;
     }
 
-    public void setAvailableOnlyAtRestaurant(boolean availableOnlyAtRestaurant) {
-        this.availableOnlyAtRestaurant = availableOnlyAtRestaurant;
+    public void setAvailableOnlyRestaurant(boolean availableOnlyRestaurant) {
+        this.availableOnlyRestaurant = availableOnlyRestaurant;
     }
 
     public String getPhotoPath() {

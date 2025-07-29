@@ -20,7 +20,7 @@ public class MenuEntity {
     private Double price;
 
     @Column(name = "available_in_restaurant", nullable = false)
-    private Boolean availableOnlyAtRestaurant;
+    private Boolean availableOnlyRestaurant;
 
     @Column(name = "photo_path")
     private String photoPath;
@@ -32,12 +32,12 @@ public class MenuEntity {
 
     }
 
-    public MenuEntity(Integer id, String name, String description, Double price, boolean availableOnlyAtRestaurant, String photoPath, Integer restaurantId) {
+    public MenuEntity(Integer id, String name, String description, Double price, boolean availableOnlyRestaurant, String photoPath, Integer restaurantId) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.price = price;
-        this.availableOnlyAtRestaurant = availableOnlyAtRestaurant;
+        this.availableOnlyRestaurant = availableOnlyRestaurant;
         this.photoPath = photoPath;
         this.restaurantId = restaurantId;
     }
@@ -50,7 +50,7 @@ public class MenuEntity {
                 name,
                 description,
                 price,
-                availableOnlyAtRestaurant != null && availableOnlyAtRestaurant, // evita null
+                availableOnlyRestaurant != null && availableOnlyRestaurant, // evita null
                 photoPath,
                 restaurantId
         );
@@ -62,7 +62,7 @@ public class MenuEntity {
                 menuItem.getName(),
                 menuItem.getDescription(),
                 menuItem.getPrice(),
-                menuItem.isAvailableOnlyAtRestaurant(),
+                menuItem.isAvailableOnlyRestaurant(),
                 menuItem.getPhotoPath(),
                 menuItem.getRestaurantId()
         );
@@ -100,12 +100,12 @@ public class MenuEntity {
         this.price = price;
     }
 
-    public Boolean getAvailableOnlyAtRestaurant() {
-        return availableOnlyAtRestaurant;
+    public Boolean getAvailableOnlyRestaurant() {
+        return availableOnlyRestaurant;
     }
 
-    public void setAvailableOnlyAtRestaurant(Boolean availableOnlyAtRestaurant) {
-        this.availableOnlyAtRestaurant = availableOnlyAtRestaurant;
+    public void setAvailableOnlyRestaurant(Boolean availableOnlyRestaurant) {
+        this.availableOnlyRestaurant = availableOnlyRestaurant;
     }
 
     public String getPhotoPath() {
