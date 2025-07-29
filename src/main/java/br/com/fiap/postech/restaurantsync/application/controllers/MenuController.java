@@ -5,7 +5,6 @@ import br.com.fiap.postech.restaurantsync.application.dtos.requests.MenuRequest;
 import br.com.fiap.postech.restaurantsync.application.dtos.responses.MenuResponse;
 import br.com.fiap.postech.restaurantsync.domain.usecases.menu.*;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -81,5 +80,4 @@ public class MenuController {
         MenuResponse response = this.updateAvailableRestaurantOnlyUseCase.execute(id, request.availableOnlyRestaurant());
         return ResponseEntity.ok().body(response);
     }
-
 }

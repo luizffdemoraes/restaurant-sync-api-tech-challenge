@@ -14,7 +14,8 @@ public class CreateMenuUseCaseImp implements CreateMenuUseCase {
     private final UserGateway userGateway;
 
     public CreateMenuUseCaseImp(MenuGateway menuGateway,
-                                RestaurantGateway restaurantGateway, UserGateway userGateway) {
+                                RestaurantGateway restaurantGateway,
+                                UserGateway userGateway) {
         this.menuGateway = menuGateway;
         this.restaurantGateway = restaurantGateway;
         this.userGateway = userGateway;

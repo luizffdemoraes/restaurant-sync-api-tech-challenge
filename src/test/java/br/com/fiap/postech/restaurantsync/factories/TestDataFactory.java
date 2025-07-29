@@ -1,5 +1,6 @@
 package br.com.fiap.postech.restaurantsync.factories;
 
+import br.com.fiap.postech.restaurantsync.application.dtos.requests.MenuRequest;
 import br.com.fiap.postech.restaurantsync.application.dtos.requests.RestaurantRequest;
 import br.com.fiap.postech.restaurantsync.application.dtos.responses.RestaurantResponse;
 import br.com.fiap.postech.restaurantsync.domain.entities.Address;
@@ -179,5 +180,17 @@ public class TestDataFactory {
         } catch (InvocationTargetException e) {
             throw e.getCause();
         }
+    }
+
+    public static MenuRequest createMenuRequest() {
+        return new MenuRequest(
+                "Menu Test",
+                "Delicious menu for testing",
+                10.00,
+                true,
+                "/images/feijoada.jpg",
+                1
+        );
+
     }
 }
