@@ -3,7 +3,10 @@
 ## ÍNDICE
 
 * [Descrição do Projeto](#descrição-do-projeto)
-* [Funcionalidades](#funcionalidades)
+* [Funcionalidades e Endpoints](#funcionalidades-e-endpoints)
+   * [👨‍💻 Gerenciamento de Usuários](#-gerenciamento-de-usuários)
+   * [🏨 Gerenciamento de Restaurantes](#-gerenciamento-de-restaurantes)
+   * [🍽️ Gerenciamento de Cardápios](#-gerenciamento-de-cardápios)
 * [Tecnologias Utilizadas](#tecnologias-utilizadas)
 * [Estrutura do Projeto](#estrutura-do-projeto)
 * [Diagrama das tabelas de banco de dados](#diagrama-das-tabelas-de-banco-de-dados)
@@ -21,7 +24,7 @@ API para gerenciamento de usuários de restaurantes, desenvolvida como parte da 
 
 O sistema é construído com **Spring Boot**, **Docker**, e **Docker Compose**, sendo integrado a um banco de dados relacional **PostgreSQL** e **H2** para testes.
 
-## Funcionalidades
+## Funcionalidades e Endpoints
 
 ### 👨‍💻 Gerenciamento de Usuários
 | Operação                         | Descrição                               | Acesso        |
@@ -53,32 +56,13 @@ O sistema é construído com **Spring Boot**, **Docker**, e **Docker Compose**, 
 | `DELETE /v1/menus/{id}`              | Remove item do cardápio                  | Admin  |
 | `PATCH  /v1/menus/{id}/availability` | Altera status de disponibilidade do item | Admin  |
 
-A API oferece as seguintes funcionalidades para o gerenciamento de usuários:
+> ⚠️ **Importante:**  
+> Antes de utilizar a API para as demais funcionalidades, o usuário **precisa estar cadastrado** (`POST /v1/usuarios`) e **autenticado** (`POST /oauth2/token`) para obter o **token de acesso**.  
+> Esse token deve ser incluído no cabeçalho `Authorization` das requisições aos endpoints protegidos:  
+> `Authorization: Bearer <token>`
+>
+> Além disso, **algumas operações são restritas a administradores**, como listar ou excluir usuários.
 
-* **Cadastro de Usuário**: Permite a criação de novos usuários no sistema, sejam eles donos de restaurante ou clientes.
-* **Busca de Usuário por ID**: Habilita a recuperação de informações detalhadas de um usuário específico utilizando seu identificador.
-* **Listagem de Usuários (Paginada)**: Oferece a capacidade de listar todos os usuários registrados no sistema, com suporte a paginação para otimização de desempenho. Esta funcionalidade é tipicamente restrita a administradores.
-* **Alteração de Dados do Usuário**: Permite a atualização das informações de um usuário existente, como nome, email e endereço.
-* **Troca de Senha**: Funcionalidade específica para a alteração segura da senha de um usuário.
-* **Exclusão de Usuário**: Possibilita a remoção permanente de um usuário do sistema. Esta funcionalidade é geralmente restrita a administradores.
-* **Validação de Login (Autenticação)**: Realiza a verificação das credenciais de login para autenticar o usuário e conceder acesso ao sistema, geralmente retornando um token de autenticação.
-
-A API oferece as seguintes funcionalidades para o gerenciamento de restaurantes:
-
-* **Cadastro de Restaurante**: Permite a criação de novos restaurantes no sistema.
-* **Busca de Restaurante por ID**: Habilita a recuperação de informações detalhadas de um restaurante específico utilizando seu identificador.
-* **Listagem de Restaurantes (Paginada)**: Oferece a capacidade de listar todos os restaurantes registrados no sistema, com suporte a paginação e ordenação.
-* **Atualização de Restaurante**: Permite a modificação das informações de um restaurante existente.
-* **Exclusão de Restaurante**: Possibilita a remoção permanente de um restaurante do sistema.
-
-A API oferece as seguintes funcionalidades para o gerenciamento do menu dos restaurantes:
-
-* **Cadastro de Item no Menu**: Permite a adição de novos itens ao cardápio de um restaurante.
-* **Busca de Item por ID**: Habilita a recuperação de informações detalhadas de um item específico do menu.
-* **Listagem de Itens do Menu (Paginada)**: Oferece a capacidade de listar todos os itens do menu, com suporte a paginação e ordenação.
-* **Atualização de Item do Menu**: Permite a modificação das informações de um item existente no cardápio.
-* **Atualização Parcial de Disponibilidade**: Permite alterar apenas a disponibilidade de um item no restaurante.
-* **Exclusão de Item do Menu**: Possibilita a remoção permanente de um item do cardápio.
 
 ## Tecnologias Utilizadas
 
@@ -227,39 +211,6 @@ Antes de iniciar, **certifique-se que todos os requisitos descritos na seção a
    ```
 
 4.  A API estará disponível em `http://localhost:8080`.
-
-## Endpoints
-
-### Usuários
-- **POST   `/v1/users`**: Cria um novo usuário.
-- **GET    `/v1/users`**: Lista todos os usuários (paginado, apenas para admin).
-- **GET    `/v1/users/{id}`**: Busca um usuário específico por ID.
-- **PUT    `/v1/users/{id}`**: Atualiza as informações de um usuário.
-- **PATCH  `/v1/users/{id}/password`**: Atualiza a senha do usuário.
-- **DELETE `/v1/users/{id}`**: Remove um usuário (apenas para admin).
-- **POST   `/oauth2/token`**: Autentica o usuário e retorna um token de acesso.
-
-### Restaurantes
-- **POST   `/v1/restaurants`**: Cadastra um novo restaurante.
-- **GET    `/v1/restaurants`**: Lista todos os restaurantes (com paginação e ordenação).
-- **GET    `/v1/restaurants/{id}`**: Obtém os detalhes de um restaurante específico.
-- **PUT    `/v1/restaurants/{id}`**: Atualiza as informações de um restaurante.
-- **DELETE `/v1/restaurants/{id}`**: Remove um restaurante do sistema.
-
-### Cardápios
-- **POST   `/v1/menus`**: Adiciona um novo item ao cardápio.
-- **GET    `/v1/menus`**: Lista todos os itens do cardápio (com paginação e ordenação).
-- **GET    `/v1/menus/{id}`**: Obtém os detalhes de um item específico do cardápio.
-- **PUT    `/v1/menus/{id}`**: Atualiza as informações de um item do cardápio.
-- **PATCH  `/v1/menus/{id}/restaurant-only`**: Atualiza apenas o status de disponibilidade de um item.
-- **DELETE `/v1/menus/{id}`**: Remove um item do cardápio.
-
-> ⚠️ **Importante:**  
-> Antes de utilizar a API para as demais funcionalidades, o usuário **precisa estar cadastrado** (`POST /v1/usuarios`) e **autenticado** (`POST /oauth2/token`) para obter o **token de acesso**.  
-> Esse token deve ser incluído no cabeçalho `Authorization` das requisições aos endpoints protegidos:  
-> `Authorization: Bearer <token>`
->
-> Além disso, **algumas operações são restritas a administradores**, como listar ou excluir usuários.
 
 ## Documentação da API
 
