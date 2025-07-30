@@ -1,13 +1,13 @@
 package br.com.fiap.postech.restaurantsync.domain.usecases.menu;
 
 import br.com.fiap.postech.restaurantsync.application.dtos.requests.MenuRequest;
-import br.com.fiap.postech.restaurantsync.application.dtos.responses.MenuResponse;
 import br.com.fiap.postech.restaurantsync.domain.entities.Menu;
 import br.com.fiap.postech.restaurantsync.domain.entities.Restaurant;
 import br.com.fiap.postech.restaurantsync.domain.gateways.MenuGateway;
 import br.com.fiap.postech.restaurantsync.domain.gateways.RestaurantGateway;
 import br.com.fiap.postech.restaurantsync.domain.gateways.UserGateway;
 import br.com.fiap.postech.restaurantsync.factories.TestDataFactory;
+import br.com.fiap.postech.restaurantsync.infrastructure.config.mapper.MenuMapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -53,15 +53,14 @@ class CreateMenuUseCaseImpTest {
         when(menuGateway.saveRestaurant(any(Menu.class))).thenReturn(dummyMenu);
 
         // Act
-        MenuResponse response = createMenuUseCaseImp.execute(request);
+        Menu response = createMenuUseCaseImp.execute(MenuMapper.toDomain(request));
 
         // Assert
         verify(userGateway, times(1)).validateAdmin();
         verify(restaurantGateway, times(1)).findRestaurantById(request.restaurantId());
         verify(menuGateway, times(1)).saveRestaurant(menuCaptor.capture());
-        Menu capturedMenu = menuCaptor.getValue();
         Assertions.assertNotNull(response);
-        Assertions.assertEquals(dummyMenu.getId(), response.id());
+        Assertions.assertEquals(dummyMenu.getId(), response.getId());
     }
 
     @Test
@@ -73,7 +72,7 @@ class CreateMenuUseCaseImpTest {
 
         // Assert
         Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            createMenuUseCaseImp.execute(request);
+            createMenuUseCaseImp.execute(MenuMapper.toDomain(request));
         });
         verify(restaurantGateway, never()).findRestaurantById(any());
         verify(menuGateway, never()).saveRestaurant(any());
@@ -91,7 +90,7 @@ class CreateMenuUseCaseImpTest {
 
         // Assert
         Assertions.assertThrows(RuntimeException.class, () -> {
-            createMenuUseCaseImp.execute(request);
+            createMenuUseCaseImp.execute(MenuMapper.toDomain(request));
         });
         verify(userGateway, times(1)).validateAdmin();
         verify(restaurantGateway, times(1)).findRestaurantById(request.restaurantId());

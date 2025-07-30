@@ -1,7 +1,5 @@
 package br.com.fiap.postech.restaurantsync.domain.usecases.menu;
 
-import br.com.fiap.postech.restaurantsync.application.dtos.requests.MenuRequest;
-import br.com.fiap.postech.restaurantsync.application.dtos.responses.MenuResponse;
 import br.com.fiap.postech.restaurantsync.domain.entities.Menu;
 import br.com.fiap.postech.restaurantsync.domain.gateways.MenuGateway;
 import br.com.fiap.postech.restaurantsync.domain.gateways.RestaurantGateway;
@@ -22,11 +20,9 @@ public class CreateMenuUseCaseImp implements CreateMenuUseCase {
     }
 
     @Override
-    public MenuResponse execute(MenuRequest request) {
+    public Menu execute(Menu menu) {
         this.userGateway.validateAdmin();
-        restaurantGateway.findRestaurantById(request.restaurantId());
-        Menu menu = new Menu(request);
-        var savedMenu = menuGateway.saveRestaurant(menu);
-        return new MenuResponse(savedMenu);
+        restaurantGateway.findRestaurantById(menu.getRestaurantId());
+        return menuGateway.saveRestaurant(menu);
     }
 }

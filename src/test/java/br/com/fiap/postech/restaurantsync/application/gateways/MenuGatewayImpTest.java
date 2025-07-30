@@ -2,6 +2,7 @@ package br.com.fiap.postech.restaurantsync.application.gateways;
 
 import br.com.fiap.postech.restaurantsync.domain.entities.Menu;
 import br.com.fiap.postech.restaurantsync.factories.TestDataFactory;
+import br.com.fiap.postech.restaurantsync.infrastructure.config.mapper.MenuMapper;
 import br.com.fiap.postech.restaurantsync.infrastructure.exceptions.BusinessException;
 import br.com.fiap.postech.restaurantsync.infrastructure.persistence.entity.MenuEntity;
 import br.com.fiap.postech.restaurantsync.infrastructure.persistence.repository.MenuRepository;
@@ -39,7 +40,7 @@ class MenuGatewayImpTest {
     void testSaveRestaurant_Success() {
         // Arrange
         Menu menu = new Menu(TestDataFactory.createMenuRequest());
-        MenuEntity menuEntity = MenuEntity.fromDomain(menu);
+        MenuEntity menuEntity = MenuMapper.toEntity(menu);
         menuEntity.setId(1);
         when(menuRepository.save(any(MenuEntity.class))).thenReturn(menuEntity);
 
@@ -84,7 +85,7 @@ class MenuGatewayImpTest {
         PageRequest pageRequest = PageRequest.of(0, 10);
         Menu menu = new Menu(TestDataFactory.createMenuRequest());
         menu.setId(1);
-        MenuEntity menuEntity = MenuEntity.fromDomain(menu);
+        MenuEntity menuEntity = MenuMapper.toEntity(menu);;
         Page<MenuEntity> pageEntity = new PageImpl<>(Collections.singletonList(menuEntity), pageRequest, 1);
         when(menuRepository.findAll(pageRequest)).thenReturn(pageEntity);
 
@@ -104,7 +105,7 @@ class MenuGatewayImpTest {
         Integer menuId = 1;
         Menu menu = new Menu(TestDataFactory.createMenuRequest());
         menu.setId(menuId);
-        MenuEntity menuEntity = MenuEntity.fromDomain(menu);
+        MenuEntity menuEntity = MenuMapper.toEntity(menu);
         when(menuRepository.findById(menuId)).thenReturn(Optional.of(menuEntity));
 
         // Act
@@ -136,10 +137,10 @@ class MenuGatewayImpTest {
         Menu menuRequest =  new Menu(TestDataFactory.createMenuRequest());
         Menu existingMenu = new Menu(TestDataFactory.createMenuRequest());
         existingMenu.setId(menuId);
-        MenuEntity existingEntity = MenuEntity.fromDomain(existingMenu);
+        MenuEntity existingEntity = MenuMapper.toEntity(existingMenu);
         Menu updatedMenu = menuRequest;
         updatedMenu.setId(menuId);
-        MenuEntity updatedEntity = MenuEntity.fromDomain(updatedMenu);
+        MenuEntity updatedEntity = MenuMapper.toEntity(updatedMenu);
 
         when(menuRepository.findById(menuId)).thenReturn(Optional.of(existingEntity));
         when(menuRepository.save(any(MenuEntity.class))).thenReturn(updatedEntity);
@@ -162,11 +163,11 @@ class MenuGatewayImpTest {
         Menu existingMenu = new Menu(TestDataFactory.createMenuRequest());
         existingMenu.setId(menuId);
         existingMenu.setAvailableOnlyRestaurant(!availableOnlyRestaurant);
-        MenuEntity existingEntity = MenuEntity.fromDomain(existingMenu);
+        MenuEntity existingEntity = MenuMapper.toEntity(existingMenu);
         Menu updatedMenu = new Menu(TestDataFactory.createMenuRequest());
         updatedMenu.setId(menuId);
         updatedMenu.setAvailableOnlyRestaurant(availableOnlyRestaurant);
-        MenuEntity updatedEntity = MenuEntity.fromDomain(updatedMenu);
+        MenuEntity updatedEntity = MenuMapper.toEntity(updatedMenu);
 
         when(menuRepository.findById(menuId)).thenReturn(Optional.of(existingEntity));
         when(menuRepository.save(any(MenuEntity.class))).thenReturn(updatedEntity);

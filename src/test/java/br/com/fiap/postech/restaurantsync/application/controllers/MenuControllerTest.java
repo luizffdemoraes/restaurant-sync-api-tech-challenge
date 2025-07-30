@@ -2,6 +2,7 @@ package br.com.fiap.postech.restaurantsync.application.controllers;
 
 import br.com.fiap.postech.restaurantsync.application.dtos.requests.MenuRequest;
 import br.com.fiap.postech.restaurantsync.application.dtos.responses.MenuResponse;
+import br.com.fiap.postech.restaurantsync.domain.entities.Menu;
 import br.com.fiap.postech.restaurantsync.domain.usecases.menu.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -63,9 +64,11 @@ class MenuControllerTest {
         MenuRequest request = new MenuRequest(
                 "Hambúrguer", "Sanduíche de carne", 35.50, true, "img/hb.png", 1
         );
-        MenuResponse response = new MenuResponse(1, "Hambúrguer", "Sanduíche de carne", 35.50, true, "img/hb.png", 1);
+        // Cria o domínio a partir do Request e seta o id
+        Menu menu = new Menu(request);
+        menu.setId(1);
 
-        when(createMenuUseCase.execute(any(MenuRequest.class))).thenReturn(response);
+        when(createMenuUseCase.execute(any())).thenReturn(menu);
 
         mockMvc.perform(post("/v1/menus")
                         .contentType(MediaType.APPLICATION_JSON)

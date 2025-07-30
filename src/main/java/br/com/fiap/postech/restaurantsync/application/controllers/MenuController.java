@@ -3,7 +3,9 @@ package br.com.fiap.postech.restaurantsync.application.controllers;
 import br.com.fiap.postech.restaurantsync.application.dtos.requests.AvailableOnlyRestaurantRequest;
 import br.com.fiap.postech.restaurantsync.application.dtos.requests.MenuRequest;
 import br.com.fiap.postech.restaurantsync.application.dtos.responses.MenuResponse;
+import br.com.fiap.postech.restaurantsync.domain.entities.Menu;
 import br.com.fiap.postech.restaurantsync.domain.usecases.menu.*;
+import br.com.fiap.postech.restaurantsync.infrastructure.config.mapper.MenuMapper;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -37,7 +39,8 @@ public class MenuController {
 
     @PostMapping
     public ResponseEntity<Object> createMenu(@Valid @RequestBody MenuRequest request) {
-        MenuResponse response = this.createMenuUseCase.execute(request);
+        Menu menu = this.createMenuUseCase.execute(MenuMapper.toDomain(request));
+        MenuResponse response = MenuMapper.toResponse(menu);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
                 .buildAndExpand(response.id()).toUri();
         return ResponseEntity.created(uri).body(response);

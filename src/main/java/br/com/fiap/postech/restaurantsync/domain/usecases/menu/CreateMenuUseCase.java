@@ -1,8 +1,7 @@
 package br.com.fiap.postech.restaurantsync.domain.usecases.menu;
 
-import br.com.fiap.postech.restaurantsync.application.dtos.requests.MenuRequest;
-import br.com.fiap.postech.restaurantsync.application.dtos.responses.MenuResponse;
+import br.com.fiap.postech.restaurantsync.domain.entities.Menu;
 
 public interface CreateMenuUseCase {
-    MenuResponse execute(MenuRequest request);
+    Menu execute(Menu request);
 }
