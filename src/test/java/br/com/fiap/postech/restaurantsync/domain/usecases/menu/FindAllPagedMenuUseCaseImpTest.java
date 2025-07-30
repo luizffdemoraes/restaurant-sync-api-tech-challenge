@@ -1,6 +1,5 @@
 package br.com.fiap.postech.restaurantsync.domain.usecases.menu;
 
-import br.com.fiap.postech.restaurantsync.application.dtos.responses.MenuResponse;
 import br.com.fiap.postech.restaurantsync.domain.entities.Menu;
 import br.com.fiap.postech.restaurantsync.domain.gateways.MenuGateway;
 import br.com.fiap.postech.restaurantsync.domain.gateways.UserGateway;
@@ -48,14 +47,14 @@ class FindAllPagedMenuUseCaseImpTest {
         when(menuGateway.findAllPagedMenus(pageRequest)).thenReturn(pagedMenus);
 
         // Act
-        Page<MenuResponse> responsePage = findAllPagedMenuUseCaseImp.execute(pageRequest);
+        Page<Menu> responsePage = findAllPagedMenuUseCaseImp.execute(pageRequest);
 
         // Assert
         verify(userGateway, times(1)).validateAdmin();
         verify(menuGateway, times(1)).findAllPagedMenus(pageRequest);
         Assertions.assertNotNull(responsePage);
         Assertions.assertEquals(1, responsePage.getTotalElements());
-        Assertions.assertEquals(dummyMenu.getId(), responsePage.getContent().get(0).id());
+        Assertions.assertEquals(dummyMenu.getId(), responsePage.getContent().get(0).getId());
     }
 
     @Test

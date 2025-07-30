@@ -1,20 +1,18 @@
 package br.com.fiap.postech.restaurantsync.domain.usecases.menu;
 
-import br.com.fiap.postech.restaurantsync.application.dtos.requests.MenuRequest;
-import br.com.fiap.postech.restaurantsync.application.dtos.responses.MenuResponse;
 import br.com.fiap.postech.restaurantsync.domain.entities.Menu;
 import br.com.fiap.postech.restaurantsync.domain.entities.Restaurant;
 import br.com.fiap.postech.restaurantsync.domain.gateways.MenuGateway;
 import br.com.fiap.postech.restaurantsync.domain.gateways.RestaurantGateway;
 import br.com.fiap.postech.restaurantsync.domain.gateways.UserGateway;
 import br.com.fiap.postech.restaurantsync.factories.TestDataFactory;
+import br.com.fiap.postech.restaurantsync.infrastructure.config.mapper.MenuMapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class UpdateMenuUseCaseImpTest {
@@ -44,30 +42,29 @@ class UpdateMenuUseCaseImpTest {
     void testExecute_Success() {
         // Arrange
         Integer id = 1;
-        MenuRequest request = TestDataFactory.createMenuRequest();
+        Menu request = MenuMapper.toDomain(TestDataFactory.createMenuRequest());
         Restaurant dummyRestaurant = new Restaurant(TestDataFactory.createRestaurantRequest());
-        Menu dummyMenu = new Menu(request);
-        dummyMenu.setId(id);
+        request.setId(id);
         doNothing().when(userGateway).validateAdmin();
-        when(restaurantGateway.findRestaurantById(request.restaurantId())).thenReturn(dummyRestaurant);
-        when(menuGateway.updateMenu(eq(id), any(Menu.class))).thenReturn(dummyMenu);
+        when(restaurantGateway.findRestaurantById(request.getRestaurantId())).thenReturn(dummyRestaurant);
+        when(menuGateway.updateMenu(eq(id), any(Menu.class))).thenReturn(request);
 
         // Act
-        MenuResponse response = updateMenuUseCaseImp.execute(id, request);
+        Menu response = updateMenuUseCaseImp.execute(id, request);
 
         // Assert
         verify(userGateway, times(1)).validateAdmin();
-        verify(restaurantGateway, times(1)).findRestaurantById(request.restaurantId());
+        verify(restaurantGateway, times(1)).findRestaurantById(request.getRestaurantId());
         verify(menuGateway, times(1)).updateMenu(eq(id), any(Menu.class));
         Assertions.assertNotNull(response);
-        Assertions.assertEquals(id, response.id());
+        Assertions.assertEquals(id, response.getId());
     }
 
     @Test
     void testExecute_InvalidAdmin() {
         // Arrange
         Integer id = 1;
-        MenuRequest request = TestDataFactory.createMenuRequest();
+        Menu request = MenuMapper.toDomain(TestDataFactory.createMenuRequest());
         doThrow(new IllegalArgumentException("Usuário não é admin"))
                 .when(userGateway).validateAdmin();
 
@@ -83,10 +80,10 @@ class UpdateMenuUseCaseImpTest {
     void testExecute_MenuGatewayThrowsException() {
         // Arrange
         Integer id = 1;
-        MenuRequest request = TestDataFactory.createMenuRequest();
+        Menu request = MenuMapper.toDomain(TestDataFactory.createMenuRequest());
         Restaurant dummyRestaurant = new Restaurant(TestDataFactory.createRestaurantRequest());
         doNothing().when(userGateway).validateAdmin();
-        when(restaurantGateway.findRestaurantById(request.restaurantId())).thenReturn(dummyRestaurant);
+        when(restaurantGateway.findRestaurantById(request.getRestaurantId())).thenReturn(dummyRestaurant);
         when(menuGateway.updateMenu(eq(id), any(Menu.class)))
                 .thenThrow(new RuntimeException("Erro ao atualizar menu"));
 
@@ -96,7 +93,7 @@ class UpdateMenuUseCaseImpTest {
         });
         Assertions.assertEquals("Erro ao atualizar menu", exception.getMessage());
         verify(userGateway, times(1)).validateAdmin();
-        verify(restaurantGateway, times(1)).findRestaurantById(request.restaurantId());
+        verify(restaurantGateway, times(1)).findRestaurantById(request.getRestaurantId());
         verify(menuGateway, times(1)).updateMenu(eq(id), any(Menu.class));
     }
 }

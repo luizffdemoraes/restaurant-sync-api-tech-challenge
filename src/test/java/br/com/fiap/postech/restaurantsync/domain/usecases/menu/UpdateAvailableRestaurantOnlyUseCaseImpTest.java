@@ -1,6 +1,5 @@
 package br.com.fiap.postech.restaurantsync.domain.usecases.menu;
 
-import br.com.fiap.postech.restaurantsync.application.dtos.responses.MenuResponse;
 import br.com.fiap.postech.restaurantsync.domain.entities.Menu;
 import br.com.fiap.postech.restaurantsync.domain.gateways.MenuGateway;
 import br.com.fiap.postech.restaurantsync.domain.gateways.UserGateway;
@@ -42,13 +41,13 @@ class UpdateAvailableRestaurantOnlyUseCaseImpTest {
         when(menuGateway.updateAvailableOnlyRestaurant(id, availableOnlyRestaurant)).thenReturn(dummyMenu);
 
         // Act
-        MenuResponse response = updateAvailableRestaurantOnlyUseCaseImp.execute(id, availableOnlyRestaurant);
+        Menu response = updateAvailableRestaurantOnlyUseCaseImp.execute(id, availableOnlyRestaurant);
 
         // Assert
         verify(userGateway, times(1)).validateAdmin();
         verify(menuGateway, times(1)).updateAvailableOnlyRestaurant(id, availableOnlyRestaurant);
         Assertions.assertNotNull(response);
-        Assertions.assertEquals(id, response.id());
+        Assertions.assertEquals(id, response.getId());
     }
 
     @Test

@@ -54,7 +54,8 @@ public class MenuController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Object> findMenuById(@PathVariable Integer id) {
-        MenuResponse response = this.findMenuByIdUseCase.execute(id);
+        Menu menu = this.findMenuByIdUseCase.execute(id);
+        MenuResponse response = MenuMapper.toResponse(menu);
         return ResponseEntity.ok(response);
     }
 
@@ -66,13 +67,15 @@ public class MenuController {
             @RequestParam(value = "orderBy", defaultValue = "name") String orderBy) {
 
         PageRequest pageRequest = PageRequest.of(page, linesPerPage, Sort.Direction.valueOf(direction), orderBy);
-        Page<MenuResponse> list = this.findAllPagedMenuUseCase.execute(pageRequest);
-        return ResponseEntity.ok(list);
+        Page<Menu> list = this.findAllPagedMenuUseCase.execute(pageRequest);
+        Page<MenuResponse> response = list.map(MenuMapper::toResponse);
+        return ResponseEntity.ok(response);
     }
 
     @PutMapping(value = "/{id}")
     public ResponseEntity<Object> updateRestaurant(@PathVariable Integer id, @Valid @RequestBody MenuRequest request) {
-        MenuResponse response = this.updateMenuUseCase.execute(id, request);
+        Menu menu = this.updateMenuUseCase.execute(id, MenuMapper.toDomain(request));
+        MenuResponse response = MenuMapper.toResponse(menu);
         return ResponseEntity.ok().body(response);
     }
 
@@ -80,7 +83,8 @@ public class MenuController {
     public ResponseEntity<MenuResponse> partialUpdateMenuItem(
             @PathVariable Integer id,
             @Valid @RequestBody AvailableOnlyRestaurantRequest request) {
-        MenuResponse response = this.updateAvailableRestaurantOnlyUseCase.execute(id, request.availableOnlyRestaurant());
+        Menu menu = this.updateAvailableRestaurantOnlyUseCase.execute(id, request.availableOnlyRestaurant());
+        MenuResponse response = MenuMapper.toResponse(menu);
         return ResponseEntity.ok().body(response);
     }
 }
