@@ -179,18 +179,6 @@ Para executar o projeto manualmente na sua máquina (sem Docker), você precisar
 - Maven instalado para compilar e construir o projeto.
 - Altere o arquivo `application.properties` para utilizar o banco H2.
 
-Utilize a configuração presente no seguinte arquivo:
-
-```properties
-src\test\resources\application-test.properties
-```
-
-Comentar a linha presente no arquivo `ResourceServerConfig.java`:
-
-```properties
-  @Profile("test")
-```
-
 ## Como Rodar o Projeto
 
 Antes de iniciar, **certifique-se que todos os requisitos descritos na seção anterior estão atendidos** (Java, Maven e Docker instalados e configurados).
