@@ -4,6 +4,7 @@ import br.com.fiap.postech.restaurantsync.domain.entities.Menu;
 import br.com.fiap.postech.restaurantsync.domain.gateways.MenuGateway;
 import br.com.fiap.postech.restaurantsync.domain.gateways.UserGateway;
 import br.com.fiap.postech.restaurantsync.factories.TestDataFactory;
+import br.com.fiap.postech.restaurantsync.infrastructure.config.mapper.MenuMapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -39,7 +40,7 @@ class FindAllPagedMenuUseCaseImpTest {
     void testExecute_Success() {
         // Arrange
         PageRequest pageRequest = PageRequest.of(0, 10);
-        Menu dummyMenu = new Menu(TestDataFactory.createMenuRequest());
+        Menu dummyMenu = MenuMapper.toDomain(TestDataFactory.createMenuRequest());
         dummyMenu.setId(1);
         List<Menu> menus = List.of(dummyMenu);
         Page<Menu> pagedMenus = new PageImpl<>(menus, pageRequest, menus.size());

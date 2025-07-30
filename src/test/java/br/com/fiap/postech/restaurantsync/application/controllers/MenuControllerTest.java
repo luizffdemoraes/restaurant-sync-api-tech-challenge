@@ -66,7 +66,7 @@ class MenuControllerTest {
                 "Hambúrguer", "Sanduíche de carne", 35.50, true, "img/hb.png", 1
         );
         // Cria o domínio a partir do Request e seta o id
-        Menu menu = new Menu(request);
+        Menu menu = MenuMapper.toDomain(request);
         menu.setId(1);
 
         when(createMenuUseCase.execute(any())).thenReturn(menu);

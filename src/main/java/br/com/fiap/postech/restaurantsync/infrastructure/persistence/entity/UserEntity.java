@@ -2,6 +2,7 @@ package br.com.fiap.postech.restaurantsync.infrastructure.persistence.entity;
 
 import br.com.fiap.postech.restaurantsync.domain.entities.Role;
 import br.com.fiap.postech.restaurantsync.domain.entities.User;
+import br.com.fiap.postech.restaurantsync.infrastructure.config.mapper.AddressMapper;
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -59,7 +60,7 @@ public class UserEntity implements UserDetails {
         if (user == null) {
             return null;
         }
-        var address = AddressEntity.fromDomain(user.getAddress());
+        var address = AddressMapper.fromDomain(user.getAddress());
         var entity = new UserEntity(
                 user.getId(),
                 user.getName(),

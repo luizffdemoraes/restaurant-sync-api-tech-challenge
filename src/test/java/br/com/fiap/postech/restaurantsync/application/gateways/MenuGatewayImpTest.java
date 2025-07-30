@@ -39,7 +39,7 @@ class MenuGatewayImpTest {
     @Test
     void testSaveRestaurant_Success() {
         // Arrange
-        Menu menu = new Menu(TestDataFactory.createMenuRequest());
+        Menu menu = MenuMapper.toDomain(TestDataFactory.createMenuRequest());
         MenuEntity menuEntity = MenuMapper.toEntity(menu);
         menuEntity.setId(1);
         when(menuRepository.save(any(MenuEntity.class))).thenReturn(menuEntity);
@@ -83,7 +83,7 @@ class MenuGatewayImpTest {
     void testFindAllPagedMenus_Success() {
         // Arrange
         PageRequest pageRequest = PageRequest.of(0, 10);
-        Menu menu = new Menu(TestDataFactory.createMenuRequest());
+        Menu menu = MenuMapper.toDomain(TestDataFactory.createMenuRequest());
         menu.setId(1);
         MenuEntity menuEntity = MenuMapper.toEntity(menu);;
         Page<MenuEntity> pageEntity = new PageImpl<>(Collections.singletonList(menuEntity), pageRequest, 1);
@@ -103,7 +103,7 @@ class MenuGatewayImpTest {
     void testFindMenuById_Success() {
         // Arrange
         Integer menuId = 1;
-        Menu menu = new Menu(TestDataFactory.createMenuRequest());
+        Menu menu = MenuMapper.toDomain(TestDataFactory.createMenuRequest());
         menu.setId(menuId);
         MenuEntity menuEntity = MenuMapper.toEntity(menu);
         when(menuRepository.findById(menuId)).thenReturn(Optional.of(menuEntity));
@@ -134,8 +134,8 @@ class MenuGatewayImpTest {
     void testUpdateMenu_Success() {
         // Arrange
         Integer menuId = 1;
-        Menu menuRequest =  new Menu(TestDataFactory.createMenuRequest());
-        Menu existingMenu = new Menu(TestDataFactory.createMenuRequest());
+        Menu menuRequest =  MenuMapper.toDomain(TestDataFactory.createMenuRequest());
+        Menu existingMenu = MenuMapper.toDomain(TestDataFactory.createMenuRequest());
         existingMenu.setId(menuId);
         MenuEntity existingEntity = MenuMapper.toEntity(existingMenu);
         Menu updatedMenu = menuRequest;
@@ -160,11 +160,11 @@ class MenuGatewayImpTest {
         // Arrange
         Integer menuId = 1;
         Boolean availableOnlyRestaurant = true;
-        Menu existingMenu = new Menu(TestDataFactory.createMenuRequest());
+        Menu existingMenu = MenuMapper.toDomain(TestDataFactory.createMenuRequest());
         existingMenu.setId(menuId);
         existingMenu.setAvailableOnlyRestaurant(!availableOnlyRestaurant);
         MenuEntity existingEntity = MenuMapper.toEntity(existingMenu);
-        Menu updatedMenu = new Menu(TestDataFactory.createMenuRequest());
+        Menu updatedMenu = MenuMapper.toDomain(TestDataFactory.createMenuRequest());
         updatedMenu.setId(menuId);
         updatedMenu.setAvailableOnlyRestaurant(availableOnlyRestaurant);
         MenuEntity updatedEntity = MenuMapper.toEntity(updatedMenu);

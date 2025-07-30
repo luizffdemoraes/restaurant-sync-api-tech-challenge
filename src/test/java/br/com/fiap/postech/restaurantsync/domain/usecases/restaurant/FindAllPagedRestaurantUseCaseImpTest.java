@@ -50,12 +50,12 @@ class FindAllPagedRestaurantUseCaseImpTest {
         doNothing().when(userGateway).validateAdmin();
         when(restaurantGateway.findAllPagedRestaurants(pageRequest)).thenReturn(restaurantPage);
 
-        Page<RestaurantResponse> responsePage = findAllPagedRestaurantUseCaseImp.execute(pageRequest);
+        Page<Restaurant> responsePage = findAllPagedRestaurantUseCaseImp.execute(pageRequest);
 
         assertNotNull(responsePage);
         assertEquals(2, responsePage.getTotalElements());
-        assertEquals(1, responsePage.getContent().get(0).id());
-        assertEquals(2, responsePage.getContent().get(1).id());
+        assertEquals(1, responsePage.getContent().get(0).getId());
+        assertEquals(2, responsePage.getContent().get(1).getId());
         verify(userGateway).validateAdmin();
         verify(restaurantGateway).findAllPagedRestaurants(pageRequest);
     }

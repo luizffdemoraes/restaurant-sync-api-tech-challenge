@@ -37,29 +37,6 @@ public class RestaurantEntity {
         this.ownerId = ownerId;
     }
 
-    public static RestaurantEntity fromDomain(Restaurant restaurant) {
-        if (restaurant == null) return null;
-        var address = AddressEntity.fromDomain(restaurant.getAddress());
-        return new RestaurantEntity(
-                restaurant.getId(),
-                restaurant.getName(),
-                address,
-                restaurant.getCuisineType(),
-                restaurant.getOpeningHours(),
-                restaurant.getOwnerId()
-        );
-    }
-
-    public Restaurant toDomain() {
-        return new Restaurant(
-                this.id,
-                this.name,
-                this.addressEntity.toDomain(),
-                this.cuisineType,
-                this.openingHours,
-                this.ownerId);
-    }
-
     public Integer getId() {
         return id;
     }

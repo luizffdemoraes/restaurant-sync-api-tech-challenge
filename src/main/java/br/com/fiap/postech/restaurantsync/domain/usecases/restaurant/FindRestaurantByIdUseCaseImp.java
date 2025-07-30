@@ -16,9 +16,8 @@ public class FindRestaurantByIdUseCaseImp implements FindRestaurantByIdUseCase{
     }
 
     @Override
-    public RestaurantResponse execute(Integer id) {
+    public Restaurant execute(Integer id) {
         this.userGateway.validateAdmin();
-        Restaurant restaurant = this.restaurantGateway.findRestaurantById(id);
-        return new RestaurantResponse(restaurant);
+        return this.restaurantGateway.findRestaurantById(id);
     }
 }

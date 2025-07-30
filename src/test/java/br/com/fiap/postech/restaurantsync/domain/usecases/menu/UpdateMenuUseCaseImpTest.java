@@ -7,6 +7,7 @@ import br.com.fiap.postech.restaurantsync.domain.gateways.RestaurantGateway;
 import br.com.fiap.postech.restaurantsync.domain.gateways.UserGateway;
 import br.com.fiap.postech.restaurantsync.factories.TestDataFactory;
 import br.com.fiap.postech.restaurantsync.infrastructure.config.mapper.MenuMapper;
+import br.com.fiap.postech.restaurantsync.infrastructure.config.mapper.RestaurantMapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -43,7 +44,7 @@ class UpdateMenuUseCaseImpTest {
         // Arrange
         Integer id = 1;
         Menu request = MenuMapper.toDomain(TestDataFactory.createMenuRequest());
-        Restaurant dummyRestaurant = new Restaurant(TestDataFactory.createRestaurantRequest());
+        Restaurant dummyRestaurant = RestaurantMapper.toDomain(TestDataFactory.createRestaurantRequest());
         request.setId(id);
         doNothing().when(userGateway).validateAdmin();
         when(restaurantGateway.findRestaurantById(request.getRestaurantId())).thenReturn(dummyRestaurant);
@@ -81,7 +82,7 @@ class UpdateMenuUseCaseImpTest {
         // Arrange
         Integer id = 1;
         Menu request = MenuMapper.toDomain(TestDataFactory.createMenuRequest());
-        Restaurant dummyRestaurant = new Restaurant(TestDataFactory.createRestaurantRequest());
+        Restaurant dummyRestaurant = RestaurantMapper.toDomain(TestDataFactory.createRestaurantRequest());
         doNothing().when(userGateway).validateAdmin();
         when(restaurantGateway.findRestaurantById(request.getRestaurantId())).thenReturn(dummyRestaurant);
         when(menuGateway.updateMenu(eq(id), any(Menu.class)))

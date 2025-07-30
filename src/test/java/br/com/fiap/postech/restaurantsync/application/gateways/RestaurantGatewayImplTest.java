@@ -1,6 +1,7 @@
 package br.com.fiap.postech.restaurantsync.application.gateways;
 
 import br.com.fiap.postech.restaurantsync.domain.entities.Restaurant;
+import br.com.fiap.postech.restaurantsync.infrastructure.config.mapper.RestaurantMapper;
 import br.com.fiap.postech.restaurantsync.infrastructure.exceptions.BusinessException;
 import br.com.fiap.postech.restaurantsync.infrastructure.persistence.entity.RestaurantEntity;
 import br.com.fiap.postech.restaurantsync.infrastructure.persistence.repository.RestaurantRepository;
@@ -32,7 +33,7 @@ class RestaurantGatewayImplTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
         mockRestaurant = TestDataFactory.createRestaurant("Restaurante Teste", 1);
-        mockRestaurantEntity = RestaurantEntity.fromDomain(mockRestaurant);
+        mockRestaurantEntity = RestaurantMapper.toEntity(mockRestaurant);
     }
 
     @Test

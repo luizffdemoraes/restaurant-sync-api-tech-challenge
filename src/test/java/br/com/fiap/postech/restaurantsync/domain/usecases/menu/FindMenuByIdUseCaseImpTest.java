@@ -4,6 +4,7 @@ import br.com.fiap.postech.restaurantsync.domain.entities.Menu;
 import br.com.fiap.postech.restaurantsync.domain.gateways.MenuGateway;
 import br.com.fiap.postech.restaurantsync.domain.gateways.UserGateway;
 import br.com.fiap.postech.restaurantsync.factories.TestDataFactory;
+import br.com.fiap.postech.restaurantsync.infrastructure.config.mapper.MenuMapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -34,7 +35,7 @@ class FindMenuByIdUseCaseImpTest {
     void testExecute_Success() {
         // Arrange
         Integer menuId = 1;
-        Menu dummyMenu = new Menu(TestDataFactory.createMenuRequest());
+        Menu dummyMenu = MenuMapper.toDomain(TestDataFactory.createMenuRequest());
         dummyMenu.setId(menuId);
         doNothing().when(userGateway).validateAdmin();
         when(menuGateway.findMenuById(menuId)).thenReturn(dummyMenu);

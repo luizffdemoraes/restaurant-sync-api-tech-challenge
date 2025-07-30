@@ -2,7 +2,9 @@ package br.com.fiap.postech.restaurantsync.application.controllers;
 
 import br.com.fiap.postech.restaurantsync.application.dtos.requests.RestaurantRequest;
 import br.com.fiap.postech.restaurantsync.application.dtos.responses.RestaurantResponse;
+import br.com.fiap.postech.restaurantsync.domain.entities.Restaurant;
 import br.com.fiap.postech.restaurantsync.domain.usecases.restaurant.*;
+import br.com.fiap.postech.restaurantsync.infrastructure.config.mapper.RestaurantMapper;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -37,10 +39,12 @@ public class RestaurantController {
 
     @PostMapping
     public ResponseEntity<Object> createRestaurant(@Valid @RequestBody RestaurantRequest request) {
-        RestaurantResponse response = this.createRestaurantUseCase.execute(request);
+        Restaurant restaurant = RestaurantMapper.toDomain(request);
+        Restaurant response = this.createRestaurantUseCase.execute(restaurant);
+        RestaurantResponse restaurantResponse = RestaurantMapper.toResponse(response);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-                .buildAndExpand(response.id()).toUri();
-        return ResponseEntity.created(uri).body(response);
+                .buildAndExpand(response.getId()).toUri();
+        return ResponseEntity.created(uri).body(restaurantResponse);
     }
 
     @DeleteMapping("/{id}")
@@ -51,7 +55,7 @@ public class RestaurantController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Object> findRestaurantById(@PathVariable Integer id) {
-        RestaurantResponse response = this.findRestaurantByIdUseCase.execute(id);
+        Restaurant response = this.findRestaurantByIdUseCase.execute(id);
         return ResponseEntity.ok(response);
     }
 
@@ -63,13 +67,16 @@ public class RestaurantController {
             @RequestParam(value = "orderBy", defaultValue = "name") String orderBy) {
 
         PageRequest pageRequest = PageRequest.of(page, linesPerPage, Sort.Direction.valueOf(direction), orderBy);
-        Page<RestaurantResponse> list = this.findAllPagedRestaurantUseCase.execute(pageRequest);
-        return ResponseEntity.ok(list);
+        Page<Restaurant> list = this.findAllPagedRestaurantUseCase.execute(pageRequest);
+        Page<RestaurantResponse> response = list.map(RestaurantMapper::toResponse);
+        return ResponseEntity.ok(response);
     }
 
     @PutMapping(value = "/{id}")
     public ResponseEntity<Object> updateRestaurant(@PathVariable Integer id, @Valid @RequestBody RestaurantRequest request) {
-        RestaurantResponse response = this.updateRestaurantUseCase.execute(id, request);
+        Restaurant restaurant = RestaurantMapper.toDomain(request);
+        Restaurant responseUpdate = this.updateRestaurantUseCase.execute(id, restaurant);
+        RestaurantResponse response = RestaurantMapper.toResponse(responseUpdate);
         return ResponseEntity.ok().body(response);
     }
 }

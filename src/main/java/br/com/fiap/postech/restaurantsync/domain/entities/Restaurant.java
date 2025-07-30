@@ -1,7 +1,5 @@
 package br.com.fiap.postech.restaurantsync.domain.entities;
 
-import br.com.fiap.postech.restaurantsync.application.dtos.requests.RestaurantRequest;
-
 public class Restaurant {
     private Integer id;
     private String name;
@@ -19,18 +17,12 @@ public class Restaurant {
         this.ownerId = ownerId;
     }
 
-    public Restaurant(RestaurantRequest request) {
-        this.name = request.name();
-        this.address = new Address(
-                request.address().street(),
-                request.address().number(),
-                request.address().city(),
-                request.address().state(),
-                request.address().zipCode()
-        );
-        this.cuisineType = request.cuisineType();
-        this.openingHours = request.openingHours();
-        this.ownerId = request.ownerId();
+    public Restaurant(String name, Address address, String cuisineType, String openingHours, Integer ownerId) {
+        this.name = name;
+        this.address = address;
+        this.cuisineType = cuisineType;
+        this.openingHours = openingHours;
+        this.ownerId = ownerId;
     }
 
     public String getName() {

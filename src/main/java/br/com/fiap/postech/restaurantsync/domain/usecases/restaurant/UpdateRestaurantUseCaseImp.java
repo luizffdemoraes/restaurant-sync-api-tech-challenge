@@ -1,7 +1,5 @@
 package br.com.fiap.postech.restaurantsync.domain.usecases.restaurant;
 
-import br.com.fiap.postech.restaurantsync.application.dtos.requests.RestaurantRequest;
-import br.com.fiap.postech.restaurantsync.application.dtos.responses.RestaurantResponse;
 import br.com.fiap.postech.restaurantsync.domain.entities.Restaurant;
 import br.com.fiap.postech.restaurantsync.domain.gateways.RestaurantGateway;
 import br.com.fiap.postech.restaurantsync.domain.gateways.UserGateway;
@@ -17,13 +15,11 @@ public class UpdateRestaurantUseCaseImp  implements UpdateRestaurantUseCase{
     }
 
     @Override
-    public RestaurantResponse execute(Integer id, RestaurantRequest request) {
+    public Restaurant execute(Integer id, Restaurant restaurant) {
         this.userGateway.validateAdmin();
-        Restaurant restaurantRequest = new Restaurant(request);
-        if (request.ownerId() != null) {
-            userGateway.validateUserByOwnerId(request.ownerId());
+        if (restaurant.getOwnerId() != null) {
+            userGateway.validateUserByOwnerId(restaurant.getOwnerId());
         }
-        Restaurant updateRestaurant = this.restaurantGateway.updateRestaurant(id, restaurantRequest);
-        return new RestaurantResponse(updateRestaurant);
+        return this.restaurantGateway.updateRestaurant(id, restaurant);
     }
 }

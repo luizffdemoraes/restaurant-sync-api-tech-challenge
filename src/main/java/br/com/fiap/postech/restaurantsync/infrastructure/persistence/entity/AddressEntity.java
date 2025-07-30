@@ -34,17 +34,6 @@ public class AddressEntity {
         this.zipCode = zipCode;
     }
 
-    public static AddressEntity fromDomain(Address address) {
-        if (address == null) return null;
-        return new AddressEntity(
-                address.getStreet(),
-                address.getNumber(),
-                address.getCity(),
-                address.getState(),
-                address.getZipCode()
-        );
-    }
-
     public Address toDomain() {
         return new Address(street, number, city, state, zipCode);
     }

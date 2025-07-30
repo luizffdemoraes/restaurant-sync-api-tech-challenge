@@ -1,11 +1,11 @@
 package br.com.fiap.postech.restaurantsync.domain.usecases.restaurant;
 
 import br.com.fiap.postech.restaurantsync.application.dtos.requests.RestaurantRequest;
-import br.com.fiap.postech.restaurantsync.application.dtos.responses.RestaurantResponse;
 import br.com.fiap.postech.restaurantsync.domain.entities.Restaurant;
 import br.com.fiap.postech.restaurantsync.domain.gateways.RestaurantGateway;
 import br.com.fiap.postech.restaurantsync.domain.gateways.UserGateway;
 import br.com.fiap.postech.restaurantsync.factories.TestDataFactory;
+import br.com.fiap.postech.restaurantsync.infrastructure.config.mapper.RestaurantMapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -41,28 +41,27 @@ class CreateRestaurantUseCaseImpTest {
 
         ArgumentCaptor<Restaurant> restaurantCaptor = ArgumentCaptor.forClass(Restaurant.class);
 
-        Restaurant dummyRestaurant = new Restaurant(request);
+        Restaurant dummyRestaurant = RestaurantMapper.toDomain(request);
         dummyRestaurant.setId(100);
         when(restaurantGateway.saveRestaurant(any(Restaurant.class))).thenReturn(dummyRestaurant);
 
         // Act
-        RestaurantResponse response = createRestaurantUseCaseImp.execute(request);
+        Restaurant response = createRestaurantUseCaseImp.execute(dummyRestaurant);
 
         // Assert
         verify(userGateway, times(1)).validateUserByOwnerId(request.ownerId());
         verify(restaurantGateway, times(1)).saveRestaurant(restaurantCaptor.capture());
-        Restaurant capturedRestaurant = restaurantCaptor.getValue();
         Assertions.assertNotNull(response);
-        Assertions.assertEquals(dummyRestaurant.getId(), response.id());
-        Assertions.assertEquals(dummyRestaurant.getName(), response.name());
+        Assertions.assertEquals(dummyRestaurant.getId(), response.getId());
+        Assertions.assertEquals(dummyRestaurant.getName(), response.getName());
     }
 
     @Test
     void testExecute_InvalidUser() {
         // Arrange
-        RestaurantRequest request = TestDataFactory.createRestaurantRequest();
+        Restaurant request = RestaurantMapper.toDomain(TestDataFactory.createRestaurantRequest());
         doThrow(new IllegalArgumentException("Usuário inválido"))
-                .when(userGateway).validateUserByOwnerId(request.ownerId());
+                .when(userGateway).validateUserByOwnerId(request.getOwnerId());
 
         // Assert
         Assertions.assertThrows(IllegalArgumentException.class, () -> {
@@ -74,9 +73,9 @@ class CreateRestaurantUseCaseImpTest {
     @Test
     void testExecute_RestaurantGatewayThrowsException() {
         // Arrange
-        RestaurantRequest request = TestDataFactory.createRestaurantRequest();
+        Restaurant request = RestaurantMapper.toDomain(TestDataFactory.createRestaurantRequest());
 
-        doNothing().when(userGateway).validateUserByOwnerId(request.ownerId());
+        doNothing().when(userGateway).validateUserByOwnerId(request.getOwnerId());
         when(restaurantGateway.saveRestaurant(any(Restaurant.class)))
                 .thenThrow(new RuntimeException("Erro ao salvar restaurante"));
 
@@ -84,7 +83,7 @@ class CreateRestaurantUseCaseImpTest {
         Assertions.assertThrows(RuntimeException.class, () -> {
             createRestaurantUseCaseImp.execute(request);
         });
-        verify(userGateway, times(1)).validateUserByOwnerId(request.ownerId());
+        verify(userGateway, times(1)).validateUserByOwnerId(request.getOwnerId());
         verify(restaurantGateway, times(1)).saveRestaurant(any(Restaurant.class));
     }
 }

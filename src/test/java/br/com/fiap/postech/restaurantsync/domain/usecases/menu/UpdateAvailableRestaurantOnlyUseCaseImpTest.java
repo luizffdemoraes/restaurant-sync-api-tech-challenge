@@ -4,6 +4,7 @@ import br.com.fiap.postech.restaurantsync.domain.entities.Menu;
 import br.com.fiap.postech.restaurantsync.domain.gateways.MenuGateway;
 import br.com.fiap.postech.restaurantsync.domain.gateways.UserGateway;
 import br.com.fiap.postech.restaurantsync.factories.TestDataFactory;
+import br.com.fiap.postech.restaurantsync.infrastructure.config.mapper.MenuMapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -35,7 +36,7 @@ class UpdateAvailableRestaurantOnlyUseCaseImpTest {
         // Arrange
         Integer id = 1;
         Boolean availableOnlyRestaurant = true;
-        Menu dummyMenu = new Menu(TestDataFactory.createMenuRequest());
+        Menu dummyMenu = MenuMapper.toDomain(TestDataFactory.createMenuRequest());
         dummyMenu.setId(id);
         doNothing().when(userGateway).validateAdmin();
         when(menuGateway.updateAvailableOnlyRestaurant(id, availableOnlyRestaurant)).thenReturn(dummyMenu);

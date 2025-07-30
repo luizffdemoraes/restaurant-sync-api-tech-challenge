@@ -9,7 +9,13 @@ import br.com.fiap.postech.restaurantsync.infrastructure.persistence.entity.Menu
 public class MenuMapper {
 
     public static Menu toDomain(MenuRequest request) {
-        return new Menu(request);
+        return new Menu(
+                request.name(),
+                request.description(),
+                request.price(),
+                request.availableOnlyRestaurant() != null && request.availableOnlyRestaurant(),
+                request.photoPath(),
+                request.restaurantId());
     }
 
     public static MenuResponse toResponse(Menu domain) {
