@@ -1,7 +1,6 @@
 package br.com.fiap.postech.restaurantsync.infrastructure.persistence.entity;
 
 
-import br.com.fiap.postech.restaurantsync.domain.entities.Address;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 

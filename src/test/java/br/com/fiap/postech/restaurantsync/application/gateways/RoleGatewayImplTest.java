@@ -1,6 +1,5 @@
 package br.com.fiap.postech.restaurantsync.application.gateways;
 
-import br.com.fiap.postech.restaurantsync.application.gateways.RoleGatewayImpl;
 import br.com.fiap.postech.restaurantsync.domain.entities.Role;
 import br.com.fiap.postech.restaurantsync.infrastructure.exceptions.BusinessException;
 import br.com.fiap.postech.restaurantsync.infrastructure.persistence.entity.RoleEntity;

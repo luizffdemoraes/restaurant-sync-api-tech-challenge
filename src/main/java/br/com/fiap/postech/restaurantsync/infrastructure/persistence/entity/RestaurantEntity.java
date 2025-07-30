@@ -1,6 +1,5 @@
 package br.com.fiap.postech.restaurantsync.infrastructure.persistence.entity;
 
-import br.com.fiap.postech.restaurantsync.domain.entities.Restaurant;
 import jakarta.persistence.*;
 
 @Entity
