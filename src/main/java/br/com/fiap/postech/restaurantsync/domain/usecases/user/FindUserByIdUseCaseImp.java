@@ -13,9 +13,9 @@ public class FindUserByIdUseCaseImp implements FindUserByIdUseCase{
     }
 
     @Override
-    public UserResponse execute(Integer id) {
+    public User execute(Integer id) {
         User user = this.userGateway.findUserById(id);
         this.userGateway.validateSelfOrAdmin(user.getId());
-        return new UserResponse(user);
+        return user;
     }
 }

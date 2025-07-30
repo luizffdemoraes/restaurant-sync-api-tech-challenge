@@ -56,49 +56,6 @@ public class UserEntity implements UserDetails {
         this.addressEntity = addressEntity;
     }
 
-    public static UserEntity fromDomain(User user) {
-        if (user == null) {
-            return null;
-        }
-        var address = AddressMapper.fromDomain(user.getAddress());
-        var entity = new UserEntity(
-                user.getId(),
-                user.getName(),
-                user.getEmail(),
-                user.getLogin(),
-                user.getPassword(),
-                address
-        );
-        entity.setId(user.getId());
-        entity.setLastUpdateDate(user.getLastUpdateDate());
-        user.getRoles().forEach(role -> {
-            RoleEntity roleEntity = new RoleEntity();
-            roleEntity.setId(role.getId());
-            roleEntity.setAuthority(role.getAuthority());
-            entity.addRole(roleEntity);
-        });
-        return entity;
-    }
-
-    public User toDomain() {
-        var domain = new User(
-                this.name,
-                this.email,
-                this.login,
-                this.password,
-                this.addressEntity.toDomain()
-        );
-        domain.setId(this.id);
-        domain.setLastUpdateDate(this.lastUpdateDate);
-        this.roleEntities.forEach(roleEntity -> {
-            domain.addRole(new Role(
-                    roleEntity.getId(),
-                    roleEntity.getAuthority()
-            ));
-        });
-        return domain;
-    }
-
     public Integer  getId() {
         return id;
     }

@@ -23,7 +23,7 @@ public class RestaurantMapper {
         return new Restaurant(
                 entity.getId(),
                 entity.getName(),
-                entity.getAddressEntity().toDomain(),
+                AddressMapper.toDomain(entity.getAddressEntity()),
                 entity.getCuisineType(),
                 entity.getOpeningHours(),
                 entity.getOwnerId());

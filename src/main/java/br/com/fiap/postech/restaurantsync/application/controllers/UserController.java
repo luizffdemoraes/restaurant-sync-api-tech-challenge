@@ -1,9 +1,11 @@
 package br.com.fiap.postech.restaurantsync.application.controllers;
 
+import br.com.fiap.postech.restaurantsync.domain.entities.User;
 import br.com.fiap.postech.restaurantsync.domain.usecases.user.*;
 import br.com.fiap.postech.restaurantsync.application.dtos.requests.PasswordRequest;
 import br.com.fiap.postech.restaurantsync.application.dtos.requests.UserRequest;
 import br.com.fiap.postech.restaurantsync.application.dtos.responses.UserResponse;
+import br.com.fiap.postech.restaurantsync.infrastructure.config.mapper.UserMapper;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -41,7 +43,9 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<Object> createUser(@Valid @RequestBody UserRequest request) {
-        UserResponse response = this.createUserUseCase.execute(request);
+        User user = UserMapper.toDomain(request);
+        User userSave = this.createUserUseCase.execute(user);
+        UserResponse response = UserMapper.toResponse(userSave);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
                 .buildAndExpand(response.id()).toUri();
         return ResponseEntity.created(uri).body(response);
@@ -55,7 +59,8 @@ public class UserController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Object> findUserById(@PathVariable Integer id) {
-        UserResponse response = this.findUserByIdUseCase.execute(id);
+        User user = this.findUserByIdUseCase.execute(id);
+        UserResponse response = UserMapper.toResponse(user);
         return ResponseEntity.ok(response);
     }
 
@@ -67,13 +72,16 @@ public class UserController {
             @RequestParam(value = "orderBy", defaultValue = "name") String orderBy) {
 
         PageRequest pageRequest = PageRequest.of(page, linesPerPage, Sort.Direction.valueOf(direction), orderBy);
-        Page<UserResponse> list = this.findAllPagedUsersUseCase.execute(pageRequest);
-        return ResponseEntity.ok(list);
+        Page<User> list = this.findAllPagedUsersUseCase.execute(pageRequest);
+        Page<UserResponse> response = list.map(UserMapper::toResponse);
+        return ResponseEntity.ok(response);
     }
 
     @PutMapping(value = "/{id}")
     public ResponseEntity<Object> updateUser(@PathVariable Integer id, @Valid @RequestBody UserRequest request) {
-        UserResponse response = updateUserUseCase.execute(id, request);
+        User user = UserMapper.toDomain(request);
+        User responseUpdate = updateUserUseCase.execute(id, user);
+        UserResponse response = UserMapper.toResponse(responseUpdate);
         return ResponseEntity.ok().body(response);
     }
 

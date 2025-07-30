@@ -27,4 +27,15 @@ public class AddressMapper {
                 address.zipCode()
         );
     }
+
+    public static Address toDomain(AddressEntity address) {
+        if (address == null) return null;
+        return new Address(
+                address.getStreet(),
+                address.getNumber(),
+                address.getCity(),
+                address.getState(),
+                address.getZipCode()
+        );
+    }
 }

@@ -4,6 +4,7 @@ package br.com.fiap.postech.restaurantsync.application.gateways;
 import br.com.fiap.postech.restaurantsync.domain.entities.Role;
 import br.com.fiap.postech.restaurantsync.domain.entities.User;
 import br.com.fiap.postech.restaurantsync.factories.TestDataFactory;
+import br.com.fiap.postech.restaurantsync.infrastructure.config.mapper.UserMapper;
 import br.com.fiap.postech.restaurantsync.infrastructure.exceptions.BusinessException;
 import br.com.fiap.postech.restaurantsync.infrastructure.persistence.entity.RoleEntity;
 import br.com.fiap.postech.restaurantsync.infrastructure.persistence.entity.UserDetailsProjection;
@@ -52,7 +53,7 @@ class UserGatewayImplTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
         mockUser = TestDataFactory.createUser();
-        mockUserEntity = UserEntity.fromDomain(mockUser);
+        mockUserEntity = UserMapper.fromDomain(mockUser);
         mockUserDetailsProjection = TestDataFactory.createUserDetailsProjection();
 
         Jwt jwt = Mockito.mock(Jwt.class);
@@ -335,7 +336,7 @@ class UserGatewayImplTest {
         UserGatewayImpl spyGateway = spy(userGateway);
         doNothing().when(spyGateway).validateAdmin();
 
-        when(userRepository.findById(ownerId)).thenReturn(Optional.of(UserEntity.fromDomain(adminUser)));
+        when(userRepository.findById(ownerId)).thenReturn(Optional.of(UserMapper.fromDomain(adminUser)));
 
         // Act & Assert
         assertDoesNotThrow(() -> spyGateway.validateUserByOwnerId(ownerId));
@@ -352,7 +353,7 @@ class UserGatewayImplTest {
         // Mock the internal validateAdmin() call to do nothing
         UserGatewayImpl spyGateway = spy(userGateway);
         doNothing().when(spyGateway).validateAdmin();
-        when(userRepository.findById(ownerId)).thenReturn(Optional.of(UserEntity.fromDomain(commonUser)));
+        when(userRepository.findById(ownerId)).thenReturn(Optional.of(UserMapper.fromDomain(commonUser)));
 
         // Act & Assert
         BusinessException ex = assertThrows(

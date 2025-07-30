@@ -1,8 +1,6 @@
 package br.com.fiap.postech.restaurantsync.domain.entities;
 
 
-import br.com.fiap.postech.restaurantsync.application.dtos.requests.UserRequest;
-
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -26,19 +24,14 @@ public class User {
         this.lastUpdateDate = new Date();
     }
 
-    public User(UserRequest request) {
-        this.name = request.name();
-        this.email = request.email();
-        this.login = request.login();
-        this.password = request.password();
+    public User(Integer id, String name, String email, String login, String password, Address address) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.login = login;
+        this.password = password;
+        this.address = address;
         this.lastUpdateDate = new Date();
-        this.address = new Address(
-                request.address().street(),
-                request.address().number(),
-                request.address().city(),
-                request.address().state(),
-                request.address().zipCode()
-        );
     }
 
     public Integer getId() {

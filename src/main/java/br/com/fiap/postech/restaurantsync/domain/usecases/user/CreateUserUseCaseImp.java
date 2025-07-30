@@ -5,8 +5,6 @@ import br.com.fiap.postech.restaurantsync.domain.entities.Role;
 import br.com.fiap.postech.restaurantsync.domain.entities.User;
 import br.com.fiap.postech.restaurantsync.domain.gateways.RoleGateway;
 import br.com.fiap.postech.restaurantsync.domain.gateways.UserGateway;
-import br.com.fiap.postech.restaurantsync.application.dtos.requests.UserRequest;
-import br.com.fiap.postech.restaurantsync.application.dtos.responses.UserResponse;
 import br.com.fiap.postech.restaurantsync.infrastructure.exceptions.BusinessException;
 
 public class CreateUserUseCaseImp implements CreateUserUseCase {
@@ -20,17 +18,14 @@ public class CreateUserUseCaseImp implements CreateUserUseCase {
         this.roleGateway = roleGateway;
     }
 
-    public UserResponse execute(UserRequest userRequest) {
-        if (userGateway.existsUserByEmail(userRequest.email())) {
+    public User execute(User user) {
+        if (userGateway.existsUserByEmail(user.getEmail())) {
             throw new BusinessException("Email already registered");
         }
-
-        User user = new User(userRequest);
-        Role role = getRoleForEmail(userRequest.email());
+        Role role = getRoleForEmail(user.getEmail());
         user.addRole(role);
 
-        User savedUser = userGateway.saveUser(user);
-        return new UserResponse(savedUser);
+        return userGateway.saveUser(user);
     }
 
     private Role getRoleForEmail(String email) {

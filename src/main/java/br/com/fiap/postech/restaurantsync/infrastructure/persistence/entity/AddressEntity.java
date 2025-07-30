@@ -34,10 +34,6 @@ public class AddressEntity {
         this.zipCode = zipCode;
     }
 
-    public Address toDomain() {
-        return new Address(street, number, city, state, zipCode);
-    }
-
     public String getStreet() {
         return street;
     }

@@ -1,10 +1,11 @@
 package br.com.fiap.postech.restaurantsync.application.controllers;
 
+import br.com.fiap.postech.restaurantsync.application.dtos.requests.PasswordRequest;
+import br.com.fiap.postech.restaurantsync.application.dtos.responses.UserResponse;
+import br.com.fiap.postech.restaurantsync.domain.entities.User;
 import br.com.fiap.postech.restaurantsync.domain.usecases.user.*;
 import br.com.fiap.postech.restaurantsync.factories.TestDataFactory;
-import br.com.fiap.postech.restaurantsync.application.dtos.requests.PasswordRequest;
-import br.com.fiap.postech.restaurantsync.application.dtos.requests.UserRequest;
-import br.com.fiap.postech.restaurantsync.application.dtos.responses.UserResponse;
+import br.com.fiap.postech.restaurantsync.infrastructure.config.mapper.UserMapper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,14 +61,14 @@ public class UserControllerTest {
 
     @Test
     void testCreateUserSuccess() throws Exception {
-        UserResponse userResponse = TestDataFactory.createUserResponse();
-        UserRequest userRequest = TestDataFactory.createUserRequest();
+        User user = UserMapper.toDomain(TestDataFactory.createUserRequest());
+        UserResponse userResponse = UserMapper.toResponse(user);
 
-        when(createUserUseCase.execute(any(UserRequest.class))).thenReturn(userResponse);
+        when(createUserUseCase.execute(any(User.class))).thenReturn(user);
 
         mockMvc.perform(post("/v1/users")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(userRequest)))
+                        .content(objectMapper.writeValueAsString(user)))
                 .andExpect(status().isCreated())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.id").value(userResponse.id()))
@@ -97,8 +98,8 @@ public class UserControllerTest {
     @Test
     @WithMockUser(roles = "ADMIN")
     void testFindAllPagedUsersSuccess() throws Exception {
-        UserResponse userResponse = TestDataFactory.createUserResponse();
-        Page<UserResponse> page = new PageImpl<>(List.of(userResponse));
+        User userResponse = UserMapper.toDomain(TestDataFactory.createUserRequest());
+        Page<User> page = new PageImpl<>(List.of(userResponse));
 
         when(findAllPagedUsersUseCase.execute(any(PageRequest.class))).thenReturn(page);
 
@@ -109,40 +110,39 @@ public class UserControllerTest {
                         .param("orderBy", "name"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.content[0].id").value(userResponse.id()))
-                .andExpect(jsonPath("$.content[0].name").value(userResponse.name()));
+                .andExpect(jsonPath("$.content[0].id").value(userResponse.getId()))
+                .andExpect(jsonPath("$.content[0].name").value(userResponse.getName()));
     }
 
     @Test
     @WithMockUser(roles = "ADMIN")
     void testFindUserByIdSuccess() throws Exception {
         Integer userId = 1;
-        UserResponse userResponse = TestDataFactory.createUserResponse();
+        User userResponse = UserMapper.toDomain(TestDataFactory.createUserRequest());
 
         when(findUserByIdUseCase.execute(userId)).thenReturn(userResponse);
 
         mockMvc.perform(get("/v1/users/{id}", userId))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.id").value(userResponse.id()))
-                .andExpect(jsonPath("$.name").value(userResponse.name()));
+                .andExpect(jsonPath("$.id").value(userResponse.getId()))
+                .andExpect(jsonPath("$.name").value(userResponse.getName()));
     }
 
     @Test
     void testUpdateUserSuccess() throws Exception {
         Integer userId = 1;
-        UserRequest userRequest = TestDataFactory.createUserRequest();
-        UserResponse userResponse = TestDataFactory.createUserResponse();
+        User user = UserMapper.toDomain(TestDataFactory.createUserRequest());
 
-        when(updateUserUseCase.execute(eq(userId), any(UserRequest.class))).thenReturn(userResponse);
+        when(updateUserUseCase.execute(eq(userId), any(User.class))).thenReturn(user);
 
         mockMvc.perform(put("/v1/users/{id}", userId)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(userRequest)))
+                        .content(objectMapper.writeValueAsString(user)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.id").value(userResponse.id()))
-                .andExpect(jsonPath("$.name").value(userResponse.name()));
+                .andExpect(jsonPath("$.id").value(user.getId()))
+                .andExpect(jsonPath("$.name").value(user.getName()));
     }
 
     @Test

@@ -1,9 +1,9 @@
 package br.com.fiap.postech.restaurantsync.domain.usecases.user;
 
-import br.com.fiap.postech.restaurantsync.application.dtos.responses.UserResponse;
+import br.com.fiap.postech.restaurantsync.domain.entities.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
 public interface FindAllPagedUsersUseCase {
-    Page<UserResponse> execute(PageRequest pageRequest);
+    Page<User> execute(PageRequest pageRequest);
 }
