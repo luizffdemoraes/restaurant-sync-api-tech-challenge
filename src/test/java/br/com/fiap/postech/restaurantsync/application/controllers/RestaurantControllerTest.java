@@ -1,9 +1,10 @@
 package br.com.fiap.postech.restaurantsync.application.controllers;
 
 import br.com.fiap.postech.restaurantsync.application.dtos.requests.RestaurantRequest;
-import br.com.fiap.postech.restaurantsync.application.dtos.responses.RestaurantResponse;
+import br.com.fiap.postech.restaurantsync.domain.entities.Restaurant;
 import br.com.fiap.postech.restaurantsync.domain.usecases.restaurant.*;
 import br.com.fiap.postech.restaurantsync.factories.TestDataFactory;
+import br.com.fiap.postech.restaurantsync.infrastructure.config.mapper.RestaurantMapper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,6 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 
 import static br.com.fiap.postech.restaurantsync.factories.TestDataFactory.createRestaurantRequest;
-import static br.com.fiap.postech.restaurantsync.factories.TestDataFactory.createRestaurantResponse;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
@@ -60,8 +60,9 @@ class RestaurantControllerTest {
     @Test
     void testCreateRestaurantSuccess() throws Exception {
         RestaurantRequest request = createRestaurantRequest();
-        RestaurantResponse response = createRestaurantResponse();
-        when(createRestaurantUseCase.execute(any(RestaurantRequest.class))).thenReturn(response);
+        Restaurant response = RestaurantMapper.toDomain(request);
+        response.setId(1); // Simulando que o ID foi gerado pelo banco de dados
+        when(createRestaurantUseCase.execute(any(Restaurant.class))).thenReturn(response);
 
         mockMvc.perform(post("/v1/restaurants")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -69,8 +70,8 @@ class RestaurantControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(header().exists("Location"))
                 .andExpect(jsonPath("$.id").value(1))
-                .andExpect(jsonPath("$.name").value(request.name()))
-                .andExpect(jsonPath("$.cuisineType").value(request.cuisineType()));
+                .andExpect(jsonPath("$.name").value(response.getName()))
+                .andExpect(jsonPath("$.cuisineType").value(response.getCuisineType()));
     }
 
     @Test
@@ -92,20 +93,21 @@ class RestaurantControllerTest {
     @Test
     void testGetRestaurantByIdSuccess() throws Exception {
         int id = 1;
-        RestaurantResponse response = createRestaurantResponse();
-        when(findRestaurantByIdUseCase.execute(id)).thenReturn(response);
+        Restaurant restaurant = RestaurantMapper.toDomain(createRestaurantRequest());
+        restaurant.setId(id); // Simulando que o ID foi gerado pelo banco de dados
+        when(findRestaurantByIdUseCase.execute(id)).thenReturn(restaurant);
 
         mockMvc.perform(get("/v1/restaurants/{id}", id))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(id))
-                .andExpect(jsonPath("$.name").value(response.name()))
-                .andExpect(jsonPath("$.cuisineType").value(response.cuisineType()));
+                .andExpect(jsonPath("$.name").value(restaurant.getName()))
+                .andExpect(jsonPath("$.cuisineType").value(restaurant.getCuisineType()));
     }
 
     @Test
     void testListPagedRestaurants() throws Exception {
-        RestaurantResponse response = createRestaurantResponse();
-        Page<RestaurantResponse> mockPage = new PageImpl<>(
+        Restaurant response = RestaurantMapper.toDomain(createRestaurantRequest());
+        Page<Restaurant> mockPage = new PageImpl<>(
                 List.of(response),
                 PageRequest.of(0, 10, Sort.Direction.ASC, "name"),
                 1
@@ -121,8 +123,8 @@ class RestaurantControllerTest {
                         .param("direction", "ASC")
                         .param("orderBy", "name"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.content[0].id").value(response.id()))
-                .andExpect(jsonPath("$.content[0].name").value(response.name()))
+                .andExpect(jsonPath("$.content[0].id").value(response.getId()))
+                .andExpect(jsonPath("$.content[0].name").value(response.getName()))
                 .andExpect(jsonPath("$.totalElements").value(1))
                 .andExpect(jsonPath("$.totalPages").value(1));
     }
@@ -130,17 +132,17 @@ class RestaurantControllerTest {
     @Test
     void testUpdateRestaurantSuccess() throws Exception {
         int id = 1;
-        RestaurantRequest request = createRestaurantRequest();
-        RestaurantResponse response = createRestaurantResponse();
+        Restaurant restaurant = RestaurantMapper.toDomain(createRestaurantRequest());
+        restaurant.setId(id); // Simulando que o ID foi gerado pelo banco de dados
 
-        when(updateRestaurantUseCase.execute(eq(id), any(RestaurantRequest.class))).thenReturn(response);
+        when(updateRestaurantUseCase.execute(eq(id), any(Restaurant.class))).thenReturn(restaurant);
 
         mockMvc.perform(put("/v1/restaurants/{id}", id)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
+                        .content(objectMapper.writeValueAsString(restaurant)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(id))
-                .andExpect(jsonPath("$.name").value(request.name()));
+                .andExpect(jsonPath("$.name").value(restaurant.getName()));
     }
 
     @Test

@@ -3,8 +3,7 @@ package br.com.fiap.postech.restaurantsync.domain.usecases.user;
 import br.com.fiap.postech.restaurantsync.domain.entities.User;
 import br.com.fiap.postech.restaurantsync.domain.gateways.UserGateway;
 import br.com.fiap.postech.restaurantsync.factories.TestDataFactory;
-import br.com.fiap.postech.restaurantsync.application.dtos.requests.UserRequest;
-import br.com.fiap.postech.restaurantsync.application.dtos.responses.UserResponse;
+import br.com.fiap.postech.restaurantsync.infrastructure.config.mapper.UserMapper;
 import br.com.fiap.postech.restaurantsync.infrastructure.exceptions.BusinessException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,26 +23,25 @@ class UpdateUserUseCaseImpTest {
     @Mock
     private UserGateway userGateway;
 
-    private UserRequest userRequest;
+    private User userRequest;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        userRequest = TestDataFactory.createUserRequest();
+        userRequest = UserMapper.toDomain(TestDataFactory.createUserRequest());
     }
 
     @Test
     void execute_shouldUpdateUser_whenAuthorized() {
         Integer userId = 1;
-        User user = new User(userRequest);
 
         doNothing().when(userGateway).validateSelfOrAdmin(userId);
-        when(userGateway.updateUser(eq(userId), any(User.class))).thenReturn(user);
+        when(userGateway.updateUser(eq(userId), any(User.class))).thenReturn(userRequest);
 
-        UserResponse response = updateUserUseCaseImp.execute(userId, userRequest);
+        User response = updateUserUseCaseImp.execute(userId, userRequest);
 
         assertNotNull(response);
-        assertEquals(userRequest.name(), response.name());
+        assertEquals(userRequest.getName(), response.getName());
         verify(userGateway).validateSelfOrAdmin(userId);
         verify(userGateway).updateUser(eq(userId), any(User.class));
     }

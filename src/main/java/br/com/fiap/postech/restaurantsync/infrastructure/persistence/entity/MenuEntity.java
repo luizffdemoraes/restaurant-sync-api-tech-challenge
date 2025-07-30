@@ -1,6 +1,5 @@
 package br.com.fiap.postech.restaurantsync.infrastructure.persistence.entity;
 
-import br.com.fiap.postech.restaurantsync.domain.entities.Menu;
 import jakarta.persistence.*;
 
 @Entity
@@ -40,32 +39,6 @@ public class MenuEntity {
         this.availableOnlyRestaurant = availableOnlyRestaurant;
         this.photoPath = photoPath;
         this.restaurantId = restaurantId;
-    }
-
-
-
-    public Menu toDomain() {
-        return new Menu(
-                id,
-                name,
-                description,
-                price,
-                availableOnlyRestaurant != null && availableOnlyRestaurant, // evita null
-                photoPath,
-                restaurantId
-        );
-    }
-
-    public static MenuEntity fromDomain(Menu menuItem) {
-        return new MenuEntity(
-                menuItem.getId(),
-                menuItem.getName(),
-                menuItem.getDescription(),
-                menuItem.getPrice(),
-                menuItem.isAvailableOnlyRestaurant(),
-                menuItem.getPhotoPath(),
-                menuItem.getRestaurantId()
-        );
     }
 
     public Integer getId() {

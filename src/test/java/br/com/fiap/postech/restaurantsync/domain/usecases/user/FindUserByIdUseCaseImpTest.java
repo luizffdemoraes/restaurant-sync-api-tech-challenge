@@ -3,7 +3,6 @@ package br.com.fiap.postech.restaurantsync.domain.usecases.user;
 import br.com.fiap.postech.restaurantsync.domain.entities.Address;
 import br.com.fiap.postech.restaurantsync.domain.entities.User;
 import br.com.fiap.postech.restaurantsync.domain.gateways.UserGateway;
-import br.com.fiap.postech.restaurantsync.application.dtos.responses.UserResponse;
 import br.com.fiap.postech.restaurantsync.infrastructure.exceptions.BusinessException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -38,11 +37,11 @@ class FindUserByIdUseCaseImpTest {
         when(userGateway.findUserById(1)).thenReturn(user);
         doNothing().when(userGateway).validateSelfOrAdmin(user.getId());
 
-        UserResponse response = findUserByIdUseCaseImp.execute(1);
+        User response = findUserByIdUseCaseImp.execute(1);
 
         assertNotNull(response);
-        assertEquals(1, response.id());
-        assertEquals("Test Street", response.address().street());
+        assertEquals(1, response.getId());
+        assertEquals("Test Street", response.getAddress().getStreet());
         verify(userGateway).findUserById(1);
         verify(userGateway).validateSelfOrAdmin(user.getId());
     }

@@ -1,14 +1,16 @@
 package br.com.fiap.postech.restaurantsync.application.controllers;
 
 import br.com.fiap.postech.restaurantsync.application.dtos.requests.MenuRequest;
-import br.com.fiap.postech.restaurantsync.application.dtos.responses.MenuResponse;
+import br.com.fiap.postech.restaurantsync.domain.entities.Menu;
 import br.com.fiap.postech.restaurantsync.domain.usecases.menu.*;
+import br.com.fiap.postech.restaurantsync.infrastructure.config.mapper.MenuMapper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -63,9 +65,11 @@ class MenuControllerTest {
         MenuRequest request = new MenuRequest(
                 "Hambúrguer", "Sanduíche de carne", 35.50, true, "img/hb.png", 1
         );
-        MenuResponse response = new MenuResponse(1, "Hambúrguer", "Sanduíche de carne", 35.50, true, "img/hb.png", 1);
+        // Cria o domínio a partir do Request e seta o id
+        Menu menu = MenuMapper.toDomain(request);
+        menu.setId(1);
 
-        when(createMenuUseCase.execute(any(MenuRequest.class))).thenReturn(response);
+        when(createMenuUseCase.execute(any())).thenReturn(menu);
 
         mockMvc.perform(post("/v1/menus")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -109,11 +113,14 @@ class MenuControllerTest {
     @Test
     @WithMockUser(roles = "ADMIN")
     void testFindAllPagedMenuSuccess() throws Exception {
-        MenuResponse menu1 = new MenuResponse(1, "Pizza", "Pizza de calabresa", 45.00, false, "img/pizza.png", 2);
-        MenuResponse menu2 = new MenuResponse(2, "Coxinha", "Coxinha de frango", 7.00, true, null, 1);
+        Menu menu1 = MenuMapper.toDomain(new MenuRequest("Pizza", "Pizza de calabresa", 45.00, false, "img/pizza.png", 2));
+        menu1.setId(1);
+        Menu menu2 = MenuMapper.toDomain(new MenuRequest("Coxinha", "Coxinha de frango", 7.00, true, null, 1));
+        menu2.setId(2);
 
         when(findAllPagedMenuUseCase.execute(any(PageRequest.class)))
-                .thenReturn(new PageImpl<>(List.of(menu1, menu2), PageRequest.of(0, 12, Sort.Direction.ASC, "name"), 2));
+                .thenReturn((Page<Menu>) new PageImpl<>(List.of(menu1, menu2),
+                        PageRequest.of(0, 12, Sort.Direction.ASC, "name"), 2));
 
         mockMvc.perform(get("/v1/menus")
                         .param("page", "0")
@@ -129,7 +136,9 @@ class MenuControllerTest {
     @Test
     @WithMockUser(roles = "ADMIN")
     void testFindMenuByIdSuccess() throws Exception {
-        MenuResponse menu = new MenuResponse(1, "Pizza", "Pizza de calabresa", 45.00, false, "img/pizza.png", 2);
+        Menu menu = MenuMapper.toDomain(new MenuRequest("Pizza", "Pizza de calabresa", 45.00, false, "img/pizza.png", 2));
+        menu.setId(1);
+
         when(findMenuByIdUseCase.execute(1)).thenReturn(menu);
 
         mockMvc.perform(get("/v1/menus/1"))
@@ -142,9 +151,12 @@ class MenuControllerTest {
     @WithMockUser(roles = "ADMIN")
     void testUpdateMenuSuccess() throws Exception {
         MenuRequest request = new MenuRequest("Novo Nome", "Nova Desc", 99.0, false, null, 2);
-        MenuResponse response = new MenuResponse(1, "Novo Nome", "Nova Desc", 99.0, false, null, 2);
+        // Converte o request para domínio e seta o id
+        Menu menu = MenuMapper.toDomain(request);
+        menu.setId(1);
 
-        when(updateMenuUseCase.execute(eq(1), any(MenuRequest.class))).thenReturn(response);
+        // Ajusta o método para esperar um Menu
+        when(updateMenuUseCase.execute(eq(1), any(Menu.class))).thenReturn(menu);
 
         mockMvc.perform(put("/v1/menus/1")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -156,12 +168,16 @@ class MenuControllerTest {
 
     @Test
     void testPartialUpdateMenuItemSuccess() throws Exception {
-        // Aqui, simula a chamada de PATCH para alteração de availableOnlyRestaurant
+        // Corpo da requisição simulada com a alteração de availableOnlyRestaurant
         String body = """
-                { "availableOnlyRestaurant":false }
-                """;
-        MenuResponse response = new MenuResponse(1, "Pizza", "Pizza de calabresa", 45.00, false, "img/pizza.png", 2);
-        when(updateAvailableRestaurantOnlyUseCase.execute(eq(1), eq(false))).thenReturn(response);
+            { "availableOnlyRestaurant":false }
+            """;
+        // Cria o domínio a partir de um MenuRequest utilizando o MenuMapper e seta o id
+        Menu menu = MenuMapper.toDomain(new MenuRequest("Pizza", "Pizza de calabresa", 45.00, false, "img/pizza.png", 2));
+        menu.setId(1);
+
+        // Ajusta o stub do use case para retornar o domínio
+        when(updateAvailableRestaurantOnlyUseCase.execute(eq(1), eq(false))).thenReturn(menu);
 
         mockMvc.perform(patch("/v1/menus/1/restaurant-only")
                         .contentType(MediaType.APPLICATION_JSON)

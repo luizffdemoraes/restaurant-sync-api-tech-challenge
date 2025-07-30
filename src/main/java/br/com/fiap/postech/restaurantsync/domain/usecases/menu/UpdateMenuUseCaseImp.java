@@ -1,7 +1,5 @@
 package br.com.fiap.postech.restaurantsync.domain.usecases.menu;
 
-import br.com.fiap.postech.restaurantsync.application.dtos.requests.MenuRequest;
-import br.com.fiap.postech.restaurantsync.application.dtos.responses.MenuResponse;
 import br.com.fiap.postech.restaurantsync.domain.entities.Menu;
 import br.com.fiap.postech.restaurantsync.domain.gateways.MenuGateway;
 import br.com.fiap.postech.restaurantsync.domain.gateways.RestaurantGateway;
@@ -21,11 +19,9 @@ public class UpdateMenuUseCaseImp implements UpdateMenuUseCase{
     }
 
     @Override
-    public MenuResponse execute(Integer id, MenuRequest request) {
+    public Menu execute(Integer id, Menu menu) {
         this.userGateway.validateAdmin();
-        restaurantGateway.findRestaurantById(request.restaurantId());
-        Menu menu = new Menu(request);
-        Menu updatedMenu = this.menuGateway.updateMenu(id, menu);
-        return new MenuResponse(updatedMenu);
+        restaurantGateway.findRestaurantById(menu.getRestaurantId());
+        return this.menuGateway.updateMenu(id, menu);
     }
 }

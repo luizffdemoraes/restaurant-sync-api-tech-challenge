@@ -3,7 +3,7 @@ package br.com.fiap.postech.restaurantsync.domain.usecases.restaurant;
 import br.com.fiap.postech.restaurantsync.domain.entities.Restaurant;
 import br.com.fiap.postech.restaurantsync.domain.gateways.RestaurantGateway;
 import br.com.fiap.postech.restaurantsync.domain.gateways.UserGateway;
-import br.com.fiap.postech.restaurantsync.application.dtos.responses.RestaurantResponse;
+import br.com.fiap.postech.restaurantsync.factories.TestDataFactory;
 import br.com.fiap.postech.restaurantsync.infrastructure.exceptions.BusinessException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,7 +13,6 @@ import org.mockito.MockitoAnnotations;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
-import br.com.fiap.postech.restaurantsync.factories.TestDataFactory;
 
 class FindRestaurantByIdUseCaseImpTest {
 
@@ -39,11 +38,11 @@ class FindRestaurantByIdUseCaseImpTest {
         when(restaurantGateway.findRestaurantById(1)).thenReturn(restaurant);
         doNothing().when(userGateway).validateAdmin();
 
-        RestaurantResponse response = findRestaurantByIdUseCaseImp.execute(1);
+        Restaurant response = findRestaurantByIdUseCaseImp.execute(1);
 
         assertNotNull(response);
-        assertEquals(1, response.id());
-        assertEquals("Restaurante Teste", response.name());
+        assertEquals(1, response.getId());
+        assertEquals("Restaurante Teste", response.getName());
         verify(restaurantGateway).findRestaurantById(1);
         verify(userGateway).validateAdmin();
     }

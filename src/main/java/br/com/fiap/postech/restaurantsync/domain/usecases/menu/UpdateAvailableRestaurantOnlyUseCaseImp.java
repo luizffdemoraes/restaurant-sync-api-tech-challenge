@@ -1,6 +1,5 @@
 package br.com.fiap.postech.restaurantsync.domain.usecases.menu;
 
-import br.com.fiap.postech.restaurantsync.application.dtos.responses.MenuResponse;
 import br.com.fiap.postech.restaurantsync.domain.entities.Menu;
 import br.com.fiap.postech.restaurantsync.domain.gateways.MenuGateway;
 import br.com.fiap.postech.restaurantsync.domain.gateways.UserGateway;
@@ -16,9 +15,8 @@ public class UpdateAvailableRestaurantOnlyUseCaseImp implements UpdateAvailableR
     }
 
     @Override
-    public MenuResponse execute(Integer id, Boolean availableOnlyRestaurant) {
+    public Menu execute(Integer id, Boolean availableOnlyRestaurant) {
         this.userGateway.validateAdmin();
-        Menu updatedMenu = this.menuGateway.updateAvailableOnlyRestaurant(id, availableOnlyRestaurant);
-        return new MenuResponse(updatedMenu);
+        return this.menuGateway.updateAvailableOnlyRestaurant(id, availableOnlyRestaurant);
     }
 }

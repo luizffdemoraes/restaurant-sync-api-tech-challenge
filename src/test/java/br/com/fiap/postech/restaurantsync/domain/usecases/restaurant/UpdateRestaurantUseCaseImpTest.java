@@ -1,11 +1,11 @@
 package br.com.fiap.postech.restaurantsync.domain.usecases.restaurant;
 
 import br.com.fiap.postech.restaurantsync.application.dtos.requests.RestaurantRequest;
-import br.com.fiap.postech.restaurantsync.application.dtos.responses.RestaurantResponse;
 import br.com.fiap.postech.restaurantsync.domain.entities.Restaurant;
 import br.com.fiap.postech.restaurantsync.domain.gateways.RestaurantGateway;
 import br.com.fiap.postech.restaurantsync.domain.gateways.UserGateway;
 import br.com.fiap.postech.restaurantsync.factories.TestDataFactory;
+import br.com.fiap.postech.restaurantsync.infrastructure.config.mapper.RestaurantMapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -43,7 +43,7 @@ class UpdateRestaurantUseCaseImpTest {
 
         ArgumentCaptor<Restaurant> restaurantCaptor = ArgumentCaptor.forClass(Restaurant.class);
 
-        Restaurant updatedRestaurant = new Restaurant(request);
+        Restaurant updatedRestaurant = RestaurantMapper.toDomain(request);
         updatedRestaurant.setId(restaurantId);
 
         doNothing().when(userGateway).validateAdmin();
@@ -52,7 +52,7 @@ class UpdateRestaurantUseCaseImpTest {
                 .thenReturn(updatedRestaurant);
 
         // Act
-        RestaurantResponse response = updateRestaurantUseCaseImp.execute(restaurantId, request);
+        Restaurant response = updateRestaurantUseCaseImp.execute(restaurantId, updatedRestaurant);
 
         // Assert
         verify(userGateway, times(1)).validateAdmin();
@@ -61,9 +61,9 @@ class UpdateRestaurantUseCaseImpTest {
 
         Restaurant capturedRestaurant = restaurantCaptor.getValue();
         Assertions.assertNotNull(response);
-        Assertions.assertEquals(updatedRestaurant.getId(), response.id());
-        Assertions.assertEquals(updatedRestaurant.getName(), response.name());
-        Assertions.assertEquals(updatedRestaurant.getCuisineType(), response.cuisineType());
+        Assertions.assertEquals(updatedRestaurant.getId(), response.getId());
+        Assertions.assertEquals(updatedRestaurant.getName(), response.getName());
+        Assertions.assertEquals(updatedRestaurant.getCuisineType(), response.getCuisineType());
     }
 
     @Test
@@ -80,7 +80,7 @@ class UpdateRestaurantUseCaseImpTest {
                 null
         );
 
-        Restaurant updatedRestaurant = new Restaurant(requestWithoutOwner);
+        Restaurant updatedRestaurant = RestaurantMapper.toDomain(requestWithoutOwner);
         updatedRestaurant.setId(restaurantId);
 
         doNothing().when(userGateway).validateAdmin();
@@ -88,7 +88,7 @@ class UpdateRestaurantUseCaseImpTest {
                 .thenReturn(updatedRestaurant);
 
         // Act
-        RestaurantResponse response = updateRestaurantUseCaseImp.execute(restaurantId, requestWithoutOwner);
+        Restaurant response = updateRestaurantUseCaseImp.execute(restaurantId, updatedRestaurant);
 
         // Assert
         verify(userGateway, times(1)).validateAdmin();
@@ -96,14 +96,14 @@ class UpdateRestaurantUseCaseImpTest {
         verify(restaurantGateway, times(1)).updateRestaurant(eq(restaurantId), any(Restaurant.class));
 
         Assertions.assertNotNull(response);
-        Assertions.assertEquals(updatedRestaurant.getId(), response.id());
+        Assertions.assertEquals(updatedRestaurant.getId(), response.getId());
     }
 
     @Test
     void testExecute_InvalidAdmin() {
         // Arrange
         Integer restaurantId = 102;
-        RestaurantRequest request = TestDataFactory.createRestaurantRequest();
+        Restaurant request = RestaurantMapper.toDomain(TestDataFactory.createRestaurantRequest());
 
         doThrow(new SecurityException("Não autorizado")).when(userGateway).validateAdmin();
 
@@ -121,18 +121,18 @@ class UpdateRestaurantUseCaseImpTest {
     void testExecute_InvalidOwner() {
         // Arrange
         Integer restaurantId = 103;
-        RestaurantRequest request = TestDataFactory.createRestaurantRequest();
+        Restaurant request = RestaurantMapper.toDomain(TestDataFactory.createRestaurantRequest());
 
         doNothing().when(userGateway).validateAdmin();
         doThrow(new IllegalArgumentException("Proprietário inválido"))
-                .when(userGateway).validateUserByOwnerId(request.ownerId());
+                .when(userGateway).validateUserByOwnerId(request.getOwnerId());
 
         // Assert
         Assertions.assertThrows(IllegalArgumentException.class, () -> {
             updateRestaurantUseCaseImp.execute(restaurantId, request);
         });
         verify(userGateway, times(1)).validateAdmin();
-        verify(userGateway, times(1)).validateUserByOwnerId(request.ownerId());
+        verify(userGateway, times(1)).validateUserByOwnerId(request.getOwnerId());
         verify(restaurantGateway, never()).updateRestaurant(any(), any());
     }
 
@@ -140,10 +140,10 @@ class UpdateRestaurantUseCaseImpTest {
     void testExecute_RestaurantGatewayThrowsException() {
         // Arrange
         Integer restaurantId = 104;
-        RestaurantRequest request = TestDataFactory.createRestaurantRequest();
+        Restaurant request = RestaurantMapper.toDomain(TestDataFactory.createRestaurantRequest());
 
         doNothing().when(userGateway).validateAdmin();
-        doNothing().when(userGateway).validateUserByOwnerId(request.ownerId());
+        doNothing().when(userGateway).validateUserByOwnerId(request.getOwnerId());
         when(restaurantGateway.updateRestaurant(eq(restaurantId), any(Restaurant.class)))
                 .thenThrow(new RuntimeException("Erro ao atualizar restaurante"));
 
@@ -152,7 +152,7 @@ class UpdateRestaurantUseCaseImpTest {
             updateRestaurantUseCaseImp.execute(restaurantId, request);
         });
         verify(userGateway, times(1)).validateAdmin();
-        verify(userGateway, times(1)).validateUserByOwnerId(request.ownerId());
+        verify(userGateway, times(1)).validateUserByOwnerId(request.getOwnerId());
         verify(restaurantGateway, times(1)).updateRestaurant(eq(restaurantId), any(Restaurant.class));
     }
 }

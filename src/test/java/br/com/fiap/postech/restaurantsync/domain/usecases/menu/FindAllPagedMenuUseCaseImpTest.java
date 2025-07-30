@@ -1,10 +1,10 @@
 package br.com.fiap.postech.restaurantsync.domain.usecases.menu;
 
-import br.com.fiap.postech.restaurantsync.application.dtos.responses.MenuResponse;
 import br.com.fiap.postech.restaurantsync.domain.entities.Menu;
 import br.com.fiap.postech.restaurantsync.domain.gateways.MenuGateway;
 import br.com.fiap.postech.restaurantsync.domain.gateways.UserGateway;
 import br.com.fiap.postech.restaurantsync.factories.TestDataFactory;
+import br.com.fiap.postech.restaurantsync.infrastructure.config.mapper.MenuMapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -40,7 +40,7 @@ class FindAllPagedMenuUseCaseImpTest {
     void testExecute_Success() {
         // Arrange
         PageRequest pageRequest = PageRequest.of(0, 10);
-        Menu dummyMenu = new Menu(TestDataFactory.createMenuRequest());
+        Menu dummyMenu = MenuMapper.toDomain(TestDataFactory.createMenuRequest());
         dummyMenu.setId(1);
         List<Menu> menus = List.of(dummyMenu);
         Page<Menu> pagedMenus = new PageImpl<>(menus, pageRequest, menus.size());
@@ -48,14 +48,14 @@ class FindAllPagedMenuUseCaseImpTest {
         when(menuGateway.findAllPagedMenus(pageRequest)).thenReturn(pagedMenus);
 
         // Act
-        Page<MenuResponse> responsePage = findAllPagedMenuUseCaseImp.execute(pageRequest);
+        Page<Menu> responsePage = findAllPagedMenuUseCaseImp.execute(pageRequest);
 
         // Assert
         verify(userGateway, times(1)).validateAdmin();
         verify(menuGateway, times(1)).findAllPagedMenus(pageRequest);
         Assertions.assertNotNull(responsePage);
         Assertions.assertEquals(1, responsePage.getTotalElements());
-        Assertions.assertEquals(dummyMenu.getId(), responsePage.getContent().get(0).id());
+        Assertions.assertEquals(dummyMenu.getId(), responsePage.getContent().get(0).getId());
     }
 
     @Test

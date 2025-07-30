@@ -2,6 +2,7 @@ package br.com.fiap.postech.restaurantsync.application.gateways;
 
 import br.com.fiap.postech.restaurantsync.domain.entities.User;
 import br.com.fiap.postech.restaurantsync.domain.gateways.UserGateway;
+import br.com.fiap.postech.restaurantsync.infrastructure.config.mapper.UserMapper;
 import br.com.fiap.postech.restaurantsync.infrastructure.exceptions.BusinessException;
 import br.com.fiap.postech.restaurantsync.infrastructure.persistence.entity.RoleEntity;
 import br.com.fiap.postech.restaurantsync.infrastructure.persistence.entity.UserDetailsProjection;
@@ -34,10 +35,10 @@ public class UserGatewayImpl implements UserGateway {
 
     @Override
     public User saveUser(User user) {
-        UserEntity userEntity = UserEntity.fromDomain(user);
+        UserEntity userEntity = UserMapper.fromDomain(user);
         userEntity.setPassword(passwordEncoder.encode(user.getPassword()));
         UserEntity saved = this.userRepository.save(userEntity);
-        return saved.toDomain();
+        return UserMapper.toDomain(saved);
     }
 
     @Override
@@ -47,7 +48,7 @@ public class UserGatewayImpl implements UserGateway {
 
     public Page<User> findAllPagedUsers(PageRequest pageRequest) {
         Page<UserEntity> pagedUsers = this.userRepository.findAll(pageRequest);
-        return pagedUsers.map(UserEntity::toDomain);
+        return pagedUsers.map(UserMapper::toDomain);
     }
 
     public User findUserById(Integer id) {
@@ -78,14 +79,14 @@ public class UserGatewayImpl implements UserGateway {
         user.setAddress(userRequest.getAddress() != null ? userRequest.getAddress() : user.getAddress());
         user.setLastUpdateDate(new Date());
 
-        UserEntity saved = this.userRepository.save(UserEntity.fromDomain(user));
-        return saved.toDomain();
+        UserEntity saved = this.userRepository.save(UserMapper.fromDomain(user));
+        return UserMapper.toDomain(saved);
     }
 
     public void updateUserPassword(Integer id, String newPassword) {
         User user = findUserOrThrow(id);
         user.setPassword(passwordEncoder.encode(newPassword));
-        this.userRepository.save(UserEntity.fromDomain(user));
+        this.userRepository.save(UserMapper.fromDomain(user));
     }
 
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -115,7 +116,8 @@ public class UserGatewayImpl implements UserGateway {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             Jwt jwtPrincipal = (Jwt) authentication.getPrincipal();
             String username = jwtPrincipal.getClaim("username");
-            return this.userRepository.findByEmail(username).get().toDomain();
+            UserEntity userEntity = this.userRepository.findByEmail(username).get();
+            return UserMapper.toDomain(userEntity);
         } catch (Exception e) {
             throw new UsernameNotFoundException("Invalid user");
         }
@@ -136,8 +138,9 @@ public class UserGatewayImpl implements UserGateway {
     }
 
     public User findUserOrThrow(Integer id) {
-        return this.userRepository.findById(id)
-                .orElseThrow(() -> new BusinessException("Id not found: " + id)).toDomain();
+        UserEntity userEntity = this.userRepository.findById(id)
+                .orElseThrow(() -> new BusinessException("Id not found: " + id));
+        return UserMapper.toDomain(userEntity);
     }
 
     public void validateUserByOwnerId(Integer ownerId) {

@@ -1,8 +1,6 @@
 package br.com.fiap.postech.restaurantsync.domain.entities;
 
 
-import br.com.fiap.postech.restaurantsync.application.dtos.requests.MenuRequest;
-
 public class Menu {
     private Integer id;
     private String name;
@@ -25,13 +23,15 @@ public class Menu {
         this.restaurantId = restaurantIds;
     }
 
-    public Menu(MenuRequest request) {
-        this.name = request.name();
-        this.description = request.description();
-        this.price = request.price();
-        this.availableOnlyRestaurant = request.availableOnlyRestaurant();
-        this.photoPath = request.photoPath();
-        this.restaurantId = request.restaurantId();
+    public Menu(String name, String description, Double price,
+                boolean availableOnlyRestaurant, String photoPath,
+                Integer restaurantIds) {
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.availableOnlyRestaurant = availableOnlyRestaurant;
+        this.photoPath = photoPath;
+        this.restaurantId = restaurantIds;
     }
 
     public String getName() {

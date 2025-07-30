@@ -1,7 +1,6 @@
 package br.com.fiap.postech.restaurantsync.infrastructure.persistence.entity;
 
 
-import br.com.fiap.postech.restaurantsync.domain.entities.Address;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 
@@ -32,21 +31,6 @@ public class AddressEntity {
         this.city = city;
         this.state = state;
         this.zipCode = zipCode;
-    }
-
-    public static AddressEntity fromDomain(Address address) {
-        if (address == null) return null;
-        return new AddressEntity(
-                address.getStreet(),
-                address.getNumber(),
-                address.getCity(),
-                address.getState(),
-                address.getZipCode()
-        );
-    }
-
-    public Address toDomain() {
-        return new Address(street, number, city, state, zipCode);
     }
 
     public String getStreet() {

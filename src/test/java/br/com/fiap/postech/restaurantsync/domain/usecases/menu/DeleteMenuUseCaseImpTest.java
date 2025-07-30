@@ -1,9 +1,7 @@
 package br.com.fiap.postech.restaurantsync.domain.usecases.menu;
 
 import br.com.fiap.postech.restaurantsync.domain.gateways.MenuGateway;
-import br.com.fiap.postech.restaurantsync.domain.gateways.RestaurantGateway;
 import br.com.fiap.postech.restaurantsync.domain.gateways.UserGateway;
-import br.com.fiap.postech.restaurantsync.domain.usecases.restaurant.DeleteRestaurantUseCaseImp;
 import br.com.fiap.postech.restaurantsync.infrastructure.exceptions.BusinessException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,7 +12,6 @@ import org.springframework.dao.DataIntegrityViolationException;
 
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.times;
 
 class DeleteMenuUseCaseImpTest {
 

@@ -2,6 +2,7 @@ package br.com.fiap.postech.restaurantsync.application.gateways;
 
 import br.com.fiap.postech.restaurantsync.domain.entities.Restaurant;
 import br.com.fiap.postech.restaurantsync.domain.gateways.RestaurantGateway;
+import br.com.fiap.postech.restaurantsync.infrastructure.config.mapper.RestaurantMapper;
 import br.com.fiap.postech.restaurantsync.infrastructure.exceptions.BusinessException;
 import br.com.fiap.postech.restaurantsync.infrastructure.persistence.entity.RestaurantEntity;
 import br.com.fiap.postech.restaurantsync.infrastructure.persistence.repository.RestaurantRepository;
@@ -34,14 +35,14 @@ public class RestaurantGatewayImpl implements RestaurantGateway {
     @Override
     public Page<Restaurant> findAllPagedRestaurants(PageRequest pageRequest) {
         Page<RestaurantEntity> pagedRestaurants = this.restaurantRepository.findAll(pageRequest);
-        return pagedRestaurants.map(RestaurantEntity::toDomain);
+        return pagedRestaurants.map(RestaurantMapper::toDomain);
     }
 
     @Override
     public Restaurant saveRestaurant(Restaurant restaurant) {
-        RestaurantEntity responseEntity = RestaurantEntity.fromDomain(restaurant);
+        RestaurantEntity responseEntity = RestaurantMapper.toEntity(restaurant);
         RestaurantEntity saved = this.restaurantRepository.save(responseEntity);
-        return saved.toDomain();
+        return RestaurantMapper.toDomain(saved);
     }
 
     @Override
@@ -52,12 +53,13 @@ public class RestaurantGatewayImpl implements RestaurantGateway {
         restaurant.setCuisineType(restaurantRequest.getCuisineType() != null ? restaurantRequest.getCuisineType() : restaurant.getCuisineType());
         restaurant.setOpeningHours(restaurantRequest.getOpeningHours() != null ? restaurantRequest.getOpeningHours() : restaurant.getOpeningHours());
         restaurant.setOwnerId(restaurantRequest.getOwnerId() != null ? restaurantRequest.getOwnerId() : restaurant.getOwnerId());
-        RestaurantEntity saved = this.restaurantRepository.save(RestaurantEntity.fromDomain(restaurant));
-        return saved.toDomain();
+        RestaurantEntity saved = this.restaurantRepository.save(RestaurantMapper.toEntity(restaurant));
+        return RestaurantMapper.toDomain(saved);
     }
 
     private Restaurant findRestaurantOrThrow(Integer id) {
-        return this.restaurantRepository.findById(id)
-                .orElseThrow(() -> new BusinessException("Id not found: " + id)).toDomain();
+        RestaurantEntity responseEntity = this.restaurantRepository.findById(id)
+                .orElseThrow(() -> new BusinessException("Id not found: " + id));
+        return RestaurantMapper.toDomain(responseEntity);
     }
 }

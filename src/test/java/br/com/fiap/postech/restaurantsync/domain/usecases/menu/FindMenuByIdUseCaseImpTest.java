@@ -1,10 +1,10 @@
 package br.com.fiap.postech.restaurantsync.domain.usecases.menu;
 
-import br.com.fiap.postech.restaurantsync.application.dtos.responses.MenuResponse;
 import br.com.fiap.postech.restaurantsync.domain.entities.Menu;
 import br.com.fiap.postech.restaurantsync.domain.gateways.MenuGateway;
 import br.com.fiap.postech.restaurantsync.domain.gateways.UserGateway;
 import br.com.fiap.postech.restaurantsync.factories.TestDataFactory;
+import br.com.fiap.postech.restaurantsync.infrastructure.config.mapper.MenuMapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -35,19 +35,19 @@ class FindMenuByIdUseCaseImpTest {
     void testExecute_Success() {
         // Arrange
         Integer menuId = 1;
-        Menu dummyMenu = new Menu(TestDataFactory.createMenuRequest());
+        Menu dummyMenu = MenuMapper.toDomain(TestDataFactory.createMenuRequest());
         dummyMenu.setId(menuId);
         doNothing().when(userGateway).validateAdmin();
         when(menuGateway.findMenuById(menuId)).thenReturn(dummyMenu);
 
         // Act
-        MenuResponse response = findMenuByIdUseCaseImp.execute(menuId);
+        Menu response = findMenuByIdUseCaseImp.execute(menuId);
 
         // Assert
         verify(userGateway, times(1)).validateAdmin();
         verify(menuGateway, times(1)).findMenuById(menuId);
         Assertions.assertNotNull(response);
-        Assertions.assertEquals(menuId, response.id());
+        Assertions.assertEquals(menuId, response.getId());
     }
 
     @Test

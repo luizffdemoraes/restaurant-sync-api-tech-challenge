@@ -1,6 +1,5 @@
 package br.com.fiap.postech.restaurantsync.infrastructure.persistence.entity;
 
-import br.com.fiap.postech.restaurantsync.domain.entities.Restaurant;
 import jakarta.persistence.*;
 
 @Entity
@@ -35,29 +34,6 @@ public class RestaurantEntity {
         this.cuisineType = cuisineType;
         this.openingHours = openingHours;
         this.ownerId = ownerId;
-    }
-
-    public static RestaurantEntity fromDomain(Restaurant restaurant) {
-        if (restaurant == null) return null;
-        var address = AddressEntity.fromDomain(restaurant.getAddress());
-        return new RestaurantEntity(
-                restaurant.getId(),
-                restaurant.getName(),
-                address,
-                restaurant.getCuisineType(),
-                restaurant.getOpeningHours(),
-                restaurant.getOwnerId()
-        );
-    }
-
-    public Restaurant toDomain() {
-        return new Restaurant(
-                this.id,
-                this.name,
-                this.addressEntity.toDomain(),
-                this.cuisineType,
-                this.openingHours,
-                this.ownerId);
     }
 
     public Integer getId() {

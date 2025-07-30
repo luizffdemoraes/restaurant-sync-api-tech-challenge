@@ -2,8 +2,6 @@ package br.com.fiap.postech.restaurantsync.domain.usecases.user;
 
 import br.com.fiap.postech.restaurantsync.domain.entities.User;
 import br.com.fiap.postech.restaurantsync.domain.gateways.UserGateway;
-import br.com.fiap.postech.restaurantsync.application.dtos.requests.UserRequest;
-import br.com.fiap.postech.restaurantsync.application.dtos.responses.UserResponse;
 
 public class UpdateUserUseCaseImp implements UpdateUserUseCase{
 
@@ -14,10 +12,8 @@ public class UpdateUserUseCaseImp implements UpdateUserUseCase{
     }
 
     @Override
-    public UserResponse execute(Integer id, UserRequest request) {
-        User user = new User(request);
+    public User execute(Integer id, User user) {
         this.userGateway.validateSelfOrAdmin(id);
-        User updateUser = this.userGateway.updateUser(id, user);
-        return new UserResponse(updateUser);
+        return this.userGateway.updateUser(id, user);
     }
 }

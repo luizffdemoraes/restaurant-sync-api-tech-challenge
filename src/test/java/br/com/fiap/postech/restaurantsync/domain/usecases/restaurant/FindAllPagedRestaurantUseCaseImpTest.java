@@ -3,7 +3,6 @@ package br.com.fiap.postech.restaurantsync.domain.usecases.restaurant;
 import br.com.fiap.postech.restaurantsync.domain.entities.Restaurant;
 import br.com.fiap.postech.restaurantsync.domain.gateways.RestaurantGateway;
 import br.com.fiap.postech.restaurantsync.domain.gateways.UserGateway;
-import br.com.fiap.postech.restaurantsync.application.dtos.responses.RestaurantResponse;
 import br.com.fiap.postech.restaurantsync.infrastructure.exceptions.BusinessException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -50,12 +49,12 @@ class FindAllPagedRestaurantUseCaseImpTest {
         doNothing().when(userGateway).validateAdmin();
         when(restaurantGateway.findAllPagedRestaurants(pageRequest)).thenReturn(restaurantPage);
 
-        Page<RestaurantResponse> responsePage = findAllPagedRestaurantUseCaseImp.execute(pageRequest);
+        Page<Restaurant> responsePage = findAllPagedRestaurantUseCaseImp.execute(pageRequest);
 
         assertNotNull(responsePage);
         assertEquals(2, responsePage.getTotalElements());
-        assertEquals(1, responsePage.getContent().get(0).id());
-        assertEquals(2, responsePage.getContent().get(1).id());
+        assertEquals(1, responsePage.getContent().get(0).getId());
+        assertEquals(2, responsePage.getContent().get(1).getId());
         verify(userGateway).validateAdmin();
         verify(restaurantGateway).findAllPagedRestaurants(pageRequest);
     }
