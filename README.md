@@ -52,7 +52,7 @@ O sistema é construído com **Spring Boot**, **Docker**, e **Docker Compose**, 
 | `POST   /v1/menus`                   | Adiciona novo item ao cardápio           | Admin  |
 | `GET    /v1/menus`                   | Lista todos os itens do menu (paginado)  | Admin  |
 | `GET    /v1/menus/{id}`              | Obtém detalhes de um item específico     | Admin  |
-| `PUT    /v1/menus/{id}`              | Atualiza todas informações do item  b    | Admin  |
+| `PUT    /v1/menus/{id}`              | Atualiza todas informações de um item    | Admin  |
 | `DELETE /v1/menus/{id}`              | Remove item do cardápio                  | Admin  |
 | `PATCH  /v1/menus/{id}/availability` | Altera status de disponibilidade do item | Admin  |
 
