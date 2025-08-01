@@ -11,4 +11,5 @@ public interface MenuGateway {
     Menu findMenuById(Integer id);
     Menu updateMenu(Integer id, Menu menu);
     Menu updateAvailableOnlyRestaurant(Integer id, Boolean availableOnlyRestaurant);
+    Menu findMenuOrThrow(Integer id);
 }

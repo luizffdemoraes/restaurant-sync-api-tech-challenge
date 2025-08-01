@@ -65,7 +65,7 @@ public class MenuGatewayImp implements MenuGateway {
         return MenuMapper.toDomain(saved);
     }
 
-    private Menu findMenuOrThrow(Integer id) {
+    public Menu findMenuOrThrow(Integer id) {
         MenuEntity entity = this.menuItemRepository.findById(id)
                 .orElseThrow(() -> new BusinessException("Id not found: " + id));
         return MenuMapper.toDomain(entity);

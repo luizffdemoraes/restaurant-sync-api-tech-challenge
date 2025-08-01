@@ -18,6 +18,7 @@ public class DeleteMenuUseCaseImp implements DeleteMenuUseCase{
     @Override
     public void execute(Integer id) {
         this.userGateway.validateAdmin();
+        this.menuGateway.findMenuOrThrow(id);
         try {
             this.menuGateway.deleteMenuById(id);
         } catch (DataIntegrityViolationException e) {
