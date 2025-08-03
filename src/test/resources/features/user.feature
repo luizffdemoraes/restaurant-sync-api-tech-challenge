@@ -26,3 +26,11 @@ Funcionalidade: Gerenciamento de Usuários Admin
     Quando eu consulto o usuário com ID 1 em "/v1/users/1"
     Então a resposta deve ter status 200
     E o corpo da resposta deve conter os dados do usuário Jack Ryan
+
+  Cenário: Atualizar usuário existente
+    Dado que o usuário admin Jack Ryan está cadastrado
+    E eu realizo login com email "jackryan@restaurantsync.com" e senha "password123"
+    E eu tenho os dados atualizados do usuário para ID
+    Quando eu envio uma requisição PUT para "/v1/users/1" com os dados do usuário
+    Então a resposta deve ter status 200
+    E o corpo da resposta deve conter os dados do usuário atualizado

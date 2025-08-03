@@ -37,6 +37,8 @@ public class UserStep {
     private Map<String, Object> userData;
     private ResponseEntity<Map> userByIdResponse;
     private Integer createdUserId;
+    private ResponseEntity<Map> updateResponse;
+    private Map<String, Object> updatedUserData;
 
 
     @Dado("que eu tenho os dados do usuário admin Jack Ryan")
@@ -74,7 +76,9 @@ public class UserStep {
     @Então("a resposta deve ter status {int}")
     public void a_resposta_deve_ter_status(Integer expectedStatus) {
         int actualStatus;
-        if (userByIdResponse != null) {
+        if (updateResponse != null) {
+            actualStatus = updateResponse.getStatusCodeValue();
+        } else if (userByIdResponse != null) {
             actualStatus = userByIdResponse.getStatusCodeValue();
         } else if (usersListResponse != null) {
             actualStatus = usersListResponse.getStatusCodeValue();
@@ -256,6 +260,65 @@ public class UserStep {
         if (responseBody.containsKey("address")) {
             Map<String, Object> address = (Map<String, Object>) responseBody.get("address");
             assertThat("Rua deve ser Rua das Flores", address.get("street"), equalTo("Rua das Flores"));
+        }
+    }
+
+    @Dado("eu tenho os dados atualizados do usuário para ID")
+    public void eu_tenho_os_dados_atualizados_do_usuário_para_ID() {
+        Map<String, Object> updatedAddress = new HashMap<>();
+        updatedAddress.put("street", "Rua das Pedras");
+        updatedAddress.put("number", 456);
+        updatedAddress.put("city", "São Paulo");
+        updatedAddress.put("state", "SP");
+        updatedAddress.put("zipCode", "12345-896");
+
+        updatedUserData = new HashMap<>();
+        updatedUserData.put("name", "Jack Jackson");
+        updatedUserData.put("email", "jack@restaurantsync.com");
+        updatedUserData.put("login", "jackryan");
+        updatedUserData.put("password", "password123");
+        updatedUserData.put("address", updatedAddress);
+    }
+
+    @Quando("eu envio uma requisição PUT para {string} com os dados do usuário")
+    public void eu_envio_uma_requisição_put_para_com_os_dados_do_usuário(String endpoint) {
+        if (accessToken == null || accessToken.isEmpty()) {
+            realizarLogin("jackryan@restaurantsync.com", "password123");
+            verificarLoginBemSucedido();
+        }
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set("Authorization", "Bearer " + accessToken);
+
+        HttpEntity<Map<String, Object>> request = new HttpEntity<>(updatedUserData, headers);
+
+        String url = endpoint.replace("{id}", "1");
+        System.out.println("PUT para: " + url);
+        System.out.println("Corpo enviado: " + updatedUserData);
+
+        updateResponse = restTemplate.exchange(url, HttpMethod.PUT, request, Map.class);
+
+        System.out.println("Status resposta: " + updateResponse.getStatusCodeValue());
+        System.out.println("Body resposta: " + updateResponse.getBody());
+    }
+
+    @Então("o corpo da resposta deve conter os dados do usuário atualizado")
+    public void o_corpo_da_resposta_deve_conter_os_dados_do_usuário_atualizado() {
+        // Verifica primeiro o status da resposta
+        assertThat(updateResponse.getStatusCodeValue(), equalTo(200));
+
+        Map<String, Object> responseBody = updateResponse.getBody();
+        assertThat("Resposta não pode ser nula", responseBody, notNullValue());
+
+        // Verifica se a resposta contém os campos esperados
+        assertThat("Nome deve ser Jack Jackson", responseBody.get("name"), equalTo("Jack Jackson"));
+        assertThat("Email deve ser atualizado", responseBody.get("email"), equalTo("jack@restaurantsync.com"));
+
+        // Verificação opcional do endereço
+        if (responseBody.containsKey("address")) {
+            Map<String, Object> address = (Map<String, Object>) responseBody.get("address");
+            assertThat("Rua deve ser atualizada", address.get("street"), equalTo("Rua das Pedras"));
         }
     }
 }
