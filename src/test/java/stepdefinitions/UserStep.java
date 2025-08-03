@@ -39,6 +39,7 @@ public class UserStep {
     private Integer createdUserId;
     private ResponseEntity<Map> updateResponse;
     private Map<String, Object> updatedUserData;
+    private ResponseEntity<Void> passwordUpdateResponse;
 
 
     @Dado("que eu tenho os dados do usuário admin Jack Ryan")
@@ -54,6 +55,24 @@ public class UserStep {
         userData.put("name", "Jack Ryan");
         userData.put("email", "jackryan@restaurantsync.com");
         userData.put("login", "jackryan");
+        userData.put("password", "password123");
+        userData.put("address", address);
+    }
+
+    // src/test/java/stepdefinitions/UserStep.java
+    @Dado("que eu tenho os dados do usuário client John Doe")
+    public void que_eu_tenho_os_dados_do_usuário_client_John_Doe() {
+        Map<String, Object> address = new HashMap<>();
+        address.put("street", "Rua das Flores");
+        address.put("number", 123);
+        address.put("city", "São Paulo");
+        address.put("state", "SP");
+        address.put("zipCode", "12345-678");
+
+        userData = new HashMap<>();
+        userData.put("name", "John Doe");
+        userData.put("email", "johndoe@example.com");
+        userData.put("login", "johndoe");
         userData.put("password", "password123");
         userData.put("address", address);
     }
@@ -76,7 +95,9 @@ public class UserStep {
     @Então("a resposta deve ter status {int}")
     public void a_resposta_deve_ter_status(Integer expectedStatus) {
         int actualStatus;
-        if (updateResponse != null) {
+        if (passwordUpdateResponse != null) {
+            actualStatus = passwordUpdateResponse.getStatusCodeValue();
+        } else if (updateResponse != null) {
             actualStatus = updateResponse.getStatusCodeValue();
         } else if (userByIdResponse != null) {
             actualStatus = userByIdResponse.getStatusCodeValue();
@@ -106,12 +127,13 @@ public class UserStep {
         que_eu_tenho_os_dados_do_usuário_admin_jack_ryan();
         eu_envio_uma_requisição_post_para_com_os_dados_do_usuário("/v1/users");
 
+        int status = userResponse.getStatusCodeValue();
         // Se recebermos 400, tentamos fazer login para ver se o usuário já existe
-        if (userResponse.getStatusCodeValue() == 400) {
+        if (status == 400 || status == 500) {
             System.out.println("Recebido 400, tentando fazer login para verificar se usuário existe...");
             realizarLogin("jackryan@restaurantsync.com", "password123");
 
-            if (loginResponse.getStatusCodeValue() == 200) {
+            if (status == 200) {
                 System.out.println("Login bem-sucedido, usuário já existe");
                 accessToken = (String) loginResponse.getBody().get("access_token");
                 return;
@@ -273,9 +295,9 @@ public class UserStep {
         updatedAddress.put("zipCode", "12345-896");
 
         updatedUserData = new HashMap<>();
-        updatedUserData.put("name", "Jack Jackson");
-        updatedUserData.put("email", "jack@restaurantsync.com");
-        updatedUserData.put("login", "jackryan");
+        updatedUserData.put("name", "John Doe");
+        updatedUserData.put("email", "john@example.com");
+        updatedUserData.put("login", "johndoe");
         updatedUserData.put("password", "password123");
         updatedUserData.put("address", updatedAddress);
     }
@@ -293,7 +315,7 @@ public class UserStep {
 
         HttpEntity<Map<String, Object>> request = new HttpEntity<>(updatedUserData, headers);
 
-        String url = endpoint.replace("{id}", "1");
+        String url = endpoint.replace("{id}", "2");
         System.out.println("PUT para: " + url);
         System.out.println("Corpo enviado: " + updatedUserData);
 
@@ -312,13 +334,34 @@ public class UserStep {
         assertThat("Resposta não pode ser nula", responseBody, notNullValue());
 
         // Verifica se a resposta contém os campos esperados
-        assertThat("Nome deve ser Jack Jackson", responseBody.get("name"), equalTo("Jack Jackson"));
-        assertThat("Email deve ser atualizado", responseBody.get("email"), equalTo("jack@restaurantsync.com"));
+        assertThat("Nome deve ser John Doe", responseBody.get("name"), equalTo("John Doe"));
+        assertThat("Email deve ser atualizado", responseBody.get("email"), equalTo("john@example.com"));
 
         // Verificação opcional do endereço
         if (responseBody.containsKey("address")) {
             Map<String, Object> address = (Map<String, Object>) responseBody.get("address");
             assertThat("Rua deve ser atualizada", address.get("street"), equalTo("Rua das Pedras"));
         }
+    }
+
+    @Quando("eu envio uma requisição PATCH para {string} com a nova senha {string}")
+    public void eu_envio_requisicao_patch_para_com_nova_senha(String endpoint, String novaSenha) {
+        if (accessToken == null || accessToken.isEmpty()) {
+            realizarLogin("jack@restaurantsync.com", "password123");
+            verificarLoginBemSucedido();
+        }
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set("Authorization", "Bearer " + accessToken);
+
+        Map<String, String> body = new HashMap<>();
+        body.put("password", novaSenha);
+
+        HttpEntity<Map<String, String>> request = new HttpEntity<>(body, headers);
+        passwordUpdateResponse = restTemplate.exchange(endpoint, HttpMethod.PATCH, request, Void.class);
+
+        System.out.println("PATCH para: " + endpoint);
+        System.out.println("Corpo enviado: " + body);
+        System.out.println("Status resposta: " + passwordUpdateResponse.getStatusCodeValue());
     }
 }
