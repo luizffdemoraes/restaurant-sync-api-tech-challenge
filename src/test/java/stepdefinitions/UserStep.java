@@ -73,7 +73,17 @@ public class UserStep {
 
     @Então("a resposta deve ter status {int}")
     public void a_resposta_deve_ter_status(Integer expectedStatus) {
-        assertThat(userResponse.getStatusCodeValue(), equalTo(expectedStatus));
+        int actualStatus;
+        if (userByIdResponse != null) {
+            actualStatus = userByIdResponse.getStatusCodeValue();
+        } else if (usersListResponse != null) {
+            actualStatus = usersListResponse.getStatusCodeValue();
+        } else if (loginResponse != null) {
+            actualStatus = loginResponse.getStatusCodeValue();
+        } else {
+            actualStatus = userResponse.getStatusCodeValue();
+        }
+        assertThat(actualStatus, equalTo(expectedStatus));
     }
 
     @Então("o corpo da resposta deve conter os dados do usuário criado")
@@ -191,5 +201,61 @@ public class UserStep {
         boolean found = users.stream().anyMatch(user ->
                 "jackryan@restaurantsync.com".equals(user.get("email")));
         assertThat("Usuário admin não encontrado na lista", found, is(true));
+    }
+
+    @Quando("eu consulto o usuário com ID {int} em {string}")
+    public void eu_consulto_o_usuário_com_ID_em(Integer userId, String endpoint) {
+        // Verificação extra para garantir que temos um token válido
+        if (accessToken == null || accessToken.isEmpty()) {
+            realizarLogin("jackryan@restaurantsync.com", "password123");
+            verificarLoginBemSucedido();
+        }
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + accessToken);
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        HttpEntity<?> request = new HttpEntity<>(headers);
+
+        try {
+            userByIdResponse = restTemplate.exchange(
+                    endpoint.replace("{id}", "1"), // Garante que o ID será 1
+                    HttpMethod.GET,
+                    request,
+                    Map.class
+            );
+
+            // Debug detalhado
+            System.out.println("=== DEBUG CONSULTA POR ID ===");
+            System.out.println("Endpoint: " + endpoint);
+            System.out.println("Token: " + accessToken);
+            System.out.println("Status: " + userByIdResponse.getStatusCodeValue());
+            System.out.println("Response Body: " + userByIdResponse.getBody());
+
+        } catch (Exception e) {
+            System.err.println("Erro na consulta por ID: " + e.getMessage());
+            throw e;
+        }
+    }
+
+    @Então("o corpo da resposta deve conter os dados do usuário Jack Ryan")
+    public void o_corpo_da_resposta_deve_conter_os_dados_do_usuário_jack_ryan() {
+        // Verifica primeiro o status da resposta
+        assertThat(userByIdResponse.getStatusCodeValue(), equalTo(200));
+
+        Map<String, Object> responseBody = userByIdResponse.getBody();
+
+        // Verificações robustas
+        assertThat("Resposta não pode ser nula", responseBody, notNullValue());
+        assertThat("ID do usuário deve ser 1", responseBody.get("id"), equalTo(1));
+        assertThat("Nome deve ser Jack Ryan", responseBody.get("name"), equalTo("Jack Ryan"));
+        assertThat("Email deve corresponder", responseBody.get("email"), equalTo("jackryan@restaurantsync.com"));
+        assertThat("Login deve ser jackryan", responseBody.get("login"), equalTo("jackryan"));
+
+        // Verificação adicional do endereço (opcional)
+        if (responseBody.containsKey("address")) {
+            Map<String, Object> address = (Map<String, Object>) responseBody.get("address");
+            assertThat("Rua deve ser Rua das Flores", address.get("street"), equalTo("Rua das Flores"));
+        }
     }
 }

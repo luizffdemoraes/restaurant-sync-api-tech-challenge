@@ -19,3 +19,10 @@ Funcionalidade: Gerenciamento de Usuários Admin
     Quando eu consulto a lista de usuários paginada em "/v1/users?page=0&size=10"
     Então a lista de usuários deve ser retornada com status 200
     E o corpo da resposta deve conter a lista de usuários
+
+  Cenário: Consultar usuário por ID
+    Dado que o usuário admin Jack Ryan está cadastrado
+    E eu realizo login com email "jackryan@restaurantsync.com" e senha "password123"
+    Quando eu consulto o usuário com ID 1 em "/v1/users/1"
+    Então a resposta deve ter status 200
+    E o corpo da resposta deve conter os dados do usuário Jack Ryan
