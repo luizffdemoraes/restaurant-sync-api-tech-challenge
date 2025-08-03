@@ -40,7 +40,7 @@ public class UserStep {
     private ResponseEntity<Map> updateResponse;
     private Map<String, Object> updatedUserData;
     private ResponseEntity<Void> passwordUpdateResponse;
-
+    private ResponseEntity<Void> deleteResponse;
 
     @Dado("que eu tenho os dados do usuário admin Jack Ryan")
     public void que_eu_tenho_os_dados_do_usuário_admin_jack_ryan() {
@@ -103,6 +103,8 @@ public class UserStep {
             actualStatus = userByIdResponse.getStatusCodeValue();
         } else if (usersListResponse != null) {
             actualStatus = usersListResponse.getStatusCodeValue();
+        } else if (deleteResponse != null) {
+            actualStatus = deleteResponse.getStatusCodeValue();
         } else if (loginResponse != null) {
             actualStatus = loginResponse.getStatusCodeValue();
         } else {
@@ -363,5 +365,21 @@ public class UserStep {
         System.out.println("PATCH para: " + endpoint);
         System.out.println("Corpo enviado: " + body);
         System.out.println("Status resposta: " + passwordUpdateResponse.getStatusCodeValue());
+    }
+
+    @Quando("eu envio uma requisição DELETE para {string}")
+    public void eu_envio_uma_requisição_DELETE_para(String endpoint) {
+        if (accessToken == null || accessToken.isEmpty()) {
+            realizarLogin("jackryan@restaurantsync.com", "password123");
+            verificarLoginBemSucedido();
+        }
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + accessToken);
+        HttpEntity<?> request = new HttpEntity<>(headers);
+
+        deleteResponse = restTemplate.exchange(endpoint, HttpMethod.DELETE, request, Void.class);
+
+        System.out.println("DELETE para: " + endpoint);
+        System.out.println("Status resposta: " + deleteResponse.getStatusCodeValue());
     }
 }

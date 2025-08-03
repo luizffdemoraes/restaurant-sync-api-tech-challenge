@@ -46,3 +46,9 @@ Funcionalidade: Gerenciamento de Usuários Admin
     E eu realizo login com email "jackryan@restaurantsync.com" e senha "password123"
     Quando eu envio uma requisição PATCH para "/v1/users/2/password" com a nova senha "password321"
     Então a resposta deve ter status 204
+
+  Cenário: Deletar usuário existente
+    Dado que o usuário admin Jack Ryan está cadastrado
+    E eu realizo login com email "jackryan@restaurantsync.com" e senha "password123"
+    Quando eu envio uma requisição DELETE para "/v1/users/2"
+    Então a resposta deve ter status 204
