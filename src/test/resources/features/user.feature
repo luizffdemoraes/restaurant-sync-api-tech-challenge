@@ -1,34 +1,21 @@
 # language: pt
-Funcionalidade: Gerenciamento de Usuários
+Funcionalidade: Gerenciamento de Usuários Admin
 
-  Cenário: Criar um usuário admin com sucesso
-    Dado que eu tenho os seguintes dados do usuário admin:
-      | campo    | valor                      |
-      | name     | Jack Ryan                  |
-      | email    | jackryan@restaurantsync.com|
-      | login    | jackryan                   |
-      | password | password123                |
-      | street   | Rua das Flores             |
-      | number   | 123                        |
-      | city     | São Paulo                  |
-      | state    | SP                         |
-      | zipCode  | 12345-678                  |
+  Cenário: Criar um novo usuário admin
+    Dado que eu tenho os dados do usuário admin Jack Ryan
     Quando eu envio uma requisição POST para "/v1/users" com os dados do usuário
     Então a resposta deve ter status 201
     E o corpo da resposta deve conter os dados do usuário criado
 
-  Cenário: Criar um usuário cliente com sucesso
-    Dado que eu tenho os seguintes dados do usuário cliente:
-      | campo    | valor               |
-      | name     | John Doe            |
-      | email    | johndoe@example.com |
-      | login    | johndoe             |
-      | password | password123         |
-      | street   | Rua das Flores      |
-      | number   | 123                 |
-      | city     | São Paulo           |
-      | state    | SP                  |
-      | zipCode  | 12345-678           |
-    Quando eu envio uma requisição POST para "/v1/users" com os dados do usuário
-    Então a resposta deve ter status 201
-    E o corpo da resposta deve conter os dados do usuário criado
+  Cenário: Login do usuário admin
+    Dado que o usuário admin Jack Ryan está cadastrado
+    Quando eu realizo login com email "jackryan@restaurantsync.com" e senha "password123"
+    Então o login deve ser bem sucedido
+    E um token de acesso deve ser retornado
+
+  Cenário: Consultar lista de usuários paginada
+    Dado que o usuário admin Jack Ryan está cadastrado
+    E eu realizo login com email "jackryan@restaurantsync.com" e senha "password123"
+    Quando eu consulto a lista de usuários paginada em "/v1/users?page=0&size=10"
+    Então a lista de usuários deve ser retornada com status 200
+    E o corpo da resposta deve conter a lista de usuários
