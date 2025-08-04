@@ -16,3 +16,18 @@ Funcionalidade: Gerenciamento de Menus
     Quando eu consulto a lista de menus em "/v1/menus?page=0&size=10"
     Então a resposta do menu deve ter status 200
     E o corpo da resposta deve conter a lista de itens de menu
+
+  Cenário: Consultar item de menu por ID
+    Dado que o usuário admin Jack Ryan está cadastrado
+    E eu realizo login com email "jackryan@restaurantsync.com" e senha "password123"
+    Quando eu consulto o item de menu com ID 1 em "/v1/menus/{id}"
+    Então a resposta do menu deve ter status 200
+    E o corpo da resposta deve conter os dados do item de menu consultado
+
+  Cenário: Atualizar item de menu existente
+    Dado que o usuário admin Jack Ryan está cadastrado
+    E eu realizo login com email "jackryan@restaurantsync.com" e senha "password123"
+    E eu tenho os dados atualizados do item de menu
+    Quando eu envio uma requisição PUT para "/v1/menus/{id}" com os dados atualizados do menu
+    Então a resposta do menu deve ter status 200
+    E o corpo da resposta deve conter os dados do menu atualizado
