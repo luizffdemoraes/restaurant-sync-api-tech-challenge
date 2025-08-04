@@ -46,4 +46,3 @@ Funcionalidade: Gerenciamento de Menus
     E o item de menu "Feijoada Pequena" está cadastrado
     Quando eu envio uma requisição DELETE menu para "/v1/menus/{id}"
     Então a resposta do menu deve ter status 204
-    
