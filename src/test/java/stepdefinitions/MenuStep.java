@@ -5,17 +5,14 @@ import io.cucumber.java.pt.Então;
 import io.cucumber.java.pt.Quando;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.*;
 
 public class MenuStep {
 
@@ -24,6 +21,7 @@ public class MenuStep {
 
     private Map<String, Object> menuData;
     private ResponseEntity<Map> menuResponse;
+    private ResponseEntity<Map> menusListResponse;
 
 
     @Dado("eu tenho os dados do item de menu {string}")
@@ -63,6 +61,30 @@ public class MenuStep {
 
     @Então("a resposta do menu deve ter status {int}")
     public void a_resposta_do_menu_deve_ter_status(int expectedStatus) {
-        assertThat(menuResponse.getStatusCodeValue(), equalTo(expectedStatus));
+        ResponseEntity<?> response = menusListResponse != null ? menusListResponse : menuResponse;
+        assertThat(response, notNullValue());
+        assertThat(response.getStatusCodeValue(), equalTo(expectedStatus));
+    }
+
+    @Quando("eu consulto a lista de menus em {string}")
+    public void eu_consulto_lista_de_menus_em(String endpoint) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + UserStep.accessToken);
+        HttpEntity<?> request = new HttpEntity<>(headers);
+
+        menusListResponse = restTemplate.exchange(
+                endpoint,
+                HttpMethod.GET,
+                request,
+                Map.class
+        );
+    }
+
+    @Então("o corpo da resposta deve conter a lista de itens de menu")
+    public void o_corpo_da_resposta_deve_conter_a_lista_de_itens_de_menu() {
+        Map<String, Object> body = menusListResponse.getBody();
+        assertThat(body, notNullValue());
+        assertThat(body.containsKey("content"), is(true));
+        assertThat(body.get("content"), instanceOf(List.class));
     }
 }
