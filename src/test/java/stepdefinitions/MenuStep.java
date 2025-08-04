@@ -25,6 +25,7 @@ public class MenuStep {
     private ResponseEntity<Map> menusListResponse;
     private ResponseEntity<Map> menuByIdResponse;
     private ResponseEntity<Map> updateMenuResponse;
+    private static Integer createdMenuId;
 
 
     @Quando("eu envio uma requisição POST para {string} com os dados do menu")
@@ -146,5 +147,46 @@ public class MenuStep {
         assertThat(body.get("availableOnlyRestaurant"), equalTo(updateMenuData.get("availableOnlyRestaurant")));
         assertThat(body.get("photoPath"), equalTo(updateMenuData.get("photoPath")));
         assertThat(body.get("restaurantId"), equalTo(updateMenuData.get("restaurantId")));
+    }
+
+    @Então("o corpo da resposta deve conter \"availableOnlyRestaurant\" igual a {word}")
+    public void verifica_disponibilidade(String expectedStr) {
+        boolean expected = Boolean.parseBoolean(expectedStr);
+        Map<String, Object> body = updateMenuResponse.getBody();
+        assertThat(body.get("availableOnlyRestaurant"), equalTo(expected));
+    }
+
+    @Dado("o item de menu {string} está cadastrado")
+    public void o_item_de_menu_esta_cadastrado(String name) {
+        menuData = new HashMap<>();
+        menuData.put("name", name);
+        menuData.put("description", "Feijoada pequena com todas as acompanhamentos");
+        menuData.put("price", 40.00);
+        menuData.put("availableOnlyRestaurant", true);
+        menuData.put("photoPath", "/images/feijoada.jpg");
+        menuData.put("restaurantId", 1);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set("Authorization", "Bearer " + UserStep.accessToken);
+        HttpEntity<Map<String, Object>> request = new HttpEntity<>(menuData, headers);
+        menuResponse = restTemplate.postForEntity("/v1/menus", request, Map.class);
+
+        assertThat(menuResponse.getStatusCodeValue(), equalTo(201));
+        createdMenuId = (Integer) menuResponse.getBody().get("id");
+    }
+
+    @Quando("eu envio uma requisição PATCH para {string} com availableOnlyRestaurant {booleanValue}")
+    public void eu_envio_requisicao_PATCH_com_disponibilidade(String endpoint, Boolean availableOnlyRestaurant) {
+        String url = endpoint.replace("{id}", createdMenuId.toString());
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set("Authorization", "Bearer " + UserStep.accessToken);
+
+        Map<String, Object> patchData = new HashMap<>();
+        patchData.put("availableOnlyRestaurant", availableOnlyRestaurant);
+        HttpEntity<Map<String, Object>> request = new HttpEntity<>(patchData, headers);
+
+        updateMenuResponse = restTemplate.exchange(url, HttpMethod.PATCH, request, Map.class);
     }
 }
