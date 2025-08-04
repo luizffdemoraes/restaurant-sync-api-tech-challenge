@@ -26,6 +26,7 @@ public class MenuStep {
     private ResponseEntity<Map> menuByIdResponse;
     private ResponseEntity<Map> updateMenuResponse;
     private static Integer createdMenuId;
+    private ResponseEntity<Void> deleteMenuResponse;
 
 
     @Quando("eu envio uma requisição POST para {string} com os dados do menu")
@@ -54,7 +55,8 @@ public class MenuStep {
 
     @Então("a resposta do menu deve ter status {int}")
     public void a_resposta_do_menu_deve_ter_status(int expectedStatus) {
-        ResponseEntity<?> response = updateMenuResponse != null ? updateMenuResponse
+        ResponseEntity<?> response = deleteMenuResponse != null ? deleteMenuResponse
+                : updateMenuResponse != null ? updateMenuResponse
                 : menuByIdResponse != null ? menuByIdResponse
                 : menusListResponse != null ? menusListResponse
                 : menuResponse;
@@ -188,5 +190,14 @@ public class MenuStep {
         HttpEntity<Map<String, Object>> request = new HttpEntity<>(patchData, headers);
 
         updateMenuResponse = restTemplate.exchange(url, HttpMethod.PATCH, request, Map.class);
+    }
+
+    @Quando("eu envio uma requisição DELETE menu para {string}")
+    public void eu_envio_requisicao_DELETE_menu_para(String endpoint) {
+        String url = endpoint.replace("{id}", createdMenuId.toString());
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + UserStep.accessToken);
+        HttpEntity<?> request = new HttpEntity<>(headers);
+        deleteMenuResponse = restTemplate.exchange(url, HttpMethod.DELETE, request, Void.class);
     }
 }

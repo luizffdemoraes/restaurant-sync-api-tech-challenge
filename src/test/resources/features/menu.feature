@@ -39,3 +39,11 @@ Funcionalidade: Gerenciamento de Menus
     Quando eu envio uma requisição PATCH para "/v1/menus/1/restaurant-only" com availableOnlyRestaurant false
     Então a resposta do menu deve ter status 200
     E o corpo da resposta deve conter "availableOnlyRestaurant" igual a false
+
+  Cenário: Deletar item de menu existente
+    Dado que o usuário admin Jack Ryan está cadastrado
+    E eu realizo login com email "jackryan@restaurantsync.com" e senha "password123"
+    E o item de menu "Feijoada Pequena" está cadastrado
+    Quando eu envio uma requisição DELETE menu para "/v1/menus/{id}"
+    Então a resposta do menu deve ter status 204
+    
