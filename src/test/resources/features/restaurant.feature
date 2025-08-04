@@ -30,3 +30,10 @@ Funcionalidade: Gerenciamento de Restaurantes
     Quando eu envio uma requisição PUT para "/v1/restaurants/1" com os dados atualizados
     Então a resposta do restaurante deve ter status 200
     E o corpo da resposta deve conter os dados do restaurante atualizado
+
+  Cenário: Deletar restaurante existente
+    Dado que o usuário admin Jack Ryan está cadastrado
+    E eu realizo login com email "jackryan@restaurantsync.com" e senha "password123"
+    E o restaurante "Pê de Fava" está cadastrado
+    Quando eu envio uma requisição DELETE para restaurante "/v1/restaurants/{id}"
+    Então a resposta de deleção de restaurante deve ter status 204

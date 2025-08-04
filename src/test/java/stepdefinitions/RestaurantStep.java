@@ -216,4 +216,14 @@ public class RestaurantStep {
 
         createdRestaurantId = (Integer) body.get("id");
     }
+
+
+    @Quando("eu envio uma requisição DELETE para restaurante {string}")
+    public void eu_envio_uma_requisicao_DELETE_para_restaurante(String endpoint) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + UserStep.accessToken);
+        HttpEntity<?> request = new HttpEntity<>(headers);
+        String url = endpoint.replace("{id}", createdRestaurantId.toString());
+        deleteResponse = restTemplate.exchange(url, HttpMethod.DELETE, request, Void.class);
+    }
 }
