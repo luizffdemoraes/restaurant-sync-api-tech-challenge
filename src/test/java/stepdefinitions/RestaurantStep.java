@@ -24,6 +24,8 @@ public class RestaurantStep {
     private ResponseEntity<Map> restaurantResponse;
     private ResponseEntity<Map> restaurantsListResponse;
     private ResponseEntity<Map> restaurantByIdResponse;
+    private Map<String, Object> updateData;
+    private ResponseEntity<Map> updateResponse;
 
 
     @Dado("eu tenho os dados do restaurante {string}")
@@ -92,11 +94,12 @@ public class RestaurantStep {
 
     @Então("a resposta do restaurante deve ter status {int}")
     public void a_resposta_do_restaurante_deve_ter_status(int expectedStatus) {
-        ResponseEntity<?> response = restaurantResponse != null
-                ? restaurantResponse
-                : restaurantsListResponse != null
-                ? restaurantsListResponse
-                : restaurantByIdResponse;
+        ResponseEntity<?> response =
+                updateResponse != null ? updateResponse :
+                        restaurantResponse != null ? restaurantResponse :
+                                restaurantsListResponse != null ? restaurantsListResponse :
+                                        restaurantByIdResponse;
+
         assertThat(response, notNullValue());
         assertThat(response.getStatusCodeValue(), equalTo(expectedStatus));
     }
@@ -129,5 +132,52 @@ public class RestaurantStep {
         assertThat(body.get("cuisineType"), notNullValue());
         assertThat(body.get("openingHours"), notNullValue());
         assertThat(body.get("ownerId"), notNullValue());
+    }
+
+    @Dado("eu tenho os dados atualizados do restaurante")
+    public void eu_tenho_os_dados_atualizados_do_restaurante() {
+        updateData = new HashMap<>();
+        updateData.put("name", "Gourmet Bistro JP");
+        Map<String, Object> address = new HashMap<>();
+        address.put("street", "Avenida Paulista 2");
+        address.put("number", 1001);
+        address.put("city", "São Paulo 2");
+        address.put("state", "SP2");
+        address.put("zipCode", "01310-101");
+        updateData.put("address", address);
+        updateData.put("cuisineType", "Brazil");
+        updateData.put("openingHours", "10:00-22:00");
+        updateData.put("ownerId", 1);
+    }
+
+    @Quando("eu envio uma requisição PUT para {string} com os dados atualizados")
+    public void eu_envio_requisicao_PUT_para_com_dados_atualizados(String endpoint) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set("Authorization", "Bearer " + UserStep.accessToken);
+        HttpEntity<Map<String, Object>> request = new HttpEntity<>(updateData, headers);
+        String url = endpoint.replace("{id}", "1");
+        updateResponse = restTemplate.exchange(url, HttpMethod.PUT, request, Map.class);
+    }
+
+
+
+    @Então("o corpo da resposta deve conter os dados do restaurante atualizado")
+    public void validar_corpo_restaurante_atualizado() {
+        Map<String, Object> body = updateResponse.getBody();
+        assertThat(body.get("id"), equalTo(1));
+        assertThat(body.get("name"), equalTo(updateData.get("name")));
+
+        Map<String, Object> respAddress = (Map<String, Object>) body.get("address");
+        Map<String, Object> reqAddress = (Map<String, Object>) updateData.get("address");
+        assertThat(respAddress.get("street"), equalTo(reqAddress.get("street")));
+        assertThat(respAddress.get("number"), equalTo(reqAddress.get("number")));
+        assertThat(respAddress.get("city"), equalTo(reqAddress.get("city")));
+        assertThat(respAddress.get("state"), equalTo(reqAddress.get("state")));
+        assertThat(respAddress.get("zipCode"), equalTo(reqAddress.get("zipCode")));
+
+        assertThat(body.get("cuisineType"), equalTo(updateData.get("cuisineType")));
+        assertThat(body.get("openingHours"), equalTo(updateData.get("openingHours")));
+        assertThat(body.get("ownerId"), equalTo(updateData.get("ownerId")));
     }
 }

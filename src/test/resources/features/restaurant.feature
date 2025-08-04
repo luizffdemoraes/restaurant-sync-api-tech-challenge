@@ -22,3 +22,11 @@ Funcionalidade: Gerenciamento de Restaurantes
     Quando eu consulto o restaurante com ID 1 em "/v1/restaurants/1"
     Então a resposta do restaurante deve ter status 200
     E o corpo da resposta deve conter os dados do restaurante consultado
+
+  Cenário: Atualizar restaurante existente
+    Dado que o usuário admin Jack Ryan está cadastrado
+    E eu realizo login com email "jackryan@restaurantsync.com" e senha "password123"
+    E eu tenho os dados atualizados do restaurante
+    Quando eu envio uma requisição PUT para "/v1/restaurants/1" com os dados atualizados
+    Então a resposta do restaurante deve ter status 200
+    E o corpo da resposta deve conter os dados do restaurante atualizado
