@@ -27,6 +27,7 @@ public class RestaurantStep {
     private Map<String, Object> updateData;
     private ResponseEntity<Map> updateResponse;
     private ResponseEntity<Void> deleteResponse;
+    public static Integer createdRestaurantId;
 
     @Dado("eu tenho os dados do restaurante {string}")
     public void que_eu_tenho_os_dados_do_restaurante(String name) {
@@ -194,5 +195,25 @@ public class RestaurantStep {
         HttpEntity<?> request = new HttpEntity<>(headers);
         String url = endpoint.replace("{id}", "2");
         deleteResponse = restTemplate.exchange(url, HttpMethod.DELETE, request, Void.class);
+    }
+
+
+    @Dado("o restaurante {string} está cadastrado")
+    public void o_restaurante_esta_cadastrado(String name) {
+        que_eu_tenho_os_dados_do_restaurante(name);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set("Authorization", "Bearer " + UserStep.accessToken);
+        HttpEntity<Map<String, Object>> request = new HttpEntity<>(restaurantData, headers);
+        restaurantResponse = restTemplate.postForEntity("/v1/restaurants", request, Map.class);
+
+        assertThat(restaurantResponse, notNullValue());
+        assertThat(restaurantResponse.getStatusCodeValue(), equalTo(201));
+
+        Map<String, Object> body = restaurantResponse.getBody();
+        assertThat(body.get("id"), notNullValue());
+        assertThat(body.get("name"), equalTo(restaurantData.get("name")));
+
+        createdRestaurantId = (Integer) body.get("id");
     }
 }
