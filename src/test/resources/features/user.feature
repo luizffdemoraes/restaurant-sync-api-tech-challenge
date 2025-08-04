@@ -1,5 +1,5 @@
 # language: pt
-Funcionalidade: Gerenciamento de Usuários Admin
+Funcionalidade: Gerenciamento de Usuários
 
   Cenário: Criar um novo usuário admin
     Dado que eu tenho os dados do usuário admin Jack Ryan

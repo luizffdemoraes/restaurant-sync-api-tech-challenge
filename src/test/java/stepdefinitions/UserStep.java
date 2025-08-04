@@ -164,6 +164,10 @@ public class UserStep {
 
         HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(body, headers);
         loginResponse = restTemplate.postForEntity("/oauth2/token", entity, Map.class);
+
+        assertThat(loginResponse.getStatusCodeValue(), equalTo(200));
+        accessToken = (String) loginResponse.getBody().get("access_token");
+        assertThat(accessToken, notNullValue());
     }
 
     @Então("o login deve ser bem sucedido")
