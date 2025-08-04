@@ -23,6 +23,7 @@ public class RestaurantStep {
     private Map<String, Object> restaurantData;
     private ResponseEntity<Map> restaurantResponse;
     private ResponseEntity<Map> restaurantsListResponse;
+    private ResponseEntity<Map> restaurantByIdResponse;
 
 
     @Dado("eu tenho os dados do restaurante {string}")
@@ -90,11 +91,12 @@ public class RestaurantStep {
     }
 
     @Então("a resposta do restaurante deve ter status {int}")
-    @Então("a resposta de lista de restaurantes deve ter status {int}")
-    public void a_resposta_deve_ter_status(int expectedStatus) {
+    public void a_resposta_do_restaurante_deve_ter_status(int expectedStatus) {
         ResponseEntity<?> response = restaurantResponse != null
                 ? restaurantResponse
-                : restaurantsListResponse;
+                : restaurantsListResponse != null
+                ? restaurantsListResponse
+                : restaurantByIdResponse;
         assertThat(response, notNullValue());
         assertThat(response.getStatusCodeValue(), equalTo(expectedStatus));
     }
@@ -105,5 +107,27 @@ public class RestaurantStep {
         assertThat(body, notNullValue());
         assertThat(body.containsKey("content"), is(true));
         assertThat(body.get("content"), instanceOf(List.class));
+    }
+
+    @Quando("eu consulto o restaurante com ID {int} em {string}")
+    public void consultar_restaurante_por_id(int id, String endpoint) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + UserStep.accessToken);
+        HttpEntity<?> request = new HttpEntity<>(headers);
+
+        String url = endpoint.replace("{id}", String.valueOf(id));
+        restaurantByIdResponse = restTemplate.exchange(url, HttpMethod.GET, request, Map.class);
+    }
+
+    @Então("o corpo da resposta deve conter os dados do restaurante consultado")
+    public void validar_corpo_restaurante_consultado() {
+        Map<String, Object> body = restaurantByIdResponse.getBody();
+        assertThat(body.get("id"), equalTo(1));
+        assertThat(body.get("name"), notNullValue());
+        assertThat(body.containsKey("address"), is(true));
+        assertThat(body.get("address"), instanceOf(Map.class));
+        assertThat(body.get("cuisineType"), notNullValue());
+        assertThat(body.get("openingHours"), notNullValue());
+        assertThat(body.get("ownerId"), notNullValue());
     }
 }
