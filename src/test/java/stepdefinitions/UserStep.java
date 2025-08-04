@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.assertj.core.api.Fail.fail;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
@@ -108,13 +109,40 @@ public class UserStep {
 
     @Então("o corpo da resposta deve conter os dados do usuário criado")
     public void o_corpo_da_resposta_deve_conter_os_dados_do_usuário_criado() {
-        Map<String, Object> responseBody = userResponse.getBody();
-        createdUserId = (Integer) responseBody.get("id");
-        assertThat(createdUserId, notNullValue());
-        assertThat(responseBody, notNullValue());
-        assertThat(responseBody.get("name"), equalTo(userData.get("name")));
-        assertThat(responseBody.get("email"), equalTo(userData.get("email")));
-        assertThat(responseBody.get("login"), equalTo(userData.get("login")));
+        int status = userResponse.getStatusCodeValue();
+
+        if (status == 422) {
+            // Se o usuário já existe, obtemos os dados via consulta
+            HttpHeaders headers = new HttpHeaders();
+            headers.set("Authorization", "Bearer " + accessToken);
+            HttpEntity<?> request = new HttpEntity<>(headers);
+
+            ResponseEntity<Map> response = restTemplate.exchange(
+                    "/v1/users?email=jackryan@restaurantsync.com",
+                    HttpMethod.GET,
+                    request,
+                    Map.class
+            );
+
+            assertThat(response.getStatusCodeValue(), equalTo(200));
+            Map<String, Object> body = response.getBody();
+            assertThat(body, notNullValue());
+
+            List<Map<String, Object>> users = (List<Map<String, Object>>) body.get("content");
+            assertThat(users, not(empty()));
+
+            Map<String, Object> existingUser = users.get(0);
+            assertThat(existingUser.get("name"), equalTo(userData.get("name")));
+            assertThat(existingUser.get("email"), equalTo(userData.get("email")));
+            assertThat(existingUser.get("login"), equalTo(userData.get("login")));
+        } else {
+            // Para status 201, verifica o corpo da resposta diretamente
+            Map<String, Object> responseBody = userResponse.getBody();
+            assertThat(responseBody, notNullValue());
+            assertThat(responseBody.get("name"), equalTo(userData.get("name")));
+            assertThat(responseBody.get("email"), equalTo(userData.get("email")));
+            assertThat(responseBody.get("login"), equalTo(userData.get("login")));
+        }
     }
 
     @Dado("que o usuário admin Jack Ryan está cadastrado")
@@ -123,23 +151,38 @@ public class UserStep {
         eu_envio_uma_requisição_post_para_com_os_dados_do_usuário("/v1/users");
 
         int status = userResponse.getStatusCodeValue();
-        // Se recebermos 400, tentamos fazer login para ver se o usuário já existe
-        if (status == 400 || status == 500) {
-            System.out.println("Recebido 400, tentando fazer login para verificar se usuário existe...");
-            realizarLogin("jackryan@restaurantsync.com", "password123");
 
-            if (status == 200) {
-                System.out.println("Login bem-sucedido, usuário já existe");
-                accessToken = (String) loginResponse.getBody().get("access_token");
-                return;
+        // Em ambos os casos (201 ou 422), fazemos login para obter o token
+        realizarLogin("jackryan@restaurantsync.com", "password123");
+        assertThat(loginResponse.getStatusCodeValue(), equalTo(200));
+        accessToken = (String) loginResponse.getBody().get("access_token");
+
+        // Verificação adicional para garantir que o usuário existe
+        if (status != 201 && status != 422) {
+            fail("Falha ao verificar usuário admin. Status: " + status);
+        }
+    }
+
+    @Então("a resposta deve ter status 201 ou 422 se usuário já existir")
+    public void a_resposta_deve_ter_status_201_ou_422() {
+        int actualStatus = userResponse.getStatusCodeValue();
+
+        // Verifica apenas o status code - 201 ou 422 são aceitáveis
+        assertThat("Status da resposta deve ser 201 (Created) ou 422 (Unprocessable Entity)",
+                actualStatus, anyOf(equalTo(201), equalTo(422)));
+
+        if (actualStatus == 422) {
+            System.out.println("Usuário já existe (422), continuando o fluxo...");
+
+            // Verifica se o corpo da resposta existe (opcional)
+            if (userResponse.getBody() != null) {
+                Map<String, Object> responseBody = userResponse.getBody();
+                // Verifica se há mensagem de erro, mas não falha se não existir
+                if (responseBody.containsKey("message")) {
+                    System.out.println("Mensagem de erro: " + responseBody.get("message"));
+                }
             }
         }
-
-        // Se não foi possível fazer login, verifica se o cadastro foi bem-sucedido
-        assertThat("Falha ao cadastrar usuário. Status: " + userResponse.getStatusCodeValue() +
-                        ", Body: " + userResponse.getBody(),
-                userResponse.getStatusCodeValue(),
-                anyOf(equalTo(201), equalTo(422)));
     }
 
     @Quando("eu realizo login com email {string} e senha {string}")

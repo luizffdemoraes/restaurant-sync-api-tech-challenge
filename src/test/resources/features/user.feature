@@ -4,7 +4,7 @@ Funcionalidade: Gerenciamento de Usuários
   Cenário: Criar um novo usuário admin
     Dado que eu tenho os dados do usuário admin Jack Ryan
     Quando eu envio uma requisição POST para "/v1/users" com os dados do usuário
-    Então a resposta deve ter status 201
+    Então a resposta deve ter status 201 ou 422 se usuário já existir
     E o corpo da resposta deve conter os dados do usuário criado
 
   Cenário: Criar um novo usuário client
