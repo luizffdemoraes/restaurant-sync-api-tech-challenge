@@ -59,7 +59,6 @@ public class UserStep {
         userData.put("address", address);
     }
 
-    // src/test/java/stepdefinitions/UserStep.java
     @Dado("que eu tenho os dados do usuário client John Doe")
     public void que_eu_tenho_os_dados_do_usuário_client_John_Doe() {
         Map<String, Object> address = new HashMap<>();
@@ -84,12 +83,6 @@ public class UserStep {
 
         HttpEntity<Map<String, Object>> request = new HttpEntity<>(userData, headers);
         userResponse = restTemplate.postForEntity(endpoint, request, Map.class);
-
-        // Debug: Mostrar requisição e resposta
-        System.out.println("Request enviado para " + endpoint + ":");
-        System.out.println(userData);
-        System.out.println("Response status: " + userResponse.getStatusCodeValue());
-        System.out.println("Response body: " + userResponse.getBody());
     }
 
     @Então("a resposta deve ter status {int}")
@@ -256,14 +249,6 @@ public class UserStep {
                     request,
                     Map.class
             );
-
-            // Debug detalhado
-            System.out.println("=== DEBUG CONSULTA POR ID ===");
-            System.out.println("Endpoint: " + endpoint);
-            System.out.println("Token: " + accessToken);
-            System.out.println("Status: " + userByIdResponse.getStatusCodeValue());
-            System.out.println("Response Body: " + userByIdResponse.getBody());
-
         } catch (Exception e) {
             System.err.println("Erro na consulta por ID: " + e.getMessage());
             throw e;
@@ -326,9 +311,6 @@ public class UserStep {
         System.out.println("Corpo enviado: " + updatedUserData);
 
         updateResponse = restTemplate.exchange(url, HttpMethod.PUT, request, Map.class);
-
-        System.out.println("Status resposta: " + updateResponse.getStatusCodeValue());
-        System.out.println("Body resposta: " + updateResponse.getBody());
     }
 
     @Então("o corpo da resposta deve conter os dados do usuário atualizado")
@@ -365,10 +347,6 @@ public class UserStep {
 
         HttpEntity<Map<String, String>> request = new HttpEntity<>(body, headers);
         passwordUpdateResponse = restTemplate.exchange(endpoint, HttpMethod.PATCH, request, Void.class);
-
-        System.out.println("PATCH para: " + endpoint);
-        System.out.println("Corpo enviado: " + body);
-        System.out.println("Status resposta: " + passwordUpdateResponse.getStatusCodeValue());
     }
 
     @Quando("eu envio uma requisição DELETE para {string}")
@@ -382,8 +360,5 @@ public class UserStep {
         HttpEntity<?> request = new HttpEntity<>(headers);
 
         deleteResponse = restTemplate.exchange(endpoint, HttpMethod.DELETE, request, Void.class);
-
-        System.out.println("DELETE para: " + endpoint);
-        System.out.println("Status resposta: " + deleteResponse.getStatusCodeValue());
     }
 }

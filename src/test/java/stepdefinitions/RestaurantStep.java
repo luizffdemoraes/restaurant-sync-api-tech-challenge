@@ -26,7 +26,7 @@ public class RestaurantStep {
     private ResponseEntity<Map> restaurantByIdResponse;
     private Map<String, Object> updateData;
     private ResponseEntity<Map> updateResponse;
-
+    private ResponseEntity<Void> deleteResponse;
 
     @Dado("eu tenho os dados do restaurante {string}")
     public void que_eu_tenho_os_dados_do_restaurante(String name) {
@@ -95,13 +95,20 @@ public class RestaurantStep {
     @Então("a resposta do restaurante deve ter status {int}")
     public void a_resposta_do_restaurante_deve_ter_status(int expectedStatus) {
         ResponseEntity<?> response =
-                updateResponse != null ? updateResponse :
-                        restaurantResponse != null ? restaurantResponse :
+                deleteResponse != null ? deleteResponse :
+                        updateResponse != null ? updateResponse :
                                 restaurantsListResponse != null ? restaurantsListResponse :
-                                        restaurantByIdResponse;
+                                        restaurantByIdResponse != null ? restaurantByIdResponse :
+                                                restaurantResponse;
 
         assertThat(response, notNullValue());
         assertThat(response.getStatusCodeValue(), equalTo(expectedStatus));
+    }
+
+    @Então("a resposta de deleção de restaurante deve ter status {int}")
+    public void a_resposta_de_delecao_de_restaurante_deve_ter_status(int expectedStatus) {
+        assertThat(deleteResponse, notNullValue());
+        assertThat(deleteResponse.getStatusCodeValue(), equalTo(expectedStatus));
     }
 
     @Então("o corpo da resposta deve conter a lista de restaurantes")
@@ -161,7 +168,6 @@ public class RestaurantStep {
     }
 
 
-
     @Então("o corpo da resposta deve conter os dados do restaurante atualizado")
     public void validar_corpo_restaurante_atualizado() {
         Map<String, Object> body = updateResponse.getBody();
@@ -179,5 +185,14 @@ public class RestaurantStep {
         assertThat(body.get("cuisineType"), equalTo(updateData.get("cuisineType")));
         assertThat(body.get("openingHours"), equalTo(updateData.get("openingHours")));
         assertThat(body.get("ownerId"), equalTo(updateData.get("ownerId")));
+    }
+
+    @Quando("eu envio uma requisição DELETE restaurante para {string}")
+    public void eu_envio_uma_requisicao_DELETE_restaurante_para(String endpoint) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + UserStep.accessToken);
+        HttpEntity<?> request = new HttpEntity<>(headers);
+        String url = endpoint.replace("{id}", "2");
+        deleteResponse = restTemplate.exchange(url, HttpMethod.DELETE, request, Void.class);
     }
 }
