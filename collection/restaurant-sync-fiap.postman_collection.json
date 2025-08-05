@@ -464,7 +464,10 @@
 					"response": []
 				},
 				{
-					"name": "Atualizar dados do Restaurante (Admin))",
+					"name": "Consulta paginadas dos Restaurantes (Admin)",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -476,7 +479,7 @@
 								}
 							]
 						},
-						"method": "PUT",
+						"method": "GET",
 						"header": [
 							{
 								"key": "Content-Type",
@@ -485,7 +488,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"name\": \"Gourmet Bistro JP\",\n    \"address\": {\n        \"street\": \"Avenida Paulista 2\",\n        \"number\": 1001,\n        \"city\": \"São Paulo 2\",\n        \"state\": \"SP2\",\n        \"zipCode\": \"01310-101\"\n    },\n    \"cuisineType\": \"Brazil\",\n    \"openingHours\": \"10:00-22:00\",\n    \"ownerId\": 1\n}",
+							"raw": "{\n    \"name\": \"Gourmet Bistro\",\n    \"address\": {\n        \"street\": \"Avenida Paulista\",\n        \"number\": 1000,\n        \"city\": \"São Paulo\",\n        \"state\": \"SP\",\n        \"zipCode\": \"01310-100\"\n    },\n    \"cuisineType\": \"French\",\n    \"openingHours\": \"11:00-22:00\",\n    \"ownerId\": 1\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -493,7 +496,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/v1/restaurants/5",
+							"raw": "http://localhost:8080/v1/restaurants",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -501,8 +504,7 @@
 							"port": "8080",
 							"path": [
 								"v1",
-								"restaurants",
-								"5"
+								"restaurants"
 							]
 						}
 					},
@@ -557,6 +559,51 @@
 					"response": []
 				},
 				{
+					"name": "Atualizar dados do Restaurante (Admin))",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Gourmet Bistro JP\",\n    \"address\": {\n        \"street\": \"Avenida Paulista 2\",\n        \"number\": 1001,\n        \"city\": \"São Paulo 2\",\n        \"state\": \"SP2\",\n        \"zipCode\": \"01310-101\"\n    },\n    \"cuisineType\": \"Brazil\",\n    \"openingHours\": \"10:00-22:00\",\n    \"ownerId\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/v1/restaurants/5",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"v1",
+								"restaurants",
+								"5"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Deleta por ID do Restaurante (Admin)",
 					"request": {
 						"auth": {
@@ -596,53 +643,6 @@
 								"v1",
 								"restaurants",
 								"3"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Consulta paginadas dos Restaurantes (Admin)",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{access_token}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"name\": \"Gourmet Bistro\",\n    \"address\": {\n        \"street\": \"Avenida Paulista\",\n        \"number\": 1000,\n        \"city\": \"São Paulo\",\n        \"state\": \"SP\",\n        \"zipCode\": \"01310-100\"\n    },\n    \"cuisineType\": \"French\",\n    \"openingHours\": \"11:00-22:00\",\n    \"ownerId\": 1\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://localhost:8080/v1/restaurants",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"v1",
-								"restaurants"
 							]
 						}
 					},
@@ -697,6 +697,101 @@
 							"path": [
 								"v1",
 								"menus"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Consulta paginadas dos Menu (Admin)",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Gourmet Bistro\",\n    \"address\": {\n        \"street\": \"Avenida Paulista\",\n        \"number\": 1000,\n        \"city\": \"São Paulo\",\n        \"state\": \"SP\",\n        \"zipCode\": \"01310-100\"\n    },\n    \"cuisineType\": \"French\",\n    \"openingHours\": \"11:00-22:00\",\n    \"ownerId\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/v1/menus",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"v1",
+								"menus"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Consulta por ID do Menu (Admin)",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Gourmet Bistro\",\n    \"address\": {\n        \"street\": \"Avenida Paulista\",\n        \"number\": 1000,\n        \"city\": \"São Paulo\",\n        \"state\": \"SP\",\n        \"zipCode\": \"01310-100\"\n    },\n    \"cuisineType\": \"French\",\n    \"openingHours\": \"11:00-22:00\",\n    \"ownerId\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/v1/menus/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"v1",
+								"menus",
+								"1"
 							]
 						}
 					},
@@ -794,54 +889,6 @@
 					"response": []
 				},
 				{
-					"name": "Consulta por ID do Menu (Admin)",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{access_token}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"name\": \"Gourmet Bistro\",\n    \"address\": {\n        \"street\": \"Avenida Paulista\",\n        \"number\": 1000,\n        \"city\": \"São Paulo\",\n        \"state\": \"SP\",\n        \"zipCode\": \"01310-100\"\n    },\n    \"cuisineType\": \"French\",\n    \"openingHours\": \"11:00-22:00\",\n    \"ownerId\": 1\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://localhost:8080/v1/menus/1",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"v1",
-								"menus",
-								"1"
-							]
-						}
-					},
-					"response": []
-				},
-				{
 					"name": "Deleta por ID do Menu (Admin)",
 					"request": {
 						"auth": {
@@ -885,56 +932,9 @@
 						}
 					},
 					"response": []
-				},
-				{
-					"name": "Consulta paginadas dos Menu (Admin)",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{access_token}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"name\": \"Gourmet Bistro\",\n    \"address\": {\n        \"street\": \"Avenida Paulista\",\n        \"number\": 1000,\n        \"city\": \"São Paulo\",\n        \"state\": \"SP\",\n        \"zipCode\": \"01310-100\"\n    },\n    \"cuisineType\": \"French\",\n    \"openingHours\": \"11:00-22:00\",\n    \"ownerId\": 1\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://localhost:8080/v1/menus",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"v1",
-								"menus"
-							]
-						}
-					},
-					"response": []
 				}
 			],
-			"description": "```\n-POST /v1/menus: Cria um novo menu. (apenas para admin)\n-GET /v1/menus: Lista menus (paginado). (apenas para admin)\n-GET /v1/menus/{id}: Busca menu por ID. (apenas para admin)\n-PUT /v1/menus/{id}: Atualiza as informações de um menu. (apenas para admin)\n-PATCH /v1/menus/{id}/restaurant-only: Atualiza apenas o campo availableOnly (apenas para admin)Restaurant do menu.\n-DELETE /v1/menus/{id}: Exclui um menu. (apenas para admin)\n\n ```"
+			"description": "```\n-POST /v1/menus: Cria um novo item menu. (apenas para admin)\n-GET /v1/menus: Lista itens dos menus (paginado). (apenas para admin)\n-GET /v1/menus/{id}: Busca um item do menu por ID. (apenas para admin)\n-PUT /v1/menus/{id}: Atualiza as informações de um item menu. (apenas para admin)\n-PATCH /v1/menus/{id}/restaurant-only: Atualiza apenas o campo availableOnly de um item do menu(apenas para admin)Restaurant do menu.\n-DELETE /v1/menus/{id}: Exclui um item menu. (apenas para admin)\n\n ```"
 		}
 	]
 }

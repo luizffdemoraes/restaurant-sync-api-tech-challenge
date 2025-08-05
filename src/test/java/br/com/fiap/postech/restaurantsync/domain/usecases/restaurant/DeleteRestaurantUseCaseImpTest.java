@@ -10,6 +10,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.dao.DataIntegrityViolationException;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.*;
 
@@ -71,5 +72,22 @@ class DeleteRestaurantUseCaseImpTest {
 
         verify(userGateway, times(1)).validateAdmin();
         verify(restaurantGateway, times(1)).deleterRestaurantById(99);
+    }
+
+    @Test
+    void execute_shouldThrowBusinessException_whenDataIntegrityViolationOccurs() {
+        Integer restaurantId = 1;
+
+        doNothing().when(userGateway).validateAdmin();
+        when(restaurantGateway.findRestaurantOrThrow(restaurantId)).thenReturn(null);
+        doThrow(new DataIntegrityViolationException("")).when(restaurantGateway).deleterRestaurantById(restaurantId);
+
+        assertThrows(BusinessException.class, () ->
+                deleteRestaurantUseCaseImp.execute(restaurantId)
+        );
+
+        verify(userGateway).validateAdmin();
+        verify(restaurantGateway).findRestaurantOrThrow(restaurantId);
+        verify(restaurantGateway).deleterRestaurantById(restaurantId);
     }
 }

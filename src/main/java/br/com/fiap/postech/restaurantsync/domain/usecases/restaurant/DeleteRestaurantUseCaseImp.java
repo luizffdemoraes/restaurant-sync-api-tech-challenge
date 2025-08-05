@@ -18,6 +18,7 @@ public class DeleteRestaurantUseCaseImp  implements DeleteRestaurantUseCase{
     @Override
     public void execute(Integer id) {
         this.userGateway.validateAdmin();
+        this.restaurantGateway.findRestaurantOrThrow(id);
         try {
             this.restaurantGateway.deleterRestaurantById(id);
         } catch (DataIntegrityViolationException e) {

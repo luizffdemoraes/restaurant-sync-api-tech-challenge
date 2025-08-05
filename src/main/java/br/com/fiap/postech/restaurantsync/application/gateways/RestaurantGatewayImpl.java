@@ -57,7 +57,7 @@ public class RestaurantGatewayImpl implements RestaurantGateway {
         return RestaurantMapper.toDomain(saved);
     }
 
-    private Restaurant findRestaurantOrThrow(Integer id) {
+    public Restaurant findRestaurantOrThrow(Integer id) {
         RestaurantEntity responseEntity = this.restaurantRepository.findById(id)
                 .orElseThrow(() -> new BusinessException("Id not found: " + id));
         return RestaurantMapper.toDomain(responseEntity);

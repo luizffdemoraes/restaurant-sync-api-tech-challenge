@@ -10,4 +10,5 @@ public interface RestaurantGateway {
     Restaurant findRestaurantById(Integer id);
     Page<Restaurant> findAllPagedRestaurants(PageRequest pageRequest);
     Restaurant updateRestaurant(Integer id, Restaurant restaurant);
+    Restaurant findRestaurantOrThrow(Integer id);
 }
