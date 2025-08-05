@@ -69,6 +69,8 @@ O sistema é construído com **Spring Boot**, **Docker**, e **Docker Compose**, 
 ![Java 21](https://img.shields.io/badge/Java-21-ED8B00?style=for-the-badge&logo=java&logoColor=white)
 ![Maven](https://img.shields.io/badge/Maven-C71A36?style=for-the-badge&logo=apachemaven&logoColor=white)
 ![Spring Boot](https://img.shields.io/badge/Spring_Boot-6DB33F?style=for-the-badge&logo=spring-boot&logoColor=white)
+![JaCoCo](https://img.shields.io/badge/JaCoCo-Coverage-4FC08D?style=for-the-badge&logo=jacoco&logoColor=white)
+![Cucumber](https://img.shields.io/badge/Cucumber-BDD-6AC259?style=for-the-badge&logo=cucumber&logoColor=white)
 ![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)
 ![H2 Database](https://img.shields.io/badge/H2_Database-0F4B8D?style=for-the-badge&logo=h2-database&logoColor=white)
