@@ -1,0 +1,874 @@
+{
+	"info": {
+		"_postman_id": "76fe4564-4098-476d-a66e-272df9c23cc2",
+		"name": "Restaurant Sync - FIAP",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "12426144"
+	},
+	"item": [
+		{
+			"name": "Login",
+			"item": [
+				{
+					"name": "2º - Login Admin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Armazena o access_token como variável de ambiente\r",
+									"pm.environment.set(\"access_token\", pm.response.json().access_token);\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "username",
+									"value": "myclientid",
+									"type": "string"
+								},
+								{
+									"key": "password",
+									"value": "myclientsecret",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "grant_type",
+									"value": "password",
+									"type": "text"
+								},
+								{
+									"key": "username",
+									"value": "jackryan@restaurantsync.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "password123",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/oauth2/token",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"oauth2",
+								"token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "2º - Login Client",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Armazena o access_token como variável de ambiente\r",
+									"pm.environment.set(\"access_token\", pm.response.json().access_token);\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "username",
+									"value": "myclientid",
+									"type": "string"
+								},
+								{
+									"key": "password",
+									"value": "myclientsecret",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "grant_type",
+									"value": "password",
+									"type": "text"
+								},
+								{
+									"key": "username",
+									"value": "johndoe@example.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "password123",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/oauth2/token",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"oauth2",
+								"token"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "```\n- POST /oauth2/token**: Valida o login de um usuário.\n\n ```"
+		},
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "1º - Criar Novo Usuário Admin",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Jack Ryan\",\n    \"email\": \"jackryan@restaurantsync.com\",\n    \"login\": \"jackryan\",\n    \"password\": \"password123\",\n    \"address\": {\n        \"street\": \"Rua das Flores\",\n        \"number\": 123,\n        \"city\": \"São Paulo\",\n        \"state\": \"SP\",\n        \"zipCode\": \"12345-678\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/v1/users",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"v1",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "1º - Criar Novo Usuário Client",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"John Doe\",\n    \"email\": \"johndoe@example.com\",\n    \"login\": \"johndoe\",\n    \"password\": \"password123\",\n    \"address\": {\n        \"street\": \"Rua das Flores\",\n        \"number\": 123,\n        \"city\": \"São Paulo\",\n        \"state\": \"SP\",\n        \"zipCode\": \"12345-678\"\n    }\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/v1/users",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"v1",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Consultar por ID do Usuário",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/v1/users/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"v1",
+								"users",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Consultar paginadas dos Usuários (Admin)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/v1/users",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"v1",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Atualiza dados do Usuário por ID",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Jack Jackson\",\r\n    \"email\": \"jackryan@restaurantsync.com\",\r\n    \"login\": \"jackryan\",\r\n    \"password\": \"password123\",\r\n    \"address\": {\r\n        \"street\": \"Rua das Pedras\",\r\n        \"number\": 456,\r\n        \"city\": \"São Paulo\",\r\n        \"state\": \"SP\",\r\n        \"zipCode\": \"12345-896\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/v1/users/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"v1",
+								"users",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Atualiza senha do Usuário por ID",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJraWQiOiI3MDI4M2MzNS0yOGFhLTQyOGUtODIwZS1mM2Q5YjVkNTE4YzciLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJteWNsaWVudGlkIiwiYXVkIjoibXljbGllbnRpZCIsIm5iZiI6MTc0ODMxNzUxMiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwIiwiZXhwIjoxNzQ4NDAzOTEyLCJpYXQiOjE3NDgzMTc1MTIsImp0aSI6ImEyMDAzZWVlLTIxZWItNGYzZC05N2ZmLTgxMzM4YTE1OTYxZCIsImF1dGhvcml0aWVzIjpbIlJPTEVfQ0xJRU5UIl0sInVzZXJuYW1lIjoiam9obmRvZUBleGFtcGxlLmNvbSJ9.KZUz98Bsb1ApHp3llstrQQQ01dZjIbwmQs-2meIJIZQCEC_zN0qa168iPibl1Lx91JLMNtY4a998tvzpP_kYi3KTpe1thhSMpFGKxmFFQayIdCsBF4SOrCHupbt0U5GPS3myJSgq6kokHZ0P29KXxgEi9rRqL4w89wYhgyLFAs6ws-gleYDxzQpxUbnjHL0AO5hGRrOfhTLI7uiTVN94Q3Qe1x_XLdBSknrKg6afGp0zD3dqTsqQdtWSPivrwu7wOmdb0Oc2tT30aijAoYcXo9P5Hp3nMijaXEnmYwY5rFiKyb6-lgZHc1B2Dto4YdmbDLWQuigAvbpjNwqFQHOU1g"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"password\": \"password123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/v1/users/2/password",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"v1",
+								"users",
+								"2",
+								"password"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Deleta por ID do Usuário (Admin)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/v1/users/3",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"v1",
+								"users",
+								"3"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "```\n- POST   /v1/users: Cria um novo usuário.\n- GET    /v1/users: Lista usuários (paginado, apenas para admin).\n- GET    /v1/users/{id}: Busca usuário por ID.\n- PUT    /v1/users/{id}: Atualiza as informações de um usuário.\n- PATCH  /v1/users/{id}/senha: Troca a senha de um usuário.\n- DELETE /v1/users/{id}: Exclui um usuário (apenas para admin).\n\n ```"
+		},
+		{
+			"name": "Restaurant",
+			"item": [
+				{
+					"name": "3º - Criar Novo Restaurante (Admin)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Gourmet Bistro\",\n    \"address\": {\n        \"street\": \"Avenida Paulista\",\n        \"number\": 1000,\n        \"city\": \"São Paulo\",\n        \"state\": \"SP\",\n        \"zipCode\": \"01310-100\"\n    },\n    \"cuisineType\": \"French\",\n    \"openingHours\": \"10:00-22:00\",\n    \"ownerId\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/v1/restaurants",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"v1",
+								"restaurants"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Consulta paginadas dos Restaurantes (Admin)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/v1/restaurants",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"v1",
+								"restaurants"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Consulta por ID do Restaurante (Admin)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/v1/restaurants/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"v1",
+								"restaurants",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Atualizar dados do Restaurante (Admin))",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Gourmet Bistro JP\",\n    \"address\": {\n        \"street\": \"Avenida Paulista 2\",\n        \"number\": 1001,\n        \"city\": \"São Paulo 2\",\n        \"state\": \"SP2\",\n        \"zipCode\": \"01310-101\"\n    },\n    \"cuisineType\": \"Brazil\",\n    \"openingHours\": \"10:00-22:00\",\n    \"ownerId\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/v1/restaurants/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"v1",
+								"restaurants",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Deleta por ID do Restaurante (Admin)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/v1/restaurants/3",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"v1",
+								"restaurants",
+								"3"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "```\n-POST /v1/restaurants: Cria um novo restaurante. (apenas para admin)\n-GET  /v1/restaurants: Lista restaurantes (paginado). (apenas para admin)\n-GET  /v1/restaurants/{id}: Busca restaurante por ID. (apenas para admin)\n-PUT  /v1/restaurants/{id}: Atualiza as informações de um restaurante. (apenas para admin)\n-DELETE /v1/restaurants/{id}: Exclui um restaurante. (apenas para admin)\n\n ```"
+		},
+		{
+			"name": "Menu",
+			"item": [
+				{
+					"name": "4º - Criar Novo Menu (Admin)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJraWQiOiIzZGI0ZmQ3OC02NzFkLTQ5NGUtOTg4My0xNDdlNjcwNjk1OWUiLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJteWNsaWVudGlkIiwiYXVkIjoibXljbGllbnRpZCIsIm5iZiI6MTc1MzY0NDY3MywiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwIiwiZXhwIjoxNzUzNzMxMDczLCJpYXQiOjE3NTM2NDQ2NzMsImp0aSI6ImE0NTRhMDg4LWM1MjEtNDk2ZS05ZDBkLTg0ODM3ZmVlOTlmNiIsImF1dGhvcml0aWVzIjpbIlJPTEVfQURNSU4iXSwidXNlcm5hbWUiOiJqYWNrcnlhbkByZXN0YXVyYW50c3luYy5jb20ifQ.NgpB9CaquXSYNTTKLs0r5z0Qg1bR_AwMv-a6SQ-2oObk7FaASlLGDv05NlQVFsdEs9n7kJl7irU0wy01ddP8Jv5E38PFGJ46uGriDUZqJtKPw3UFRbQb-BAaCz4M4vHzkdBUhsJA2LQiX3y0ixDylP6kYD6mzyNChSK4HAuVsJiU1KeRvay98JYGg-VFx6xV3YauyePID01GJr2P_gMVuy9ClyhY8lN3kCqKajL9r3OqSOEfnwgK85yv2rNFk-1-7UioRtUuolppOPzHyZdHmJDSrVHYzhKD1VuDVLWGY1DdzpdU5kQXalyuPrGGELIgehlj3WQL2OMx1JveqbZbtQ"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Feijoada Pequena\",\n    \"description\": \"Feijoada pequena com todas as acompanhamentos\",\n    \"price\": 40.00,\n    \"availableOnlyRestaurant\": true,\n    \"photoPath\": \"/images/feijoada.jpg\",\n    \"restaurantId\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/v1/menus",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"v1",
+								"menus"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Consulta paginadas dos Menu (Admin)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/v1/menus",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"v1",
+								"menus"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Consulta por ID do Menu (Admin)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/v1/menus/3",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"v1",
+								"menus",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Atualizar dados do Menu (Admin)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Feijoada\",\n    \"description\": \"Feijoada\",\n    \"price\": 45.00,\n    \"availableOnlyRestaurant\": true,\n    \"photoPath\": \"/images/feijoada.jpg\",\n    \"restaurantId\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/v1/menus/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"v1",
+								"menus",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Atualizar disponibilidade de item do Menu (Admin)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"availableOnlyRestaurant\": false\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/v1/menus/2/restaurant-only",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"v1",
+								"menus",
+								"2",
+								"restaurant-only"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Deleta por ID do Menu (Admin)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/v1/menus/3",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"v1",
+								"menus",
+								"3"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "```\n-POST /v1/menus: Cria um novo item menu. (apenas para admin)\n-GET /v1/menus: Lista itens dos menus (paginado). (apenas para admin)\n-GET /v1/menus/{id}: Busca um item do menu por ID. (apenas para admin)\n-PUT /v1/menus/{id}: Atualiza as informações de um item menu. (apenas para admin)\n-PATCH /v1/menus/{id}/restaurant-only: Atualiza apenas o campo availableOnly de um item do menu(apenas para admin)Restaurant do menu.\n-DELETE /v1/menus/{id}: Exclui um item menu. (apenas para admin)\n\n ```"
+		}
+	]
+}
