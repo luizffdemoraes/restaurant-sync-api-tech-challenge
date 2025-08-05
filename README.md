@@ -250,6 +250,10 @@ target/site/jacoco/index.html
 
 ![restaurant-sync-coverage](images/restaurant-sysc-coverage.png)
 
+### Exemplo testes integrados
+
+![restaurant-sync-tests](images/restaurant-sync-tests.png)
+
 ## Collection POSTMAN
 
 https://github.com/luizffdemoraes/restaurant-sync-api-tech-challenge/blob/main/collection/restaurant-sync-fiap.postman_collection.json
