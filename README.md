@@ -20,7 +20,7 @@
 
 ## Descrição do Projeto
 
-API para gerenciamento de usuários de restaurantes, desenvolvida como parte da **Fase 2** do **Tech Challenge FIAP**. Esta fase foca na implementação das funcionalidades essenciais para o gerenciamento de usuários, permitindo o cadastro, atualização, exclusão e validação de login de dois tipos de usuários: **donos de restaurante** e **clientes**.
+API para gestão para restaurantes de usuários de restaurantes, desenvolvida como parte da **Fase 2** do **Tech Challenge FIAP**. Esta fase foca na implementação das funcionalidades essenciais para o gerenciamento de usuários, permitindo o cadastro, atualização, exclusão e validação de login de dois tipos de usuários: **donos de restaurante** e **clientes**.
 
 O sistema é construído com **Spring Boot**, **Docker**, e **Docker Compose**, sendo integrado a um banco de dados relacional **PostgreSQL** e **H2** para testes.
 
